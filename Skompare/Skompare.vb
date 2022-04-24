@@ -27,8 +27,9 @@ Public Class SkompareMain
     Public lenRows As Integer
     'Větší počet řádků
     Public lenCols As Integer
-    'Sloupec pro vyhledávání
-    Public ColLookup As Int16
+    'Sloupce pro vyhledávání
+    Public ColLookup As Integer
+    Public ColLookupSecondary As Integer
 
     'Deklarace polí pro porovnání řádků
     Public NewRowArr As Object(,)
@@ -65,13 +66,8 @@ Public Class SkompareMain
 
     End Sub
 
-    'Metoda pro nalezení duplicitních jedinečných kódů
-    Public Function CheckDuplicities() As Boolean
-        Return CheckDuplicities = False
-    End Function
-
     'Vrací číslo sloupce, podle kterého se vyhledává
-    Sub ColSelect(TboxVal As String)
+    Private Function ColSelect(TboxVal As String) As Integer
 
         'Přepis písmene sloupce na číslo
         Dim IntCatch As Integer
@@ -83,13 +79,13 @@ Public Class SkompareMain
             'Je číslo integer?
             If Integer.TryParse(TboxVal, IntCatch) Then
 
-                ColLookup = TboxVal
-                'Trace.WriteLine("Is numeric")
+                Return TboxVal
 
             Else
 
                 MsgBox("Invalid input - Search by column must be integer")
                 Trace.WriteLine("Is numeric but not integer")
+                Return Nothing
 
             End If
 
@@ -98,19 +94,20 @@ Public Class SkompareMain
             Try
 
                 'Hodnota není číslo - písmeno se převede na číslo sloupce
-                ColLookup = NewSheet.Range(TboxVal & "1").Column
+                Return NewSheet.Range(TboxVal & "1").Column
                 Trace.WriteLine("Is not numeric and can be turned to column")
 
             Catch ex As Exception
 
                 MsgBox("Error: " & ex.Message)
                 Trace.WriteLine("Is not numeric and cannot be turned to column")
+                Return Nothing
 
             End Try
 
         End If
 
-    End Sub
+    End Function
 
     'Prochází sešity a porovnává řádky (vyznačení změn v řádku řeší samostatná funkce)
     Public Sub Compare()
@@ -132,7 +129,8 @@ Public Class SkompareMain
         'Získá číslo sloupce, podle kterého se bude hledat
         Trace.WriteLine("Getting key column")
         PrLbl.Text = "Getting key column"
-        ColSelect(FormSkompare.TBoxColSelect.Text)
+        ColLookup = ColSelect(FormSkompare.TBoxColSelect.Text)
+        ColLookupSecondary = ColSelect(FormSkompare.TBoxColSelectSecondary.Text)
 
         'Získání startovacího řádku
         PrLbl.Text = "Checking start row input"
@@ -155,10 +153,15 @@ Public Class SkompareMain
         Dim OldRow As Integer
         'Pomocná proměnná pro hledání duplicit
         Dim i As Integer
+        'Seznam položek s duplicitním UID
+        Dim duplicityArr As String()
 
         'Získání pole vyhledávaných indexů starého pole
         Dim OldIndArr() As String
         OldIndArr = GetIndArr(OldArr, ColLookup, OldRows)
+        'Deklarace pole se sekundárním vyhledávacím indexem
+        Dim OldIndArrSecondary() As String
+        OldIndArrSecondary = GetIndArr(OldArr, ColLookupSecondary, OldRows)
 
         'Získání pole pro kontrolu duplicit (0 = index zatím nenalezen)
         Dim Duplicity(OldRows) As Integer
@@ -181,15 +184,28 @@ Public Class SkompareMain
             'Vrátí polohu (řádek) hledaného kódu ve "starém" poli
             OldRow = Array.IndexOf(OldIndArr, SearchString)
 
-            'Ignoruje první výskyt, pokud už byl zaznamenán (pokud jsou duplicitní kódy)
-            If OldRow > 0 Then
-                If Duplicity(OldRow) = 1 Then
-                    OldRow = Array.IndexOf(OldIndArr, SearchString, OldRow + 1)
-                End If
-            End If
-
             'Nalezena shoda identifikátoru?
             If OldRow > 0 Then
+
+                'Kontroluje duplicitu
+                If Duplicity(OldRow) = 1 Then
+
+                    'Získá pole čísel řádků se stejným SearchString
+                    duplicityArr = GetDuplicityList(OldIndArr, SearchString)
+                    'Nastaví SearchString dle sekundárního klíče
+                    SearchString = NewArr(NewRow, ColLookupSecondary)
+
+                    'Prochází pole duplicit  
+                    For Each element As String In duplicityArr
+                        Trace.WriteLine(OldIndArrSecondary(element) & " " & SearchString & " " & element)
+                        If OldIndArrSecondary(element) = SearchString Then
+                            OldRow = element
+                            Duplicity(OldRow) = 1
+                        End If
+                    Next
+                    'OldRow = Array.IndexOf(OldIndArr, SearchString, OldRow + 1)
+
+                End If
 
                 'Zaznamená nalezení shody
                 MatchFound = True
@@ -199,7 +215,6 @@ Public Class SkompareMain
                 CompareRow(NewArr, OldArr, NewRow, OldRow)
 
             End If
-
 
             If MatchFound = False Then
 
@@ -393,6 +408,23 @@ Public Class SkompareMain
         End While
 
         Return columnName
+    End Function
+
+    'Metoda pro nalezení duplicitních jedinečných kódů
+    Public Function GetDuplicityList(arr As Array, str As String) As String()
+
+        Dim row = 0
+        Dim duplicityList As New List(Of String)
+
+        For Each element In arr
+            If CStr(element) = str Then
+                duplicityList.Add(row)
+            End If
+            row += 1
+        Next
+
+        GetDuplicityList = duplicityList.ToArray
+
     End Function
 
     'Vrátí pole indexů, podle kterých se vyhledává

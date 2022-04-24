@@ -99,7 +99,6 @@ Public Class FormSkompare
 
     End Sub
 
-
     'Metoda po zmáčknutí tlačítka pro porovnání
     Private Sub BtnCompare(sender As Object, e As EventArgs) Handles BtnComp.Click
 
@@ -337,7 +336,7 @@ Public Class FormSkompare
         skompareMain.GetSheetParams(LBoxNewSheets.GetItemText(LBoxNewSheets.SelectedItem),
                                     LBoxOldSheets.GetItemText(LBoxOldSheets.SelectedItem))
         TBoxColSelect.Text = skompareMain.GetExcelColumnName(skompareMain.NewSheet.Range("UID").Column)
-        TBoxStart.Text = skompareMain.NewSheet.Range("Header").Rows.Count
+        TBoxStart.Text = skompareMain.NewSheet.Range("Header").Rows.Count + 1
     End Sub
 End Class
 

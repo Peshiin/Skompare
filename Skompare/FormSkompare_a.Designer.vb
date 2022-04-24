@@ -61,6 +61,7 @@ Partial Class FormSkompare
         Me.Button1 = New System.Windows.Forms.Button()
         Me.BtnGetStartPoint = New System.Windows.Forms.Button()
         Me.Panel1 = New System.Windows.Forms.Panel()
+        Me.TBoxColSelectSecondary = New System.Windows.Forms.TextBox()
         Me.GBoxCompareStyle.SuspendLayout()
         Me.GBoxStatsDiff.SuspendLayout()
         Me.Panel1.SuspendLayout()
@@ -195,6 +196,7 @@ Partial Class FormSkompare
         'GBoxStatsDiff
         '
         resources.ApplyResources(Me.GBoxStatsDiff, "GBoxStatsDiff")
+        Me.GBoxStatsDiff.Controls.Add(Me.TBoxColSelectSecondary)
         Me.GBoxStatsDiff.Controls.Add(Me.BtnColor)
         Me.GBoxStatsDiff.Controls.Add(Me.TBoxColor)
         Me.GBoxStatsDiff.Controls.Add(Me.LblStringEnd)
@@ -297,6 +299,11 @@ Partial Class FormSkompare
         Me.Panel1.Controls.Add(Me.BtnOld)
         Me.Panel1.Name = "Panel1"
         '
+        'TBoxColSelectSecondary
+        '
+        resources.ApplyResources(Me.TBoxColSelectSecondary, "TBoxColSelectSecondary")
+        Me.TBoxColSelectSecondary.Name = "TBoxColSelectSecondary"
+        '
         'FormSkompare
         '
         resources.ApplyResources(Me, "$this")
@@ -363,4 +370,5 @@ Partial Class FormSkompare
     Friend WithEvents Button1 As Button
     Friend WithEvents BtnGetStartPoint As Button
     Friend WithEvents Panel1 As Panel
+    Friend WithEvents TBoxColSelectSecondary As TextBox
 End Class

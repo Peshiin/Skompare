@@ -118,9 +118,6 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="RBtnStyle6.Size" type="System.Drawing.Size, System.Drawing">
-    <value>139, 21</value>
-  </data>
   <data name="LblOldFileName.MaximumSize" type="System.Drawing.Size, System.Drawing">
     <value>200, 48</value>
   </data>
@@ -194,6 +191,9 @@
   <data name="&gt;&gt;BtnStats.ZOrder" xml:space="preserve">
     <value>8</value>
   </data>
+  <data name="RBtnStyle5.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
   <data name="&gt;&gt;TBoxColor.Type" xml:space="preserve">
     <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
@@ -254,8 +254,11 @@
   <data name="BtnColor.Font" type="System.Drawing.Font, System.Drawing">
     <value>Microsoft Sans Serif, 6pt</value>
   </data>
-  <data name="BtnStats.TabIndex" type="System.Int32, mscorlib">
-    <value>0</value>
+  <data name="&gt;&gt;BtnComp.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="TBoxColSelectSecondary.TabIndex" type="System.Int32, mscorlib">
+    <value>4</value>
   </data>
   <data name="TBoxColor.Font" type="System.Drawing.Font, System.Drawing">
     <value>Microsoft Sans Serif, 10pt</value>
@@ -287,6 +290,9 @@
   <data name="LBoxOldSheets.Items" xml:space="preserve">
     <value>*No file Selected</value>
   </data>
+  <data name="RBtnStyle5.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
   <data name="LblStringEnd.Size" type="System.Drawing.Size, System.Drawing">
     <value>76, 17</value>
   </data>
@@ -311,8 +317,8 @@
   <data name="TBoxStats.Font" type="System.Drawing.Font, System.Drawing">
     <value>Microsoft Sans Serif, 10pt</value>
   </data>
-  <data name="TBoxStats.Text" xml:space="preserve">
-    <value />
+  <data name="LblOldSheets.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
   </data>
   <data name="&gt;&gt;RBtnStyle1.Parent" xml:space="preserve">
     <value>GBoxCompareStyle</value>
@@ -411,9 +417,6 @@
   <data name="BtnColor.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>2, 2, 2, 2</value>
   </data>
-  <data name="LblStart.TabIndex" type="System.Int32, mscorlib">
-    <value>1</value>
-  </data>
   <data name="GBoxStatsDiff.Location" type="System.Drawing.Point, System.Drawing">
     <value>255, 216</value>
   </data>
@@ -423,8 +426,11 @@
   <data name="BtnComp.Location" type="System.Drawing.Point, System.Drawing">
     <value>617, 405</value>
   </data>
+  <data name="BtnStats.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
   <data name="&gt;&gt;TBoxStringEnd.ZOrder" xml:space="preserve">
-    <value>6</value>
+    <value>7</value>
   </data>
   <data name="RBtnStyle6.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -434,6 +440,9 @@
   </data>
   <data name="&gt;&gt;RBtnStyle4.Parent" xml:space="preserve">
     <value>GBoxCompareStyle</value>
+  </data>
+  <data name="TBoxColSelectSecondary.Location" type="System.Drawing.Point, System.Drawing">
+    <value>260, 45</value>
   </data>
   <data name="&gt;&gt;RBtnStyle5.Parent" xml:space="preserve">
     <value>GBoxCompareStyle</value>
@@ -447,8 +456,8 @@
   <data name="LblOldFile.Font" type="System.Drawing.Font, System.Drawing">
     <value>Microsoft Sans Serif, 14pt</value>
   </data>
-  <data name="RBtnStyle5.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
+  <data name="&gt;&gt;TBoxColSelectSecondary.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;BtnLang.Parent" xml:space="preserve">
     <value>Panel1</value>
@@ -457,19 +466,19 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;TBoxStart.ZOrder" xml:space="preserve">
-    <value>10</value>
+    <value>11</value>
   </data>
   <data name="TBoxColor.Location" type="System.Drawing.Point, System.Drawing">
     <value>169, 74</value>
   </data>
+  <data name="&gt;&gt;TBoxColSelectSecondary.Parent" xml:space="preserve">
+    <value>GBoxStatsDiff</value>
+  </data>
   <data name="RBtnStyle5.Size" type="System.Drawing.Size, System.Drawing">
     <value>94, 21</value>
   </data>
-  <data name="BtnColor.TabIndex" type="System.Int32, mscorlib">
-    <value>3</value>
-  </data>
-  <data name="TBoxColSelect.TabIndex" type="System.Int32, mscorlib">
-    <value>0</value>
+  <data name="RBtnStyle6.Size" type="System.Drawing.Size, System.Drawing">
+    <value>139, 21</value>
   </data>
   <data name="&gt;&gt;TBoxColSelect.Parent" xml:space="preserve">
     <value>GBoxStatsDiff</value>
@@ -510,8 +519,8 @@
   <data name="LblColor.Location" type="System.Drawing.Point, System.Drawing">
     <value>7, 77</value>
   </data>
-  <data name="&gt;&gt;BtnComp.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="BtnColor.TabIndex" type="System.Int32, mscorlib">
+    <value>3</value>
   </data>
   <data name="&gt;&gt;LBoxNewSheets.ZOrder" xml:space="preserve">
     <value>5</value>
@@ -535,7 +544,7 @@
     <value>561, 71</value>
   </data>
   <data name="&gt;&gt;TBoxStringStart.ZOrder" xml:space="preserve">
-    <value>8</value>
+    <value>9</value>
   </data>
   <data name="&gt;&gt;RBtnStyle4.ZOrder" xml:space="preserve">
     <value>2</value>
@@ -558,6 +567,9 @@
   <data name="&gt;&gt;LblOldFile.Name" xml:space="preserve">
     <value>LblOldFile</value>
   </data>
+  <data name="&gt;&gt;TBoxColSelectSecondary.Name" xml:space="preserve">
+    <value>TBoxColSelectSecondary</value>
+  </data>
   <data name="TBoxColor.TabIndex" type="System.Int32, mscorlib">
     <value>2</value>
   </data>
@@ -577,7 +589,7 @@
     <value>ColorDialog1</value>
   </data>
   <data name="&gt;&gt;LblStringEnd.ZOrder" xml:space="preserve">
-    <value>2</value>
+    <value>3</value>
   </data>
   <data name="&gt;&gt;BtnColor.Name" xml:space="preserve">
     <value>BtnColor</value>
@@ -690,8 +702,8 @@
   <data name="&gt;&gt;RBtnStyle4.Name" xml:space="preserve">
     <value>RBtnStyle4</value>
   </data>
-  <data name="LblOldSheets.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
+  <data name="Panel1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
   </data>
   <data name="LblNewFileName.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -739,7 +751,7 @@
     <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;LblStart.ZOrder" xml:space="preserve">
-    <value>9</value>
+    <value>10</value>
   </data>
   <data name="&gt;&gt;Button1.Type" xml:space="preserve">
     <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -751,7 +763,7 @@
     <value>RBtnStyle5</value>
   </data>
   <data name="&gt;&gt;TBoxColSelect.ZOrder" xml:space="preserve">
-    <value>7</value>
+    <value>8</value>
   </data>
   <data name="LblOldFileName.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -832,10 +844,10 @@
     <value>BtnLang</value>
   </data>
   <data name="&gt;&gt;BtnColor.ZOrder" xml:space="preserve">
-    <value>0</value>
+    <value>1</value>
   </data>
   <data name="&gt;&gt;LblStringStart.ZOrder" xml:space="preserve">
-    <value>3</value>
+    <value>4</value>
   </data>
   <data name="LblStart.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -846,8 +858,8 @@
   <data name="&gt;&gt;TBoxStringStart.Parent" xml:space="preserve">
     <value>GBoxStatsDiff</value>
   </data>
-  <data name="TBoxStart.TextAlign" type="System.Windows.Forms.HorizontalAlignment, System.Windows.Forms">
-    <value>Center</value>
+  <data name="TBoxColSelect.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
   </data>
   <data name="BtnLang.Text" xml:space="preserve">
     <value>CZ</value>
@@ -855,8 +867,8 @@
   <data name="&gt;&gt;LblOldFileName.Parent" xml:space="preserve">
     <value>Panel1</value>
   </data>
-  <data name="RBtnStyle2.TabIndex" type="System.Int32, mscorlib">
-    <value>0</value>
+  <data name="BtnStats.Text" xml:space="preserve">
+    <value>See stats</value>
   </data>
   <data name="RBtnStyle5.Location" type="System.Drawing.Point, System.Drawing">
     <value>6, 153</value>
@@ -924,17 +936,20 @@
   <data name="TBoxColor.Size" type="System.Drawing.Size, System.Drawing">
     <value>121, 23</value>
   </data>
+  <data name="TBoxStart.TextAlign" type="System.Windows.Forms.HorizontalAlignment, System.Windows.Forms">
+    <value>Center</value>
+  </data>
   <data name="LblNewFile.Text" xml:space="preserve">
     <value>New file name:</value>
   </data>
   <data name="&gt;&gt;LblStringStart.Name" xml:space="preserve">
     <value>LblStringStart</value>
   </data>
+  <data name="&gt;&gt;TBoxColSelectSecondary.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
   <data name="TBoxStringStart.Location" type="System.Drawing.Point, System.Drawing">
     <value>169, 99</value>
-  </data>
-  <data name="Panel1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
   </data>
   <data name="BtnComp.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -949,13 +964,10 @@
     <value>118, 24</value>
   </data>
   <data name="&gt;&gt;LblColor.ZOrder" xml:space="preserve">
-    <value>4</value>
+    <value>5</value>
   </data>
   <data name="BtnStats.Location" type="System.Drawing.Point, System.Drawing">
     <value>21, 405</value>
-  </data>
-  <data name="BtnStats.Text" xml:space="preserve">
-    <value>See stats</value>
   </data>
   <data name="Button1.Location" type="System.Drawing.Point, System.Drawing">
     <value>255, 405</value>
@@ -963,17 +975,23 @@
   <data name="LblColor.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
+  <data name="LblStringStart.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
   <data name="BtnColor.Size" type="System.Drawing.Size, System.Drawing">
     <value>29, 27</value>
   </data>
   <data name="&gt;&gt;Label1.ZOrder" xml:space="preserve">
-    <value>5</value>
+    <value>6</value>
   </data>
   <data name="GBoxCompareStyle.Location" type="System.Drawing.Point, System.Drawing">
     <value>554, 216</value>
   </data>
   <data name="RBtnStyle6.Text" xml:space="preserve">
     <value>String in comment</value>
+  </data>
+  <data name="TBoxStats.Text" xml:space="preserve">
+    <value />
   </data>
   <data name="&gt;&gt;Panel1.Type" xml:space="preserve">
     <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -989,6 +1007,9 @@
   </data>
   <data name="&gt;&gt;BtnOld.Type" xml:space="preserve">
     <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;TBoxStats.ZOrder" xml:space="preserve">
+    <value>3</value>
   </data>
   <data name="BtnOld.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -1011,8 +1032,8 @@
   <data name="&gt;&gt;LblNewFile.Parent" xml:space="preserve">
     <value>Panel1</value>
   </data>
-  <data name="RBtnStyle5.TabIndex" type="System.Int32, mscorlib">
-    <value>0</value>
+  <data name="BtnGetStartPoint.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
   <data name="&gt;&gt;BtnNew.Name" xml:space="preserve">
     <value>BtnNew</value>
@@ -1038,8 +1059,8 @@
   <data name="Label1.Text" xml:space="preserve">
     <value>Search by column:</value>
   </data>
-  <data name="&gt;&gt;TBoxStats.ZOrder" xml:space="preserve">
-    <value>3</value>
+  <data name="RBtnStyle2.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
   </data>
   <data name="BtnLang.TabIndex" type="System.Int32, mscorlib">
     <value>9</value>
@@ -1110,11 +1131,8 @@
   <data name="LblNewFile.Size" type="System.Drawing.Size, System.Drawing">
     <value>135, 24</value>
   </data>
-  <data name="LblStringStart.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="&gt;&gt;TBoxStats.Type" xml:space="preserve">
-    <value>System.Windows.Forms.RichTextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="LblStart.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
   </data>
   <data name="TBoxColSelect.Text" xml:space="preserve">
     <value>A</value>
@@ -1131,8 +1149,8 @@
   <data name="&gt;&gt;TBoxStats.Parent" xml:space="preserve">
     <value>$this</value>
   </data>
-  <data name="BtnGetStartPoint.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
+  <data name="&gt;&gt;TBoxStats.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RichTextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="Button1.TabIndex" type="System.Int32, mscorlib">
     <value>10</value>
@@ -1147,7 +1165,7 @@
     <value>No file selected</value>
   </data>
   <data name="&gt;&gt;TBoxColor.ZOrder" xml:space="preserve">
-    <value>1</value>
+    <value>2</value>
   </data>
   <data name="&gt;&gt;LBoxOldSheets.ZOrder" xml:space="preserve">
     <value>4</value>

@@ -203,6 +203,9 @@
   <data name="BtnStats.Text" xml:space="preserve">
     <value>Statistiky</value>
   </data>
+  <data name="GBoxCompareStyle.Text" xml:space="preserve">
+    <value>Styl značení</value>
+  </data>
   <data name="RBtnStyle5.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
@@ -257,8 +260,17 @@
   <data name="RBtnStyle1.Text" xml:space="preserve">
     <value>Pouze zvýraznění</value>
   </data>
-  <data name="GBoxCompareStyle.Text" xml:space="preserve">
-    <value>Styl značení</value>
+  <data name="TBoxColSelectSecondary.Location" type="System.Drawing.Point, System.Drawing">
+    <value>260, 48</value>
+  </data>
+  <data name="TBoxColSelectSecondary.Size" type="System.Drawing.Size, System.Drawing">
+    <value>29, 23</value>
+  </data>
+  <data name="TBoxColSelectSecondary.Text" xml:space="preserve">
+    <value>CX</value>
+  </data>
+  <data name="TBoxColSelectSecondary.TextAlign" type="System.Windows.Forms.HorizontalAlignment, System.Windows.Forms">
+    <value>Center</value>
   </data>
   <data name="BtnColor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -298,6 +310,9 @@
   </data>
   <data name="Label1.Text" xml:space="preserve">
     <value>Vyhledávej podle sloupce:</value>
+  </data>
+  <data name="TBoxColSelect.Location" type="System.Drawing.Point, System.Drawing">
+    <value>225, 48</value>
   </data>
   <data name="LblStart.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
