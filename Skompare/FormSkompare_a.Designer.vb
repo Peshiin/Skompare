@@ -60,8 +60,10 @@ Partial Class FormSkompare
         Me.BtnLang = New System.Windows.Forms.Button()
         Me.Button1 = New System.Windows.Forms.Button()
         Me.BtnGetStartPoint = New System.Windows.Forms.Button()
+        Me.Panel1 = New System.Windows.Forms.Panel()
         Me.GBoxCompareStyle.SuspendLayout()
         Me.GBoxStatsDiff.SuspendLayout()
+        Me.Panel1.SuspendLayout()
         Me.SuspendLayout()
         '
         'BtnNew
@@ -73,6 +75,7 @@ Partial Class FormSkompare
         'OpenFDNew
         '
         Me.OpenFDNew.FileName = "OpenFileDialogNew"
+        resources.ApplyResources(Me.OpenFDNew, "OpenFDNew")
         '
         'LblNewFile
         '
@@ -143,13 +146,13 @@ Partial Class FormSkompare
         '
         'GBoxCompareStyle
         '
+        resources.ApplyResources(Me.GBoxCompareStyle, "GBoxCompareStyle")
         Me.GBoxCompareStyle.Controls.Add(Me.RBtnStyle5)
         Me.GBoxCompareStyle.Controls.Add(Me.RBtnStyle6)
         Me.GBoxCompareStyle.Controls.Add(Me.RBtnStyle4)
         Me.GBoxCompareStyle.Controls.Add(Me.RBtnStyle3)
         Me.GBoxCompareStyle.Controls.Add(Me.RBtnStyle2)
         Me.GBoxCompareStyle.Controls.Add(Me.RBtnStyle1)
-        resources.ApplyResources(Me.GBoxCompareStyle, "GBoxCompareStyle")
         Me.GBoxCompareStyle.Name = "GBoxCompareStyle"
         Me.GBoxCompareStyle.TabStop = False
         '
@@ -191,6 +194,7 @@ Partial Class FormSkompare
         '
         'GBoxStatsDiff
         '
+        resources.ApplyResources(Me.GBoxStatsDiff, "GBoxStatsDiff")
         Me.GBoxStatsDiff.Controls.Add(Me.BtnColor)
         Me.GBoxStatsDiff.Controls.Add(Me.TBoxColor)
         Me.GBoxStatsDiff.Controls.Add(Me.LblStringEnd)
@@ -202,21 +206,20 @@ Partial Class FormSkompare
         Me.GBoxStatsDiff.Controls.Add(Me.TBoxStringStart)
         Me.GBoxStatsDiff.Controls.Add(Me.LblStart)
         Me.GBoxStatsDiff.Controls.Add(Me.TBoxStart)
-        resources.ApplyResources(Me.GBoxStatsDiff, "GBoxStatsDiff")
         Me.GBoxStatsDiff.Name = "GBoxStatsDiff"
         Me.GBoxStatsDiff.TabStop = False
         '
         'BtnColor
         '
-        Me.BtnColor.BackgroundImage = Global.Skompare.My.Resources.Resources.PickIcon
         resources.ApplyResources(Me.BtnColor, "BtnColor")
+        Me.BtnColor.BackgroundImage = Global.Skompare.My.Resources.Resources.PickIcon
         Me.BtnColor.Name = "BtnColor"
         Me.BtnColor.UseVisualStyleBackColor = True
         '
         'TBoxColor
         '
-        Me.TBoxColor.BackColor = System.Drawing.Color.Yellow
         resources.ApplyResources(Me.TBoxColor, "TBoxColor")
+        Me.TBoxColor.BackColor = System.Drawing.Color.Yellow
         Me.TBoxColor.Name = "TBoxColor"
         '
         'LblStringEnd
@@ -282,33 +285,41 @@ Partial Class FormSkompare
         Me.BtnGetStartPoint.Name = "BtnGetStartPoint"
         Me.BtnGetStartPoint.UseVisualStyleBackColor = True
         '
+        'Panel1
+        '
+        resources.ApplyResources(Me.Panel1, "Panel1")
+        Me.Panel1.Controls.Add(Me.BtnLang)
+        Me.Panel1.Controls.Add(Me.BtnNew)
+        Me.Panel1.Controls.Add(Me.LblOldFile)
+        Me.Panel1.Controls.Add(Me.LblNewFile)
+        Me.Panel1.Controls.Add(Me.LblNewFileName)
+        Me.Panel1.Controls.Add(Me.LblOldFileName)
+        Me.Panel1.Controls.Add(Me.BtnOld)
+        Me.Panel1.Name = "Panel1"
+        '
         'FormSkompare
         '
         resources.ApplyResources(Me, "$this")
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.Controls.Add(Me.Button1)
-        Me.Controls.Add(Me.BtnLang)
         Me.Controls.Add(Me.GBoxCompareStyle)
         Me.Controls.Add(Me.GBoxStatsDiff)
         Me.Controls.Add(Me.TBoxStats)
         Me.Controls.Add(Me.LBoxOldSheets)
         Me.Controls.Add(Me.LBoxNewSheets)
-        Me.Controls.Add(Me.LblOldFileName)
-        Me.Controls.Add(Me.LblNewFileName)
         Me.Controls.Add(Me.LblOldSheets)
         Me.Controls.Add(Me.LblNewSheets)
-        Me.Controls.Add(Me.LblOldFile)
-        Me.Controls.Add(Me.LblNewFile)
-        Me.Controls.Add(Me.BtnOld)
         Me.Controls.Add(Me.BtnStats)
         Me.Controls.Add(Me.BtnGetStartPoint)
         Me.Controls.Add(Me.BtnComp)
-        Me.Controls.Add(Me.BtnNew)
+        Me.Controls.Add(Me.Panel1)
         Me.Name = "FormSkompare"
         Me.GBoxCompareStyle.ResumeLayout(False)
         Me.GBoxCompareStyle.PerformLayout()
         Me.GBoxStatsDiff.ResumeLayout(False)
         Me.GBoxStatsDiff.PerformLayout()
+        Me.Panel1.ResumeLayout(False)
+        Me.Panel1.PerformLayout()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -351,4 +362,5 @@ Partial Class FormSkompare
     Friend WithEvents BtnLang As Button
     Friend WithEvents Button1 As Button
     Friend WithEvents BtnGetStartPoint As Button
+    Friend WithEvents Panel1 As Panel
 End Class

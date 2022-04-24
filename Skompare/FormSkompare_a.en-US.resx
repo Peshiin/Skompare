@@ -187,11 +187,4 @@
   <data name="BtnLang.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="BtnLang.Location" type="System.Drawing.Point, System.Drawing">
-    <value>736, 11</value>
-  </data>
-  <data name="BtnLang.Size" type="System.Drawing.Size, System.Drawing">
-    <value>34, 20</value>
-  </data>
 </root>

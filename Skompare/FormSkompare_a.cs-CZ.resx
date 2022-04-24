@@ -203,9 +203,6 @@
   <data name="BtnStats.Text" xml:space="preserve">
     <value>Statistiky</value>
   </data>
-  <data name="GBoxCompareStyle.Text" xml:space="preserve">
-    <value>Styl značení</value>
-  </data>
   <data name="RBtnStyle5.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
@@ -260,8 +257,8 @@
   <data name="RBtnStyle1.Text" xml:space="preserve">
     <value>Pouze zvýraznění</value>
   </data>
-  <data name="GBoxStatsDiff.Text" xml:space="preserve">
-    <value>Nastavení</value>
+  <data name="GBoxCompareStyle.Text" xml:space="preserve">
+    <value>Styl značení</value>
   </data>
   <data name="BtnColor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -311,11 +308,8 @@
   <data name="LblStart.Text" xml:space="preserve">
     <value>Začni na řádku:</value>
   </data>
-  <data name="BtnLang.Location" type="System.Drawing.Point, System.Drawing">
-    <value>1105, 15</value>
-  </data>
-  <data name="BtnLang.Size" type="System.Drawing.Size, System.Drawing">
-    <value>50, 33</value>
+  <data name="GBoxStatsDiff.Text" xml:space="preserve">
+    <value>Nastavení</value>
   </data>
   <data name="BtnLang.Text" xml:space="preserve">
     <value>EN</value>

@@ -65,6 +65,11 @@ Public Class SkompareMain
 
     End Sub
 
+    'Metoda pro nalezení duplicitních jedinečných kódů
+    Public Function CheckDuplicities() As Boolean
+        Return CheckDuplicities = False
+    End Function
+
     'Vrací číslo sloupce, podle kterého se vyhledává
     Sub ColSelect(TboxVal As String)
 
