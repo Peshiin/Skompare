@@ -260,17 +260,8 @@
   <data name="RBtnStyle1.Text" xml:space="preserve">
     <value>Pouze zvýraznění</value>
   </data>
-  <data name="TBoxColSelectSecondary.Location" type="System.Drawing.Point, System.Drawing">
-    <value>260, 48</value>
-  </data>
-  <data name="TBoxColSelectSecondary.Size" type="System.Drawing.Size, System.Drawing">
-    <value>29, 23</value>
-  </data>
-  <data name="TBoxColSelectSecondary.Text" xml:space="preserve">
-    <value>CX</value>
-  </data>
-  <data name="TBoxColSelectSecondary.TextAlign" type="System.Windows.Forms.HorizontalAlignment, System.Windows.Forms">
-    <value>Center</value>
+  <data name="GBoxStatsDiff.Text" xml:space="preserve">
+    <value>Nastavení</value>
   </data>
   <data name="BtnColor.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -311,9 +302,6 @@
   <data name="Label1.Text" xml:space="preserve">
     <value>Vyhledávej podle sloupce:</value>
   </data>
-  <data name="TBoxColSelect.Location" type="System.Drawing.Point, System.Drawing">
-    <value>225, 48</value>
-  </data>
   <data name="LblStart.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
@@ -323,13 +311,13 @@
   <data name="LblStart.Text" xml:space="preserve">
     <value>Začni na řádku:</value>
   </data>
-  <data name="GBoxStatsDiff.Text" xml:space="preserve">
-    <value>Nastavení</value>
-  </data>
   <data name="BtnLang.Text" xml:space="preserve">
     <value>EN</value>
   </data>
   <data name="BtnGetStartPoint.Text" xml:space="preserve">
     <value>Získat počátek</value>
+  </data>
+  <data name="BtnAdvanced.Text" xml:space="preserve">
+    <value>Pokročilé</value>
   </data>
 </root>

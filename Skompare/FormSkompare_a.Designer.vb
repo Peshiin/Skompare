@@ -45,6 +45,7 @@ Partial Class FormSkompare
         Me.RBtnStyle2 = New System.Windows.Forms.RadioButton()
         Me.RBtnStyle1 = New System.Windows.Forms.RadioButton()
         Me.GBoxStatsDiff = New System.Windows.Forms.GroupBox()
+        Me.TBoxColSelectSecondary = New System.Windows.Forms.TextBox()
         Me.BtnColor = New System.Windows.Forms.Button()
         Me.TBoxColor = New System.Windows.Forms.TextBox()
         Me.LblStringEnd = New System.Windows.Forms.Label()
@@ -58,13 +59,16 @@ Partial Class FormSkompare
         Me.TBoxStart = New System.Windows.Forms.TextBox()
         Me.ColorDialog1 = New System.Windows.Forms.ColorDialog()
         Me.BtnLang = New System.Windows.Forms.Button()
-        Me.Button1 = New System.Windows.Forms.Button()
+        Me.BtnTest = New System.Windows.Forms.Button()
         Me.BtnGetStartPoint = New System.Windows.Forms.Button()
         Me.Panel1 = New System.Windows.Forms.Panel()
-        Me.TBoxColSelectSecondary = New System.Windows.Forms.TextBox()
+        Me.PanelBottom = New System.Windows.Forms.Panel()
+        Me.lblTest = New System.Windows.Forms.Label()
+        Me.BtnAdvanced = New System.Windows.Forms.Button()
         Me.GBoxCompareStyle.SuspendLayout()
         Me.GBoxStatsDiff.SuspendLayout()
         Me.Panel1.SuspendLayout()
+        Me.PanelBottom.SuspendLayout()
         Me.SuspendLayout()
         '
         'BtnNew
@@ -76,7 +80,6 @@ Partial Class FormSkompare
         'OpenFDNew
         '
         Me.OpenFDNew.FileName = "OpenFileDialogNew"
-        resources.ApplyResources(Me.OpenFDNew, "OpenFDNew")
         '
         'LblNewFile
         '
@@ -147,13 +150,13 @@ Partial Class FormSkompare
         '
         'GBoxCompareStyle
         '
-        resources.ApplyResources(Me.GBoxCompareStyle, "GBoxCompareStyle")
         Me.GBoxCompareStyle.Controls.Add(Me.RBtnStyle5)
         Me.GBoxCompareStyle.Controls.Add(Me.RBtnStyle6)
         Me.GBoxCompareStyle.Controls.Add(Me.RBtnStyle4)
         Me.GBoxCompareStyle.Controls.Add(Me.RBtnStyle3)
         Me.GBoxCompareStyle.Controls.Add(Me.RBtnStyle2)
         Me.GBoxCompareStyle.Controls.Add(Me.RBtnStyle1)
+        resources.ApplyResources(Me.GBoxCompareStyle, "GBoxCompareStyle")
         Me.GBoxCompareStyle.Name = "GBoxCompareStyle"
         Me.GBoxCompareStyle.TabStop = False
         '
@@ -195,7 +198,6 @@ Partial Class FormSkompare
         '
         'GBoxStatsDiff
         '
-        resources.ApplyResources(Me.GBoxStatsDiff, "GBoxStatsDiff")
         Me.GBoxStatsDiff.Controls.Add(Me.TBoxColSelectSecondary)
         Me.GBoxStatsDiff.Controls.Add(Me.BtnColor)
         Me.GBoxStatsDiff.Controls.Add(Me.TBoxColor)
@@ -208,20 +210,26 @@ Partial Class FormSkompare
         Me.GBoxStatsDiff.Controls.Add(Me.TBoxStringStart)
         Me.GBoxStatsDiff.Controls.Add(Me.LblStart)
         Me.GBoxStatsDiff.Controls.Add(Me.TBoxStart)
+        resources.ApplyResources(Me.GBoxStatsDiff, "GBoxStatsDiff")
         Me.GBoxStatsDiff.Name = "GBoxStatsDiff"
         Me.GBoxStatsDiff.TabStop = False
         '
+        'TBoxColSelectSecondary
+        '
+        resources.ApplyResources(Me.TBoxColSelectSecondary, "TBoxColSelectSecondary")
+        Me.TBoxColSelectSecondary.Name = "TBoxColSelectSecondary"
+        '
         'BtnColor
         '
-        resources.ApplyResources(Me.BtnColor, "BtnColor")
         Me.BtnColor.BackgroundImage = Global.Skompare.My.Resources.Resources.PickIcon
+        resources.ApplyResources(Me.BtnColor, "BtnColor")
         Me.BtnColor.Name = "BtnColor"
         Me.BtnColor.UseVisualStyleBackColor = True
         '
         'TBoxColor
         '
-        resources.ApplyResources(Me.TBoxColor, "TBoxColor")
         Me.TBoxColor.BackColor = System.Drawing.Color.Yellow
+        resources.ApplyResources(Me.TBoxColor, "TBoxColor")
         Me.TBoxColor.Name = "TBoxColor"
         '
         'LblStringEnd
@@ -275,11 +283,11 @@ Partial Class FormSkompare
         Me.BtnLang.Name = "BtnLang"
         Me.BtnLang.UseVisualStyleBackColor = True
         '
-        'Button1
+        'BtnTest
         '
-        resources.ApplyResources(Me.Button1, "Button1")
-        Me.Button1.Name = "Button1"
-        Me.Button1.UseVisualStyleBackColor = True
+        resources.ApplyResources(Me.BtnTest, "BtnTest")
+        Me.BtnTest.Name = "BtnTest"
+        Me.BtnTest.UseVisualStyleBackColor = True
         '
         'BtnGetStartPoint
         '
@@ -289,7 +297,6 @@ Partial Class FormSkompare
         '
         'Panel1
         '
-        resources.ApplyResources(Me.Panel1, "Panel1")
         Me.Panel1.Controls.Add(Me.BtnLang)
         Me.Panel1.Controls.Add(Me.BtnNew)
         Me.Panel1.Controls.Add(Me.LblOldFile)
@@ -297,18 +304,32 @@ Partial Class FormSkompare
         Me.Panel1.Controls.Add(Me.LblNewFileName)
         Me.Panel1.Controls.Add(Me.LblOldFileName)
         Me.Panel1.Controls.Add(Me.BtnOld)
+        resources.ApplyResources(Me.Panel1, "Panel1")
         Me.Panel1.Name = "Panel1"
         '
-        'TBoxColSelectSecondary
+        'PanelBottom
         '
-        resources.ApplyResources(Me.TBoxColSelectSecondary, "TBoxColSelectSecondary")
-        Me.TBoxColSelectSecondary.Name = "TBoxColSelectSecondary"
+        Me.PanelBottom.Controls.Add(Me.lblTest)
+        resources.ApplyResources(Me.PanelBottom, "PanelBottom")
+        Me.PanelBottom.Name = "PanelBottom"
+        '
+        'lblTest
+        '
+        resources.ApplyResources(Me.lblTest, "lblTest")
+        Me.lblTest.Name = "lblTest"
+        '
+        'BtnAdvanced
+        '
+        resources.ApplyResources(Me.BtnAdvanced, "BtnAdvanced")
+        Me.BtnAdvanced.Name = "BtnAdvanced"
+        Me.BtnAdvanced.UseVisualStyleBackColor = True
         '
         'FormSkompare
         '
         resources.ApplyResources(Me, "$this")
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.Controls.Add(Me.Button1)
+        Me.Controls.Add(Me.BtnAdvanced)
+        Me.Controls.Add(Me.BtnTest)
         Me.Controls.Add(Me.GBoxCompareStyle)
         Me.Controls.Add(Me.GBoxStatsDiff)
         Me.Controls.Add(Me.TBoxStats)
@@ -320,6 +341,7 @@ Partial Class FormSkompare
         Me.Controls.Add(Me.BtnGetStartPoint)
         Me.Controls.Add(Me.BtnComp)
         Me.Controls.Add(Me.Panel1)
+        Me.Controls.Add(Me.PanelBottom)
         Me.Name = "FormSkompare"
         Me.GBoxCompareStyle.ResumeLayout(False)
         Me.GBoxCompareStyle.PerformLayout()
@@ -327,6 +349,8 @@ Partial Class FormSkompare
         Me.GBoxStatsDiff.PerformLayout()
         Me.Panel1.ResumeLayout(False)
         Me.Panel1.PerformLayout()
+        Me.PanelBottom.ResumeLayout(False)
+        Me.PanelBottom.PerformLayout()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -367,8 +391,11 @@ Partial Class FormSkompare
     Friend WithEvents BtnColor As Button
     Friend WithEvents RBtnStyle6 As RadioButton
     Friend WithEvents BtnLang As Button
-    Friend WithEvents Button1 As Button
+    Friend WithEvents BtnTest As Button
     Friend WithEvents BtnGetStartPoint As Button
     Friend WithEvents Panel1 As Panel
     Friend WithEvents TBoxColSelectSecondary As TextBox
+    Friend WithEvents PanelBottom As Panel
+    Friend WithEvents lblTest As Label
+    Friend WithEvents BtnAdvanced As Button
 End Class

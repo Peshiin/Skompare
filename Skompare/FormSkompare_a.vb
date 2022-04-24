@@ -7,6 +7,10 @@ Imports Skompare.SkompareMain
 
 Public Class FormSkompare
 
+    'Pro kontrolu viditelnosti panelu "advanced/pokročilé"
+    Dim advancedVisibility As Boolean
+
+    ' Vytvoří instanci třídy SkompareMain
     Dim skompareMain = New SkompareMain
 
     'Vypisuje data o jednotlivých sešitech do textového pole ve formuláři
@@ -211,6 +215,11 @@ Public Class FormSkompare
         'Vytvoření aplikace excel, se ktrou se dále bude pracovat
         skompareMain.XlApp = New Excel.Application
 
+        'Schování panelu "advanced"
+        advancedVisibility = False
+        PanelBottom.Visible = advancedVisibility
+        MyBase.Height -= PanelBottom.Height
+
     End Sub
 
     'Metoda při ukončení hlavního formuláře
@@ -337,6 +346,28 @@ Public Class FormSkompare
                                     LBoxOldSheets.GetItemText(LBoxOldSheets.SelectedItem))
         TBoxColSelect.Text = skompareMain.GetExcelColumnName(skompareMain.NewSheet.Range("UID").Column)
         TBoxStart.Text = skompareMain.NewSheet.Range("Header").Rows.Count + 1
+    End Sub
+
+    'Schovává/zobrazuje panel "advanced/pokročilé" pro detailnější nastavení
+    Private Sub BtnAdvanced_Click(sender As Object, e As EventArgs) Handles BtnAdvanced.Click
+
+        If advancedVisibility Then
+            'Schování panelu "advanced"
+            advancedVisibility = False
+            PanelBottom.Visible = advancedVisibility
+            MyBase.Height -= PanelBottom.Height
+        Else
+            'Zobrazení panelu "advanced"
+            advancedVisibility = True
+            PanelBottom.Visible = advancedVisibility
+            MyBase.Height += PanelBottom.Height
+        End If
+
+    End Sub
+
+    Private Sub BtnTest_Click(sender As Object, e As EventArgs) Handles BtnTest.Click
+
+
     End Sub
 End Class
 

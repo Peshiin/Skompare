@@ -203,7 +203,6 @@ Public Class SkompareMain
                             Duplicity(OldRow) = 1
                         End If
                     Next
-                    'OldRow = Array.IndexOf(OldIndArr, SearchString, OldRow + 1)
 
                 End If
 
