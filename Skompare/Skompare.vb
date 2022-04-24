@@ -1,9 +1,4 @@
-﻿Imports Microsoft.VisualBasic
-Imports Excel = Microsoft.Office.Interop.Excel
-Imports System.Diagnostics
-Imports System.Runtime.InteropServices
-Imports System.Globalization
-Imports System.Threading
+﻿Imports Excel = Microsoft.Office.Interop.Excel
 
 Public Class SkompareMain
 
@@ -43,160 +38,72 @@ Public Class SkompareMain
     Public PrBar As Object = FormProgBar.ProgBar
     Public PrLbl As Object = FormProgBar.LblProgBar
 
-    'Otevírá sešity pro porovnání
-    Public Sub OpenExcel(FilePath As String, sender As Object)
+    'Metoda pro nastavení automatického přepočítávání/updatů sešitu
+    Sub autoUpdate(auto As Boolean)
 
-        'Výběr, které objekty se upraví podle stisknutého tlačítka
-        If sender Is FormSkompare.BtnNew Then 'Stisknuto "nové" tlačítko
+        If auto = True Then
 
-            'Otevření souboru v aplikaci Excel
-            NewWb = XlApp.Workbooks.Open(FilePath, [ReadOnly]:=True)
+            'Povolení přepočítávání, updateování apod. sešitu během výpočtu
+            With XlApp
+                .Calculation = Excel.XlCalculation.xlCalculationAutomatic
+                .ScreenUpdating = True
+                .DisplayStatusBar = True
+                .EnableEvents = True
+            End With
 
-        ElseIf sender Is FormSkompare.BtnOld Then 'Stisknuto "staré" tlačítko
+        ElseIf auto = False Then
 
-            'Otevření souboru v aplikaci Excel
-            OldWb = XlApp.Workbooks.Open(FilePath, [ReadOnly]:=True)
-
-        End If
-
-    End Sub
-
-    'Získává data o počtech řádků a sloupců v jednotlivých sešitech
-    Public Function GetSheetParams(newSheetName As String, oldSheetName As String)
-
-        'Přiřazením globálním proměnným
-        OldSheet = OldWb.Worksheets(oldSheetName)
-        NewSheet = NewWb.Worksheets(newSheetName)
-
-        'Deklarace pole
-        Dim returnArr()() As String = New String(1)() {}
-        returnArr(0) = New String(1) {}
-        returnArr(1) = New String(1) {}
-
-        returnArr(0)(0) = CStr(GetLast(OldSheet, order:=Excel.XlSearchOrder.xlByColumns).Row)
-        returnArr(0)(1) = CStr(GetLast(NewSheet, order:=Excel.XlSearchOrder.xlByColumns).Row)
-
-        returnArr(1)(0) = CStr(GetLast(OldSheet, order:=Excel.XlSearchOrder.xlByRows).Column)
-        returnArr(1)(1) = CStr(GetLast(NewSheet, order:=Excel.XlSearchOrder.xlByRows).Column)
-
-        OldRows = returnArr(0)(0)
-        NewRows = returnArr(0)(1)
-
-        OldCols = returnArr(1)(0)
-        NewCols = returnArr(1)(1)
-
-        Return returnArr
-
-    End Function
-
-    'Vrátí poslední buňku ve sloupci/řádku
-    Private Function GetLast(ws As Excel.Worksheet, order As Excel.XlSearchOrder) As Excel.Range
-        GetLast = ws.Cells.Find(What:="*",
-                                  After:=ws.Cells(1, 1),
-                                  LookIn:=Excel.XlFindLookIn.xlFormulas,
-                                  LookAt:=Excel.XlLookAt.xlPart,
-                                  SearchOrder:=order,
-                                  SearchDirection:=Excel.XlSearchDirection.xlPrevious,
-                                  MatchCase:=False)
-    End Function
-
-    'Vypisuje listy sešitů do přehledového okénka
-    Sub WriteFileData(Wb As Excel.Workbook, FileName As String, Lbox As Object, nameLbl As Object)
-
-        'Vypsání názvu souboru do formuláře (Dir() vybere pouze název souboru a ne celou cestu)
-        nameLbl.Text = Dir(FileName)
-
-        'Vyčištění ListBoxu od popisku
-        Lbox.Items.Clear()
-        'Vypsání názvů listů ve vybraném sešitu
-        For Each sheet In Wb.Worksheets
-            Lbox.Items.Add(sheet.Name)
-        Next
-
-    End Sub
-
-    'Rozhoduje, jak se vyznačí změna
-    Private Sub CompareStyle(NewRng As Excel.Range, NewStr As String, OldStr As String)
-
-        'Jen obarvení
-        If FormSkompare.RBtnStyle1.Checked Then
-            NewRng.Interior.Color = FormSkompare.TBoxColor.BackColor
-            NewRng.Value = NewStr
-
-            'Obarvení a komentář
-        ElseIf FormSkompare.RBtnStyle2.Checked Then
-            NewRng.Interior.Color = FormSkompare.TBoxColor.BackColor
-            NewRng.Value = NewStr
-            'Vyhazuje výjimku, pokud je komentář prázdný
-            If OldStr = "" Then
-                NewRng.AddComment("-")
-            Else
-                NewRng.AddComment(OldStr)
-            End If
-
-            'Obarvení a řetězec
-        ElseIf FormSkompare.RBtnStyle3.Checked Then
-            NewRng.Interior.Color = FormSkompare.TBoxColor.BackColor
-            NewRng.Value = NewStr & " " _
-                & FormSkompare.TBoxStringStart.Text _
-                & OldStr _
-                & FormSkompare.TBoxStringEnd.Text _
-
-            'Jen komentář
-        ElseIf FormSkompare.RBtnStyle4.Checked Then
-            NewRng.Value = NewStr
-            'Vyhazuje výjimku, pokud je komentář prázdný
-            If OldStr = "" Then
-                NewRng.AddComment("-")
-            Else
-                NewRng.AddComment(OldStr)
-            End If
-
-            'Jen řetězec
-        ElseIf FormSkompare.RBtnStyle5.Checked Then
-            NewRng.Value = NewStr & " " _
-                & FormSkompare.TBoxStringStart.Text _
-                & OldStr _
-                & FormSkompare.TBoxStringEnd.Text _
-
-            'Řetězec v komentáři
-        ElseIf FormSkompare.RBtnStyle6.Checked Then
-            NewRng.Value = NewStr
-            'Vyhazuje výjimku, pokud je komentář prázdný
-            If OldStr = "" Then
-                NewRng.AddComment("-")
-            Else
-                NewRng.AddComment(FormSkompare.TBoxStringStart.Text _
-                                  & OldStr _
-                                  & FormSkompare.TBoxStringEnd.Text)
-            End If
+            'Zákaz přepočítávání, updateování apod. sešitu během výpočtu
+            With XlApp
+                .Calculation = Excel.XlCalculation.xlCalculationManual
+                .ScreenUpdating = False
+                .DisplayStatusBar = False
+                .EnableEvents = False
+            End With
 
         End If
+
     End Sub
 
-    'Vyznačuje změny v řádku
-    Sub CompareRow(NewA As Array, OldA As Array, NewR As Integer, OldR As Integer)
+    'Vrací číslo sloupce, podle kterého se vyhledává
+    Sub ColSelect(TboxVal As String)
 
-        'Deklarace pomocných proměnných
-        Dim NewVal As String
-        Dim OldVal As String
+        'Přepis písmene sloupce na číslo
+        Dim IntCatch As Integer
 
-        With NewResSheet.Rows(NewR)
+        Trace.WriteLine("Is column numeric")
+        'Je sloupec zadán jako číslo?
+        If IsNumeric(TboxVal) Then
 
-            For Val As Integer = 1 To Math.Min(NewCols, OldCols)
+            'Je číslo integer?
+            If Integer.TryParse(TboxVal, IntCatch) Then
 
-                NewVal = NewA.GetValue(NewR, Val)
-                OldVal = OldA.GetValue(OldR, Val)
+                ColLookup = TboxVal
+                'Trace.WriteLine("Is numeric")
 
-                If NewVal <> OldVal Then
+            Else
 
-                    CompareStyle(.Cells(1, Val), NewVal, OldVal)
+                MsgBox("Invalid input - Search by column must be integer")
+                Trace.WriteLine("Is numeric but not integer")
 
-                End If
+            End If
 
-            Next
+        Else
 
-        End With
+            Try
+
+                'Hodnota není číslo - písmeno se převede na číslo sloupce
+                ColLookup = NewSheet.Range(TboxVal & "1").Column
+                Trace.WriteLine("Is not numeric and can be turned to column")
+
+            Catch ex As Exception
+
+                MsgBox("Error: " & ex.Message)
+                Trace.WriteLine("Is not numeric and cannot be turned to column")
+
+            End Try
+
+        End If
 
     End Sub
 
@@ -316,88 +223,103 @@ Public Class SkompareMain
 
     End Sub
 
-    'Metoda pro vymazání nalezených (označeno zeleně) řádek ve "zrušeném" listu
-    Sub DeleteRows(sheet As Excel.Worksheet, indexArray() As Integer)
+    'Vyznačuje změny v řádku
+    Sub CompareRow(NewA As Array, OldA As Array, NewR As Integer, OldR As Integer)
 
-        For i As Integer = indexArray.Length - 1 To FormSkompare.TBoxStart.Text Step -1
+        'Deklarace pomocných proměnných
+        Dim NewVal As String
+        Dim OldVal As String
 
-            If indexArray(i) = 1 Then
+        With NewResSheet.Rows(NewR)
 
-                sheet.Rows(i).EntireRow.Delete
+            For Val As Integer = 1 To Math.Min(NewCols, OldCols)
 
-            End If
+                NewVal = NewA.GetValue(NewR, Val)
+                OldVal = OldA.GetValue(OldR, Val)
 
-        Next
+                If NewVal <> OldVal Then
+
+                    CompareStyle(.Cells(1, Val), NewVal, OldVal)
+
+                End If
+
+            Next
+
+        End With
 
     End Sub
 
-    'Vrátí pole indexů, podle kterých se vyhledává
-    Function GetIndArr(array As Object, col As Integer, len As Integer)
+    'Rozhoduje, jak se vyznačí změna
+    Private Sub CompareStyle(NewRng As Excel.Range, NewStr As String, OldStr As String)
 
-        Dim IndArr(len) As String
+        'Jen obarvení
+        If FormSkompare.RBtnStyle1.Checked Then
+            NewRng.Interior.Color = FormSkompare.TBoxColor.BackColor
+            NewRng.Value = NewStr
 
-        For i = 1 To len
-
-            IndArr(i) = array(i, col)
-
-        Next
-
-        Return IndArr
-
-    End Function
-
-    'Poskytuje hodnotu pro velikost pole (který sešit má víc řádků/sloupců)
-    Function GetBiggerDim(x As Integer, y As Integer) As Integer
-
-        If x > y Then
-            GetBiggerDim = x
-        Else
-            GetBiggerDim = y
-        End If
-
-        Return GetBiggerDim
-
-    End Function
-
-    'Vrací číslo sloupce, podle kterého se vyhledává
-    Sub ColSelect(TboxVal As String)
-
-        'Přepis písmene sloupce na číslo
-        Dim IntCatch As Integer
-
-        Trace.WriteLine("Is column numeric")
-        'Je sloupec zadán jako číslo?
-        If IsNumeric(TboxVal) Then
-
-            'Je číslo integer?
-            If Integer.TryParse(TboxVal, IntCatch) Then
-
-                ColLookup = TboxVal
-                'Trace.WriteLine("Is numeric")
-
+            'Obarvení a komentář
+        ElseIf FormSkompare.RBtnStyle2.Checked Then
+            NewRng.Interior.Color = FormSkompare.TBoxColor.BackColor
+            NewRng.Value = NewStr
+            'Vyhazuje výjimku, pokud je komentář prázdný
+            If OldStr = "" Then
+                NewRng.AddComment("-")
             Else
-
-                MsgBox("Invalid input - Search by column must be integer")
-                Trace.WriteLine("Is numeric but not integer")
-
+                NewRng.AddComment(OldStr)
             End If
 
-        Else
+            'Obarvení a řetězec
+        ElseIf FormSkompare.RBtnStyle3.Checked Then
+            NewRng.Interior.Color = FormSkompare.TBoxColor.BackColor
+            NewRng.Value = NewStr & " " _
+                & FormSkompare.TBoxStringStart.Text _
+                & OldStr _
+                & FormSkompare.TBoxStringEnd.Text _
 
-            Try
+            'Jen komentář
+        ElseIf FormSkompare.RBtnStyle4.Checked Then
+            NewRng.Value = NewStr
+            'Vyhazuje výjimku, pokud je komentář prázdný
+            If OldStr = "" Then
+                NewRng.AddComment("-")
+            Else
+                NewRng.AddComment(OldStr)
+            End If
 
-                'Hodnota není číslo - písmeno se převede na číslo sloupce
-                ColLookup = NewSheet.Range(TboxVal & "1").Column
-                Trace.WriteLine("Is not numeric and can be turned to column")
+            'Jen řetězec
+        ElseIf FormSkompare.RBtnStyle5.Checked Then
+            NewRng.Value = NewStr & " " _
+                & FormSkompare.TBoxStringStart.Text _
+                & OldStr _
+                & FormSkompare.TBoxStringEnd.Text _
 
-            Catch ex As Exception
-
-                MsgBox("Error: " & ex.Message)
-                Trace.WriteLine("Is not numeric and cannot be turned to column")
-
-            End Try
+            'Řetězec v komentáři
+        ElseIf FormSkompare.RBtnStyle6.Checked Then
+            NewRng.Value = NewStr
+            'Vyhazuje výjimku, pokud je komentář prázdný
+            If OldStr = "" Then
+                NewRng.AddComment("-")
+            Else
+                NewRng.AddComment(FormSkompare.TBoxStringStart.Text _
+                                  & OldStr _
+                                  & FormSkompare.TBoxStringEnd.Text)
+            End If
 
         End If
+    End Sub
+
+    'Metoda pro kopírování listů do výstupního souboru
+    Sub CopyOld(res As Excel.Workbook, old As Excel.Workbook)
+
+        Dim oldSheets As Excel.Sheets = old.Worksheets()
+        Dim x As Integer = 1
+
+        For Each sheet As Excel.Worksheet In oldSheets
+
+            sheet.Copy(After:=res.Worksheets(x))
+            x += 1
+
+        Next
 
     End Sub
 
@@ -425,47 +347,33 @@ Public Class SkompareMain
 
     End Sub
 
-    'Metoda pro kopírování listů do výstupního souboru
-    Sub CopyOld(res As Excel.Workbook, old As Excel.Workbook)
+    'Metoda pro vymazání nalezených (označeno zeleně) řádek ve "zrušeném" listu
+    Sub DeleteRows(sheet As Excel.Worksheet, indexArray() As Integer)
 
-        Dim oldSheets As Excel.Sheets = old.Worksheets()
-        Dim x As Integer = 1
+        For i As Integer = indexArray.Length - 1 To FormSkompare.TBoxStart.Text Step -1
 
-        For Each sheet As Excel.Worksheet In oldSheets
+            If indexArray(i) = 1 Then
 
-            sheet.Copy(After:=res.Worksheets(x))
-            x += 1
+                sheet.Rows(i).EntireRow.Delete
+
+            End If
 
         Next
 
     End Sub
 
-    'Metoda pro nastavení automatického přepočítávání/updatů sešitu
-    Sub autoUpdate(auto As Boolean)
+    'Poskytuje hodnotu pro velikost pole (který sešit má víc řádků/sloupců)
+    Function GetBiggerDim(x As Integer, y As Integer) As Integer
 
-        If auto = True Then
-
-            'Povolení přepočítávání, updateování apod. sešitu během výpočtu
-            With XlApp
-                .Calculation = Excel.XlCalculation.xlCalculationAutomatic
-                .ScreenUpdating = True
-                .DisplayStatusBar = True
-                .EnableEvents = True
-            End With
-
-        ElseIf auto = False Then
-
-            'Zákaz přepočítávání, updateování apod. sešitu během výpočtu
-            With XlApp
-                .Calculation = Excel.XlCalculation.xlCalculationManual
-                .ScreenUpdating = False
-                .DisplayStatusBar = False
-                .EnableEvents = False
-            End With
-
+        If x > y Then
+            GetBiggerDim = x
+        Else
+            GetBiggerDim = y
         End If
 
-    End Sub
+        Return GetBiggerDim
+
+    End Function
 
     'Převádí číslo sloupce na písmeno
     Public Function GetExcelColumnName(columnNumber As Integer) As String
@@ -481,4 +389,92 @@ Public Class SkompareMain
 
         Return columnName
     End Function
+
+    'Vrátí pole indexů, podle kterých se vyhledává
+    Function GetIndArr(array As Object, col As Integer, len As Integer)
+
+        Dim IndArr(len) As String
+
+        For i = 1 To len
+
+            IndArr(i) = array(i, col)
+
+        Next
+
+        Return IndArr
+
+    End Function
+
+    'Vrátí poslední buňku ve sloupci/řádku
+    Private Function GetLast(ws As Excel.Worksheet, order As Excel.XlSearchOrder) As Excel.Range
+        GetLast = ws.Cells.Find(What:="*",
+                                  After:=ws.Cells(1, 1),
+                                  LookIn:=Excel.XlFindLookIn.xlFormulas,
+                                  LookAt:=Excel.XlLookAt.xlPart,
+                                  SearchOrder:=order,
+                                  SearchDirection:=Excel.XlSearchDirection.xlPrevious,
+                                  MatchCase:=False)
+    End Function
+
+    'Získává data o počtech řádků a sloupců v jednotlivých sešitech
+    Public Function GetSheetParams(newSheetName As String, oldSheetName As String)
+
+        'Přiřazením globálním proměnným
+        OldSheet = OldWb.Worksheets(oldSheetName)
+        NewSheet = NewWb.Worksheets(newSheetName)
+
+        'Deklarace pole
+        Dim returnArr()() As String = New String(1)() {}
+        returnArr(0) = New String(1) {}
+        returnArr(1) = New String(1) {}
+
+        returnArr(0)(0) = CStr(GetLast(OldSheet, order:=Excel.XlSearchOrder.xlByColumns).Row)
+        returnArr(0)(1) = CStr(GetLast(NewSheet, order:=Excel.XlSearchOrder.xlByColumns).Row)
+
+        returnArr(1)(0) = CStr(GetLast(OldSheet, order:=Excel.XlSearchOrder.xlByRows).Column)
+        returnArr(1)(1) = CStr(GetLast(NewSheet, order:=Excel.XlSearchOrder.xlByRows).Column)
+
+        OldRows = returnArr(0)(0)
+        NewRows = returnArr(0)(1)
+
+        OldCols = returnArr(1)(0)
+        NewCols = returnArr(1)(1)
+
+        Return returnArr
+
+    End Function
+
+    'Otevírá sešity pro porovnání
+    Public Sub OpenExcel(FilePath As String, sender As Object)
+
+        'Výběr, které objekty se upraví podle stisknutého tlačítka
+        If sender Is FormSkompare.BtnNew Then 'Stisknuto "nové" tlačítko
+
+            'Otevření souboru v aplikaci Excel
+            NewWb = XlApp.Workbooks.Open(FilePath, [ReadOnly]:=True)
+
+        ElseIf sender Is FormSkompare.BtnOld Then 'Stisknuto "staré" tlačítko
+
+            'Otevření souboru v aplikaci Excel
+            OldWb = XlApp.Workbooks.Open(FilePath, [ReadOnly]:=True)
+
+        End If
+
+    End Sub
+
+    'Vypisuje listy sešitů do přehledového okénka
+    Sub WriteFileData(Wb As Excel.Workbook, FileName As String, Lbox As Object, nameLbl As Object)
+
+        'Vypsání názvu souboru do formuláře (Dir() vybere pouze název souboru a ne celou cestu)
+        nameLbl.Text = Dir(FileName)
+
+        'Vyčištění ListBoxu od popisku
+        Lbox.Items.Clear()
+        'Vypsání názvů listů ve vybraném sešitu
+        For Each sheet In Wb.Worksheets
+            Lbox.Items.Add(sheet.Name)
+        Next
+
+    End Sub
+
 End Class
