@@ -499,17 +499,21 @@ Public Class SkompareMain
     End Sub
 
     'Vypisuje listy sešitů do přehledového okénka
-    Sub WriteFileData(Wb As Excel.Workbook, FileName As String, Lbox As Object, nameLbl As Object)
+    Sub WriteFileData(Wb As Excel.Workbook, FileName As String, Cbox As Object, nameLbl As Object)
 
         'Vypsání názvu souboru do formuláře (Dir() vybere pouze název souboru a ne celou cestu)
         nameLbl.Text = Dir(FileName)
 
         'Vyčištění ListBoxu od popisku
-        Lbox.Items.Clear()
+        Cbox.Items.Clear()
         'Vypsání názvů listů ve vybraném sešitu
         For Each sheet In Wb.Worksheets
-            Lbox.Items.Add(sheet.Name)
+            Cbox.Items.Add(sheet.Name)
         Next
+
+        'Nastaví do comboboxu hodnotu prvního listu
+        Dim sheetOne As Excel.Worksheet = Wb.Worksheets(1)
+        Cbox.SelectedIndex = Cbox.FindStringExact(sheetOne.Name)
 
     End Sub
 

@@ -23,13 +23,13 @@ Public Class FormSkompare
         Dim statsArr()() As String
 
         'Zkontroluje, zda je vybráno
-        If LBoxNewSheets.SelectedIndex >= 0 And
-                LBoxOldSheets.SelectedIndex >= 0 Then
+        If CBoxNewSheets.SelectedIndex >= 0 And
+                CBoxOldSheets.SelectedIndex >= 0 Then
 
             'Získání parametrů (názvy, řádky, sloupce) vybraných listů
             Try
-                statsArr = skompareMain.GetSheetParams(LBoxNewSheets.GetItemText(LBoxNewSheets.SelectedItem),
-                                                        LBoxOldSheets.GetItemText(LBoxOldSheets.SelectedItem))
+                statsArr = skompareMain.GetSheetParams(CBoxNewSheets.GetItemText(CBoxNewSheets.SelectedItem),
+                                                        CBoxOldSheets.GetItemText(CBoxOldSheets.SelectedItem))
 
             Catch ex As Exception When TypeOf ex Is NullReferenceException _
                                 OrElse TypeOf ex Is System.Runtime.InteropServices.COMException
@@ -41,9 +41,9 @@ Public Class FormSkompare
             'Vypsání parametrů do textboxu
             TBoxStats.AppendText("Sheet name:" _
                                 + vbTab _
-                                + LBoxOldSheets.GetItemText(LBoxOldSheets.SelectedItem) _
+                                + CBoxOldSheets.GetItemText(CBoxOldSheets.SelectedItem) _
                                 + vbTab _
-                                + LBoxNewSheets.GetItemText(LBoxNewSheets.SelectedItem))
+                                + CBoxNewSheets.GetItemText(CBoxNewSheets.SelectedItem))
             TBoxStats.AppendText(Environment.NewLine _
                                 + "Row count:" _
                                 + vbTab _
@@ -93,12 +93,12 @@ Public Class FormSkompare
         'Výběr, které objekty se upraví podle stisknutého tlačítka
         If sender Is BtnNew Then 'Stisknuto "nové" tlačítko
             nameLbl = LblNewFileName
-            Lbox = LBoxNewSheets
-            skompareMain.WriteFileData(skompareMain.NewWb, FileName, LBoxNewSheets, LblNewFileName)
+            Lbox = CBoxNewSheets
+            skompareMain.WriteFileData(skompareMain.NewWb, FileName, CBoxNewSheets, LblNewFileName)
         ElseIf sender Is BtnOld Then 'Stisknuto "staré" tlačítko
             nameLbl = LblOldFileName
-            Lbox = LBoxOldSheets
-            skompareMain.WriteFileData(skompareMain.OldWb, FileName, LBoxOldSheets, LblOldFileName)
+            Lbox = CBoxOldSheets
+            skompareMain.WriteFileData(skompareMain.OldWb, FileName, CBoxOldSheets, LblOldFileName)
         End If
 
     End Sub
@@ -121,8 +121,8 @@ Public Class FormSkompare
 
             'Získání parametrů (názvy, řádky, sloupce) vybraných listů
             Trace.WriteLine("Getting sheets parameters")
-            skompareMain.GetSheetParams(LBoxNewSheets.GetItemText(LBoxNewSheets.SelectedItem),
-                                        LBoxOldSheets.GetItemText(LBoxOldSheets.SelectedItem))
+            skompareMain.GetSheetParams(CBoxNewSheets.GetItemText(CBoxNewSheets.SelectedItem),
+                                        CBoxOldSheets.GetItemText(CBoxOldSheets.SelectedItem))
 
             'Zobrazení formuláře s progress barem
             Trace.WriteLine("Showing progress bar")
@@ -342,8 +342,8 @@ Public Class FormSkompare
 
     'Najde velikost záhlaví a pozici UID kódu podle pojmenovaného rozsahu v sešitu
     Private Sub BtnGetStartPoint_Click(sender As Object, e As EventArgs) Handles BtnGetStartPoint.Click
-        skompareMain.GetSheetParams(LBoxNewSheets.GetItemText(LBoxNewSheets.SelectedItem),
-                                    LBoxOldSheets.GetItemText(LBoxOldSheets.SelectedItem))
+        skompareMain.GetSheetParams(CBoxNewSheets.GetItemText(CBoxNewSheets.SelectedItem),
+                                    CBoxOldSheets.GetItemText(CBoxOldSheets.SelectedItem))
         TBoxColSelect.Text = skompareMain.GetExcelColumnName(skompareMain.NewSheet.Range("UID").Column)
         TBoxStart.Text = skompareMain.NewSheet.Range("Header").Rows.Count + 1
     End Sub

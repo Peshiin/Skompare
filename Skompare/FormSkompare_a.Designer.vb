@@ -28,12 +28,10 @@ Partial Class FormSkompare
         Me.LblNewFile = New System.Windows.Forms.Label()
         Me.LblNewFileName = New System.Windows.Forms.Label()
         Me.LblNewSheets = New System.Windows.Forms.Label()
-        Me.LBoxNewSheets = New System.Windows.Forms.ListBox()
         Me.BtnOld = New System.Windows.Forms.Button()
         Me.LblOldFile = New System.Windows.Forms.Label()
         Me.LblOldSheets = New System.Windows.Forms.Label()
         Me.LblOldFileName = New System.Windows.Forms.Label()
-        Me.LBoxOldSheets = New System.Windows.Forms.ListBox()
         Me.BtnComp = New System.Windows.Forms.Button()
         Me.TBoxStats = New System.Windows.Forms.RichTextBox()
         Me.BtnStats = New System.Windows.Forms.Button()
@@ -65,6 +63,8 @@ Partial Class FormSkompare
         Me.PanelBottom = New System.Windows.Forms.Panel()
         Me.lblTest = New System.Windows.Forms.Label()
         Me.BtnAdvanced = New System.Windows.Forms.Button()
+        Me.CBoxOldSheets = New System.Windows.Forms.ComboBox()
+        Me.CBoxNewSheets = New System.Windows.Forms.ComboBox()
         Me.GBoxCompareStyle.SuspendLayout()
         Me.GBoxStatsDiff.SuspendLayout()
         Me.Panel1.SuspendLayout()
@@ -96,13 +96,6 @@ Partial Class FormSkompare
         resources.ApplyResources(Me.LblNewSheets, "LblNewSheets")
         Me.LblNewSheets.Name = "LblNewSheets"
         '
-        'LBoxNewSheets
-        '
-        resources.ApplyResources(Me.LBoxNewSheets, "LBoxNewSheets")
-        Me.LBoxNewSheets.FormattingEnabled = True
-        Me.LBoxNewSheets.Items.AddRange(New Object() {resources.GetString("LBoxNewSheets.Items")})
-        Me.LBoxNewSheets.Name = "LBoxNewSheets"
-        '
         'BtnOld
         '
         resources.ApplyResources(Me.BtnOld, "BtnOld")
@@ -123,13 +116,6 @@ Partial Class FormSkompare
         '
         resources.ApplyResources(Me.LblOldFileName, "LblOldFileName")
         Me.LblOldFileName.Name = "LblOldFileName"
-        '
-        'LBoxOldSheets
-        '
-        resources.ApplyResources(Me.LBoxOldSheets, "LBoxOldSheets")
-        Me.LBoxOldSheets.FormattingEnabled = True
-        Me.LBoxOldSheets.Items.AddRange(New Object() {resources.GetString("LBoxOldSheets.Items")})
-        Me.LBoxOldSheets.Name = "LBoxOldSheets"
         '
         'BtnComp
         '
@@ -324,17 +310,29 @@ Partial Class FormSkompare
         Me.BtnAdvanced.Name = "BtnAdvanced"
         Me.BtnAdvanced.UseVisualStyleBackColor = True
         '
+        'CBoxOldSheets
+        '
+        resources.ApplyResources(Me.CBoxOldSheets, "CBoxOldSheets")
+        Me.CBoxOldSheets.FormattingEnabled = True
+        Me.CBoxOldSheets.Name = "CBoxOldSheets"
+        '
+        'CBoxNewSheets
+        '
+        resources.ApplyResources(Me.CBoxNewSheets, "CBoxNewSheets")
+        Me.CBoxNewSheets.FormattingEnabled = True
+        Me.CBoxNewSheets.Name = "CBoxNewSheets"
+        '
         'FormSkompare
         '
         resources.ApplyResources(Me, "$this")
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+        Me.Controls.Add(Me.CBoxNewSheets)
+        Me.Controls.Add(Me.CBoxOldSheets)
         Me.Controls.Add(Me.BtnAdvanced)
         Me.Controls.Add(Me.BtnTest)
         Me.Controls.Add(Me.GBoxCompareStyle)
         Me.Controls.Add(Me.GBoxStatsDiff)
         Me.Controls.Add(Me.TBoxStats)
-        Me.Controls.Add(Me.LBoxOldSheets)
-        Me.Controls.Add(Me.LBoxNewSheets)
         Me.Controls.Add(Me.LblOldSheets)
         Me.Controls.Add(Me.LblNewSheets)
         Me.Controls.Add(Me.BtnStats)
@@ -361,12 +359,10 @@ Partial Class FormSkompare
     Friend WithEvents LblNewFile As Label
     Friend WithEvents LblNewFileName As Label
     Friend WithEvents LblNewSheets As Label
-    Friend WithEvents LBoxNewSheets As ListBox
     Friend WithEvents BtnOld As Button
     Friend WithEvents LblOldFile As Label
     Friend WithEvents LblOldSheets As Label
     Friend WithEvents LblOldFileName As Label
-    Friend WithEvents LBoxOldSheets As ListBox
     Friend WithEvents BtnComp As Button
     Friend WithEvents TBoxStats As RichTextBox
     Friend WithEvents BtnStats As Button
@@ -398,4 +394,6 @@ Partial Class FormSkompare
     Friend WithEvents PanelBottom As Panel
     Friend WithEvents lblTest As Label
     Friend WithEvents BtnAdvanced As Button
+    Friend WithEvents CBoxOldSheets As ComboBox
+    Friend WithEvents CBoxNewSheets As ComboBox
 End Class

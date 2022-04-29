@@ -122,7 +122,7 @@
     <value>Microsoft Sans Serif, 12pt</value>
   </data>
   <data name="BtnNew.Location" type="System.Drawing.Point, System.Drawing">
-    <value>628, 30</value>
+    <value>619, 30</value>
   </data>
   <data name="BtnNew.Size" type="System.Drawing.Size, System.Drawing">
     <value>153, 38</value>
@@ -219,7 +219,7 @@
     <value>Microsoft Sans Serif, 14pt</value>
   </data>
   <data name="LblNewSheets.Location" type="System.Drawing.Point, System.Drawing">
-    <value>409, 129</value>
+    <value>420, 118</value>
   </data>
   <data name="LblNewSheets.Size" type="System.Drawing.Size, System.Drawing">
     <value>118, 24</value>
@@ -242,41 +242,11 @@
   <data name="&gt;&gt;LblNewSheets.ZOrder" xml:space="preserve">
     <value>8</value>
   </data>
-  <data name="LBoxNewSheets.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Microsoft Sans Serif, 12pt</value>
-  </data>
-  <data name="LBoxNewSheets.ItemHeight" type="System.Int32, mscorlib">
-    <value>20</value>
-  </data>
-  <data name="LBoxNewSheets.Items" xml:space="preserve">
-    <value>*No file Selected</value>
-  </data>
-  <data name="LBoxNewSheets.Location" type="System.Drawing.Point, System.Drawing">
-    <value>554, 129</value>
-  </data>
-  <data name="LBoxNewSheets.Size" type="System.Drawing.Size, System.Drawing">
-    <value>215, 64</value>
-  </data>
-  <data name="LBoxNewSheets.TabIndex" type="System.Int32, mscorlib">
-    <value>4</value>
-  </data>
-  <data name="&gt;&gt;LBoxNewSheets.Name" xml:space="preserve">
-    <value>LBoxNewSheets</value>
-  </data>
-  <data name="&gt;&gt;LBoxNewSheets.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ListBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;LBoxNewSheets.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;LBoxNewSheets.ZOrder" xml:space="preserve">
-    <value>6</value>
-  </data>
   <data name="BtnOld.Font" type="System.Drawing.Font, System.Drawing">
     <value>Microsoft Sans Serif, 12pt</value>
   </data>
   <data name="BtnOld.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 30</value>
+    <value>12, 30</value>
   </data>
   <data name="BtnOld.Size" type="System.Drawing.Size, System.Drawing">
     <value>153, 38</value>
@@ -306,7 +276,7 @@
     <value>Microsoft Sans Serif, 14pt</value>
   </data>
   <data name="LblOldFile.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 71</value>
+    <value>12, 71</value>
   </data>
   <data name="LblOldFile.Size" type="System.Drawing.Size, System.Drawing">
     <value>126, 24</value>
@@ -336,7 +306,7 @@
     <value>Microsoft Sans Serif, 14pt</value>
   </data>
   <data name="LblOldSheets.Location" type="System.Drawing.Point, System.Drawing">
-    <value>17, 129</value>
+    <value>12, 118</value>
   </data>
   <data name="LblOldSheets.Size" type="System.Drawing.Size, System.Drawing">
     <value>118, 24</value>
@@ -366,7 +336,7 @@
     <value>Microsoft Sans Serif, 14pt, style=Italic</value>
   </data>
   <data name="LblOldFileName.Location" type="System.Drawing.Point, System.Drawing">
-    <value>143, 71</value>
+    <value>152, 71</value>
   </data>
   <data name="LblOldFileName.MaximumSize" type="System.Drawing.Size, System.Drawing">
     <value>200, 48</value>
@@ -390,36 +360,6 @@
     <value>Panel1</value>
   </data>
   <data name="&gt;&gt;LblOldFileName.ZOrder" xml:space="preserve">
-    <value>5</value>
-  </data>
-  <data name="LBoxOldSheets.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Microsoft Sans Serif, 12pt</value>
-  </data>
-  <data name="LBoxOldSheets.ItemHeight" type="System.Int32, mscorlib">
-    <value>20</value>
-  </data>
-  <data name="LBoxOldSheets.Items" xml:space="preserve">
-    <value>*No file Selected</value>
-  </data>
-  <data name="LBoxOldSheets.Location" type="System.Drawing.Point, System.Drawing">
-    <value>161, 129</value>
-  </data>
-  <data name="LBoxOldSheets.Size" type="System.Drawing.Size, System.Drawing">
-    <value>215, 64</value>
-  </data>
-  <data name="LBoxOldSheets.TabIndex" type="System.Int32, mscorlib">
-    <value>4</value>
-  </data>
-  <data name="&gt;&gt;LBoxOldSheets.Name" xml:space="preserve">
-    <value>LBoxOldSheets</value>
-  </data>
-  <data name="&gt;&gt;LBoxOldSheets.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ListBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;LBoxOldSheets.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;LBoxOldSheets.ZOrder" xml:space="preserve">
     <value>5</value>
   </data>
   <data name="BtnComp.Font" type="System.Drawing.Font, System.Drawing">
@@ -474,7 +414,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;TBoxStats.ZOrder" xml:space="preserve">
-    <value>4</value>
+    <value>6</value>
   </data>
   <data name="BtnStats.Font" type="System.Drawing.Font, System.Drawing">
     <value>Microsoft Sans Serif, 15pt</value>
@@ -502,6 +442,105 @@
   </data>
   <data name="&gt;&gt;BtnStats.ZOrder" xml:space="preserve">
     <value>9</value>
+  </data>
+  <data name="&gt;&gt;RBtnStyle5.Name" xml:space="preserve">
+    <value>RBtnStyle5</value>
+  </data>
+  <data name="&gt;&gt;RBtnStyle5.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;RBtnStyle5.Parent" xml:space="preserve">
+    <value>GBoxCompareStyle</value>
+  </data>
+  <data name="&gt;&gt;RBtnStyle5.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;RBtnStyle6.Name" xml:space="preserve">
+    <value>RBtnStyle6</value>
+  </data>
+  <data name="&gt;&gt;RBtnStyle6.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;RBtnStyle6.Parent" xml:space="preserve">
+    <value>GBoxCompareStyle</value>
+  </data>
+  <data name="&gt;&gt;RBtnStyle6.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;RBtnStyle4.Name" xml:space="preserve">
+    <value>RBtnStyle4</value>
+  </data>
+  <data name="&gt;&gt;RBtnStyle4.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;RBtnStyle4.Parent" xml:space="preserve">
+    <value>GBoxCompareStyle</value>
+  </data>
+  <data name="&gt;&gt;RBtnStyle4.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="&gt;&gt;RBtnStyle3.Name" xml:space="preserve">
+    <value>RBtnStyle3</value>
+  </data>
+  <data name="&gt;&gt;RBtnStyle3.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;RBtnStyle3.Parent" xml:space="preserve">
+    <value>GBoxCompareStyle</value>
+  </data>
+  <data name="&gt;&gt;RBtnStyle3.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="&gt;&gt;RBtnStyle2.Name" xml:space="preserve">
+    <value>RBtnStyle2</value>
+  </data>
+  <data name="&gt;&gt;RBtnStyle2.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;RBtnStyle2.Parent" xml:space="preserve">
+    <value>GBoxCompareStyle</value>
+  </data>
+  <data name="&gt;&gt;RBtnStyle2.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="&gt;&gt;RBtnStyle1.Name" xml:space="preserve">
+    <value>RBtnStyle1</value>
+  </data>
+  <data name="&gt;&gt;RBtnStyle1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;RBtnStyle1.Parent" xml:space="preserve">
+    <value>GBoxCompareStyle</value>
+  </data>
+  <data name="&gt;&gt;RBtnStyle1.ZOrder" xml:space="preserve">
+    <value>5</value>
+  </data>
+  <data name="GBoxCompareStyle.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Microsoft Sans Serif, 10pt</value>
+  </data>
+  <data name="GBoxCompareStyle.Location" type="System.Drawing.Point, System.Drawing">
+    <value>554, 216</value>
+  </data>
+  <data name="GBoxCompareStyle.Size" type="System.Drawing.Size, System.Drawing">
+    <value>215, 183</value>
+  </data>
+  <data name="GBoxCompareStyle.TabIndex" type="System.Int32, mscorlib">
+    <value>6</value>
+  </data>
+  <data name="GBoxCompareStyle.Text" xml:space="preserve">
+    <value>Comparison style</value>
+  </data>
+  <data name="&gt;&gt;GBoxCompareStyle.Name" xml:space="preserve">
+    <value>GBoxCompareStyle</value>
+  </data>
+  <data name="&gt;&gt;GBoxCompareStyle.Type" xml:space="preserve">
+    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;GBoxCompareStyle.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;GBoxCompareStyle.ZOrder" xml:space="preserve">
+    <value>4</value>
   </data>
   <data name="RBtnStyle5.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -665,32 +704,176 @@
   <data name="&gt;&gt;RBtnStyle1.ZOrder" xml:space="preserve">
     <value>5</value>
   </data>
-  <data name="GBoxCompareStyle.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Microsoft Sans Serif, 10pt</value>
+  <data name="&gt;&gt;TBoxColSelectSecondary.Name" xml:space="preserve">
+    <value>TBoxColSelectSecondary</value>
   </data>
-  <data name="GBoxCompareStyle.Location" type="System.Drawing.Point, System.Drawing">
-    <value>554, 216</value>
+  <data name="&gt;&gt;TBoxColSelectSecondary.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="GBoxCompareStyle.Size" type="System.Drawing.Size, System.Drawing">
-    <value>215, 183</value>
+  <data name="&gt;&gt;TBoxColSelectSecondary.Parent" xml:space="preserve">
+    <value>GBoxStatsDiff</value>
   </data>
-  <data name="GBoxCompareStyle.TabIndex" type="System.Int32, mscorlib">
+  <data name="&gt;&gt;TBoxColSelectSecondary.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;BtnColor.Name" xml:space="preserve">
+    <value>BtnColor</value>
+  </data>
+  <data name="&gt;&gt;BtnColor.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;BtnColor.Parent" xml:space="preserve">
+    <value>GBoxStatsDiff</value>
+  </data>
+  <data name="&gt;&gt;BtnColor.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;TBoxColor.Name" xml:space="preserve">
+    <value>TBoxColor</value>
+  </data>
+  <data name="&gt;&gt;TBoxColor.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;TBoxColor.Parent" xml:space="preserve">
+    <value>GBoxStatsDiff</value>
+  </data>
+  <data name="&gt;&gt;TBoxColor.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="&gt;&gt;LblStringEnd.Name" xml:space="preserve">
+    <value>LblStringEnd</value>
+  </data>
+  <data name="&gt;&gt;LblStringEnd.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;LblStringEnd.Parent" xml:space="preserve">
+    <value>GBoxStatsDiff</value>
+  </data>
+  <data name="&gt;&gt;LblStringEnd.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="&gt;&gt;LblStringStart.Name" xml:space="preserve">
+    <value>LblStringStart</value>
+  </data>
+  <data name="&gt;&gt;LblStringStart.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;LblStringStart.Parent" xml:space="preserve">
+    <value>GBoxStatsDiff</value>
+  </data>
+  <data name="&gt;&gt;LblStringStart.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="&gt;&gt;LblColor.Name" xml:space="preserve">
+    <value>LblColor</value>
+  </data>
+  <data name="&gt;&gt;LblColor.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;LblColor.Parent" xml:space="preserve">
+    <value>GBoxStatsDiff</value>
+  </data>
+  <data name="&gt;&gt;LblColor.ZOrder" xml:space="preserve">
+    <value>5</value>
+  </data>
+  <data name="&gt;&gt;Label1.Name" xml:space="preserve">
+    <value>Label1</value>
+  </data>
+  <data name="&gt;&gt;Label1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;Label1.Parent" xml:space="preserve">
+    <value>GBoxStatsDiff</value>
+  </data>
+  <data name="&gt;&gt;Label1.ZOrder" xml:space="preserve">
     <value>6</value>
   </data>
-  <data name="GBoxCompareStyle.Text" xml:space="preserve">
-    <value>Comparison style</value>
+  <data name="&gt;&gt;TBoxStringEnd.Name" xml:space="preserve">
+    <value>TBoxStringEnd</value>
   </data>
-  <data name="&gt;&gt;GBoxCompareStyle.Name" xml:space="preserve">
-    <value>GBoxCompareStyle</value>
+  <data name="&gt;&gt;TBoxStringEnd.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;GBoxCompareStyle.Type" xml:space="preserve">
+  <data name="&gt;&gt;TBoxStringEnd.Parent" xml:space="preserve">
+    <value>GBoxStatsDiff</value>
+  </data>
+  <data name="&gt;&gt;TBoxStringEnd.ZOrder" xml:space="preserve">
+    <value>7</value>
+  </data>
+  <data name="&gt;&gt;TBoxColSelect.Name" xml:space="preserve">
+    <value>TBoxColSelect</value>
+  </data>
+  <data name="&gt;&gt;TBoxColSelect.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;TBoxColSelect.Parent" xml:space="preserve">
+    <value>GBoxStatsDiff</value>
+  </data>
+  <data name="&gt;&gt;TBoxColSelect.ZOrder" xml:space="preserve">
+    <value>8</value>
+  </data>
+  <data name="&gt;&gt;TBoxStringStart.Name" xml:space="preserve">
+    <value>TBoxStringStart</value>
+  </data>
+  <data name="&gt;&gt;TBoxStringStart.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;TBoxStringStart.Parent" xml:space="preserve">
+    <value>GBoxStatsDiff</value>
+  </data>
+  <data name="&gt;&gt;TBoxStringStart.ZOrder" xml:space="preserve">
+    <value>9</value>
+  </data>
+  <data name="&gt;&gt;LblStart.Name" xml:space="preserve">
+    <value>LblStart</value>
+  </data>
+  <data name="&gt;&gt;LblStart.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;LblStart.Parent" xml:space="preserve">
+    <value>GBoxStatsDiff</value>
+  </data>
+  <data name="&gt;&gt;LblStart.ZOrder" xml:space="preserve">
+    <value>10</value>
+  </data>
+  <data name="&gt;&gt;TBoxStart.Name" xml:space="preserve">
+    <value>TBoxStart</value>
+  </data>
+  <data name="&gt;&gt;TBoxStart.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;TBoxStart.Parent" xml:space="preserve">
+    <value>GBoxStatsDiff</value>
+  </data>
+  <data name="&gt;&gt;TBoxStart.ZOrder" xml:space="preserve">
+    <value>11</value>
+  </data>
+  <data name="GBoxStatsDiff.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Microsoft Sans Serif, 10pt</value>
+  </data>
+  <data name="GBoxStatsDiff.Location" type="System.Drawing.Point, System.Drawing">
+    <value>255, 216</value>
+  </data>
+  <data name="GBoxStatsDiff.Size" type="System.Drawing.Size, System.Drawing">
+    <value>293, 183</value>
+  </data>
+  <data name="GBoxStatsDiff.TabIndex" type="System.Int32, mscorlib">
+    <value>6</value>
+  </data>
+  <data name="GBoxStatsDiff.Text" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="&gt;&gt;GBoxStatsDiff.Name" xml:space="preserve">
+    <value>GBoxStatsDiff</value>
+  </data>
+  <data name="&gt;&gt;GBoxStatsDiff.Type" xml:space="preserve">
     <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;GBoxCompareStyle.Parent" xml:space="preserve">
+  <data name="&gt;&gt;GBoxStatsDiff.Parent" xml:space="preserve">
     <value>$this</value>
   </data>
-  <data name="&gt;&gt;GBoxCompareStyle.ZOrder" xml:space="preserve">
-    <value>2</value>
+  <data name="&gt;&gt;GBoxStatsDiff.ZOrder" xml:space="preserve">
+    <value>5</value>
   </data>
   <data name="TBoxColSelectSecondary.Location" type="System.Drawing.Point, System.Drawing">
     <value>260, 48</value>
@@ -1017,33 +1200,6 @@
   <data name="&gt;&gt;TBoxStart.ZOrder" xml:space="preserve">
     <value>11</value>
   </data>
-  <data name="GBoxStatsDiff.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Microsoft Sans Serif, 10pt</value>
-  </data>
-  <data name="GBoxStatsDiff.Location" type="System.Drawing.Point, System.Drawing">
-    <value>255, 216</value>
-  </data>
-  <data name="GBoxStatsDiff.Size" type="System.Drawing.Size, System.Drawing">
-    <value>293, 183</value>
-  </data>
-  <data name="GBoxStatsDiff.TabIndex" type="System.Int32, mscorlib">
-    <value>6</value>
-  </data>
-  <data name="GBoxStatsDiff.Text" xml:space="preserve">
-    <value>Settings</value>
-  </data>
-  <data name="&gt;&gt;GBoxStatsDiff.Name" xml:space="preserve">
-    <value>GBoxStatsDiff</value>
-  </data>
-  <data name="&gt;&gt;GBoxStatsDiff.Type" xml:space="preserve">
-    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;GBoxStatsDiff.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;GBoxStatsDiff.ZOrder" xml:space="preserve">
-    <value>3</value>
-  </data>
   <metadata name="ColorDialog1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>138, 17</value>
   </metadata>
@@ -1051,7 +1207,7 @@
     <value>True</value>
   </data>
   <data name="BtnLang.Location" type="System.Drawing.Point, System.Drawing">
-    <value>741, 2</value>
+    <value>732, 2</value>
   </data>
   <data name="BtnLang.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>2, 2, 2, 2</value>
@@ -1102,7 +1258,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;BtnTest.ZOrder" xml:space="preserve">
-    <value>1</value>
+    <value>3</value>
   </data>
   <data name="BtnGetStartPoint.Font" type="System.Drawing.Font, System.Drawing">
     <value>Microsoft Sans Serif, 15pt</value>
@@ -1158,21 +1314,6 @@
   <data name="&gt;&gt;Panel1.ZOrder" xml:space="preserve">
     <value>12</value>
   </data>
-  <data name="lblTest.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="lblTest.Location" type="System.Drawing.Point, System.Drawing">
-    <value>12, 14</value>
-  </data>
-  <data name="lblTest.Size" type="System.Drawing.Size, System.Drawing">
-    <value>39, 13</value>
-  </data>
-  <data name="lblTest.TabIndex" type="System.Int32, mscorlib">
-    <value>0</value>
-  </data>
-  <data name="lblTest.Text" xml:space="preserve">
-    <value>Label2</value>
-  </data>
   <data name="&gt;&gt;lblTest.Name" xml:space="preserve">
     <value>lblTest</value>
   </data>
@@ -1209,6 +1350,33 @@
   <data name="&gt;&gt;PanelBottom.ZOrder" xml:space="preserve">
     <value>13</value>
   </data>
+  <data name="lblTest.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="lblTest.Location" type="System.Drawing.Point, System.Drawing">
+    <value>12, 14</value>
+  </data>
+  <data name="lblTest.Size" type="System.Drawing.Size, System.Drawing">
+    <value>39, 13</value>
+  </data>
+  <data name="lblTest.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="lblTest.Text" xml:space="preserve">
+    <value>Label2</value>
+  </data>
+  <data name="&gt;&gt;lblTest.Name" xml:space="preserve">
+    <value>lblTest</value>
+  </data>
+  <data name="&gt;&gt;lblTest.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lblTest.Parent" xml:space="preserve">
+    <value>PanelBottom</value>
+  </data>
+  <data name="&gt;&gt;lblTest.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
   <data name="BtnAdvanced.Font" type="System.Drawing.Font, System.Drawing">
     <value>Microsoft Sans Serif, 15pt</value>
   </data>
@@ -1237,6 +1405,54 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;BtnAdvanced.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="CBoxOldSheets.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Microsoft Sans Serif, 12pt</value>
+  </data>
+  <data name="CBoxOldSheets.Location" type="System.Drawing.Point, System.Drawing">
+    <value>136, 118</value>
+  </data>
+  <data name="CBoxOldSheets.Size" type="System.Drawing.Size, System.Drawing">
+    <value>240, 28</value>
+  </data>
+  <data name="CBoxOldSheets.TabIndex" type="System.Int32, mscorlib">
+    <value>14</value>
+  </data>
+  <data name="&gt;&gt;CBoxOldSheets.Name" xml:space="preserve">
+    <value>CBoxOldSheets</value>
+  </data>
+  <data name="&gt;&gt;CBoxOldSheets.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;CBoxOldSheets.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;CBoxOldSheets.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="CBoxNewSheets.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Microsoft Sans Serif, 12pt</value>
+  </data>
+  <data name="CBoxNewSheets.Location" type="System.Drawing.Point, System.Drawing">
+    <value>542, 118</value>
+  </data>
+  <data name="CBoxNewSheets.Size" type="System.Drawing.Size, System.Drawing">
+    <value>240, 28</value>
+  </data>
+  <data name="CBoxNewSheets.TabIndex" type="System.Int32, mscorlib">
+    <value>14</value>
+  </data>
+  <data name="&gt;&gt;CBoxNewSheets.Name" xml:space="preserve">
+    <value>CBoxNewSheets</value>
+  </data>
+  <data name="&gt;&gt;CBoxNewSheets.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;CBoxNewSheets.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;CBoxNewSheets.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
   <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
