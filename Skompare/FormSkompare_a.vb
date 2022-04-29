@@ -144,10 +144,6 @@ Public Class FormSkompare
             Trace.WriteLine("Starting Comparison")
             skompareMain.Compare()
 
-            'Uložení
-            progressBar.LblProgBar.Text = "Saving"
-            skompareMain.ResultWb.SaveAs(skompareMain.NewWb.Path & "\compared", FileFormat:=51)
-
             'Zavření progress baru
             FormProgBar.Hide()
 
@@ -156,7 +152,10 @@ Public Class FormSkompare
             skompareMain.autoUpdate(True)
 
             'Zavření sešitů
-            skompareMain.ResultWb.Close(SaveChanges:=True)
+            skompareMain.OldWb.Close(SaveChanges:=False)
+            skompareMain.NewWb.Close(SaveChanges:=False)
+            skompareMain.xlApp.visible = True
+
 
             MsgBox("All done")
             Trace.WriteLine("ALL DONE")
@@ -228,8 +227,6 @@ Public Class FormSkompare
 
             'Některé můžou být zavřené
             Try
-                skompareMain.OldWb.Close(SaveChanges:=False)
-                skompareMain.NewWb.Close(SaveChanges:=False)
                 skompareMain.ResultWb.Close(SaveChanges:=False)
             Catch ex As Exception
             End Try
