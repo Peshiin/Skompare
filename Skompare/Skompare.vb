@@ -39,38 +39,49 @@ Public Class SkompareMain
     End Property
 
     'Deklarace listů
-    Public NewSheet As Excel.Worksheet
-    Public OldSheet As Excel.Worksheet
-    Public NewResSheet As Excel.Worksheet
-    Public OldResSheet As Excel.Worksheet
+    Private NewSheet As Excel.Worksheet
+    Private OldSheet As Excel.Worksheet
+    Private NewResSheet As Excel.Worksheet
+    Private OldResSheet As Excel.Worksheet
 
     'Deklarace parametrů vybraných listů
     'Počty řádků
-    Public NewRows As Integer
-    Public OldRows As Integer
+    Private NewRows As Integer
+    Private OldRows As Integer
     'Počty sloupců
-    Public NewCols As Integer
-    Public OldCols As Integer
+    Private NewCols As Integer
+    Private OldCols As Integer
     'Větší počet řádků
-    Public lenRows As Integer
+    Private lenRows As Integer
     'Větší počet řádků
-    Public lenCols As Integer
+    Private lenCols As Integer
+
     'Sloupce pro vyhledávání
-    Public ColLookupPrim As Integer
-    Public ColLookupSec As Integer
-    Public ColLookupTerc As Integer
+    Private SearchKeysCols(2) As Integer
+
+    'Declaration of the row where the comparing shall start (to ignore header)
+    Private startRow As Integer
+
+    'Deklarace polí porovnávaných rozsahů
+    Private NewArr As Object(,)
+    Private OldArr As Object(,)
+
+    'Declaration of search arrays
+    Private NewSearchArr As String()
+    Private OldSearchArr As String()
 
     'Deklarace polí pro porovnání řádků
-    Public NewRowArr As Object(,)
-    Public OldRowArr As Object(,)
+    Private NewRowArr As Object(,)
+    Private OldRowArr As Object(,)
 
     'Deklarace proměnných pro ovládání progress baru a jeho popisku
-    Public PrBar As Object = FormProgBar.ProgBar
-    Public PrLbl As Object = FormProgBar.LblProgBar
+    Private PrBar As Object = FormProgBar.ProgBar
+    Private PrLbl As Object = FormProgBar.LblProgBar
 
     '###############################################################
     '           Methods
     '###############################################################
+
 
     '           Opening File
     '###############################################################
@@ -147,6 +158,51 @@ Public Class SkompareMain
 
     '           Data extraction
     '###############################################################
+    'Compare function initiation
+    Public Sub CompareInit()
+
+        'Tries to assign sheet parameters if workbooks are assigned
+        If NewWb IsNot Nothing And
+            OldWb IsNot Nothing Then
+
+            AssignSheetsParams(FormSkompare.CBoxNewSheets.SelectedItem,
+                               FormSkompare.CBoxOldSheets.SelectedItem)
+        Else
+            MessageBox.Show("Nejsou vybrány soubory pro porovnání")
+            Exit Sub
+        End If
+
+        'Checks the inputs
+        If CheckInput() = False Then
+            Exit Sub
+        End If
+
+        'Assigns sheets variables
+        AssignSheetsParams(FormSkompare.CBoxNewSheets.SelectedItem,
+                           FormSkompare.CBoxOldSheets.SelectedItem)
+
+        'Assigns starting row
+        startRow = FormSkompare.TBoxStart.Text
+
+        'Assigns columns to search by
+        SearchKeysCols(0) = ColSelect(FormSkompare.TBoxColSelect1.Text)
+        If FormSkompare.TBoxColSelect2.Enabled Then
+            SearchKeysCols(1) = ColSelect(FormSkompare.TBoxColSelect2.Text)
+        End If
+        If FormSkompare.TBoxColSelect3.Enabled Then
+            SearchKeysCols(2) = ColSelect(FormSkompare.TBoxColSelect3.Text)
+        End If
+
+        'Assigns sheets arrays
+        GetSheetArrays()
+
+        'Assigns search arrays
+        NewSearchArr = GetSearchArray(NewArr)
+        OldSearchArr = GetSearchArray(OldArr)
+
+
+
+    End Sub
 
     'Writes main parameters to the tBox
     Public Sub ShowMainParams(tBox As RichTextBox)
@@ -205,18 +261,19 @@ Public Class SkompareMain
 
             'Assigning sheets to variables
             NewSheet = NewWb.Sheets(newSheetName)
-            OldSheet = NewWb.Sheets(oldSheetName)
+            OldSheet = OldWb.Sheets(oldSheetName)
 
             'Getting number of rows and columns in "new" sheet
             NewRows = GetLast(NewSheet, Excel.XlSearchOrder.xlByColumns).Row
             NewCols = GetLast(NewSheet, Excel.XlSearchOrder.xlByRows).Column
 
             'Getting number of rows and columns in "old" sheet
-            OldRows = GetLast(NewSheet, Excel.XlSearchOrder.xlByColumns).Row
-            OldCols = GetLast(NewSheet, Excel.XlSearchOrder.xlByRows).Column
+            OldRows = GetLast(OldSheet, Excel.XlSearchOrder.xlByColumns).Row
+            OldCols = GetLast(OldSheet, Excel.XlSearchOrder.xlByRows).Column
 
             'Getting the bigger number of rows
             lenRows = GetBiggerDim(NewRows, OldRows)
+            lenCols = GetBiggerDim(NewCols, OldCols)
 
         End If
 
@@ -259,7 +316,48 @@ Public Class SkompareMain
 
     End Function
 
+    'Gets array of indexes to search by
+    Public Function GetSearchArray(inputArr As Object(,))
 
+        Dim len As Integer
+
+        'Defines length of the return array
+        len = UBound(inputArr, 1)
+
+        Dim returnArr(len) As String
+
+        For row As Integer = startRow To len
+
+            For Each key In SearchKeysCols
+
+                If key > 0 Then
+
+                    returnArr(row) &= inputArr(row, key)
+
+                End If
+
+            Next
+
+        Next
+
+            Return returnArr
+
+    End Function
+
+    'Gets array of values from range to be compared
+    Public Sub GetSheetArrays()
+
+        Dim lastCell As String
+
+        'Assigns "new" array of compared values
+        lastCell = CStr(GetExcelColumnName(lenCols)) & CStr(NewRows)
+        NewArr = CType(NewSheet.Range("A1", lastCell).Value, Object(,))
+
+        'Assigns "old" array of compared values
+        lastCell = CStr(GetExcelColumnName(lenCols)) & CStr(OldRows)
+        OldArr = CType(NewSheet.Range("A1", lastCell).Value, Object(,))
+
+    End Sub
 
 
 
@@ -353,16 +451,14 @@ Public Class SkompareMain
         'Vytvoří pole pro porovnávání
         Trace.WriteLine("Getting arrays")
         PrLbl.Text = "Getting arrays"
-        NewSheet.UsedRange.Calculate()
-        OldSheet.UsedRange.Calculate()
         Dim NewArr As Object(,) = CType(NewSheet.UsedRange.Value, Object(,))
         Dim OldArr As Object(,) = CType(OldSheet.UsedRange.Value, Object(,))
 
         'Získá číslo sloupce, podle kterého se bude hledat
         Trace.WriteLine("Getting key column")
         PrLbl.Text = "Getting key column"
-        ColLookupPrim = ColSelect(FormSkompare.TBoxColSelect1.Text)
-        ColLookupSec = ColSelect(FormSkompare.TBoxColSelect2.Text)
+        'ColLookupPrim = ColSelect(FormSkompare.TBoxColSelect1.Text)
+        'ColLookupSec = ColSelect(FormSkompare.TBoxColSelect2.Text)
 
         'Získání startovacího řádku
         PrLbl.Text = "Checking start row input"
@@ -390,10 +486,10 @@ Public Class SkompareMain
 
         'Získání pole vyhledávaných indexů starého pole
         Dim OldIndArr() As String
-        OldIndArr = GetIndArr(OldArr, ColLookupPrim, OldRows)
+        'OldIndArr = GetIndArr(OldArr, ColLookupPrim, OldRows)
         'Deklarace pole se sekundárním vyhledávacím indexem
         Dim OldIndArrSecondary() As String
-        OldIndArrSecondary = GetIndArr(OldArr, ColLookupSec, OldRows)
+        'OldIndArrSecondary = GetIndArr(OldArr, ColLookupSec, OldRows)
 
         'Získání pole pro kontrolu duplicit (0 = index zatím nenalezen)
         Dim Duplicity(OldRows) As Integer
@@ -411,7 +507,7 @@ Public Class SkompareMain
             MatchFound = False
 
             'Hledaný jedinečný kód
-            SearchString = NewArr(NewRow, ColLookupPrim)
+            'SearchString = NewArr(NewRow, ColLookupPrim)
 
             'Vrátí polohu (řádek) hledaného kódu ve "starém" poli
             OldRow = Array.IndexOf(OldIndArr, SearchString)
@@ -425,7 +521,7 @@ Public Class SkompareMain
                     'Získá pole čísel řádků se stejným SearchString
                     duplicityArr = GetDuplicityList(OldIndArr, SearchString)
                     'Nastaví SearchString dle sekundárního klíče
-                    SearchString = NewArr(NewRow, ColLookupSec)
+                    'SearchString = NewArr(NewRow, ColLookupSec)
 
                     'Prochází pole duplicit  
                     For Each element As String In duplicityArr

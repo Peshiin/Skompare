@@ -66,6 +66,8 @@ Partial Class FormSkompare
         Me.CBoxOldSheets = New System.Windows.Forms.ComboBox()
         Me.CBoxNewSheets = New System.Windows.Forms.ComboBox()
         Me.TBoxColSelect3 = New System.Windows.Forms.TextBox()
+        Me.ChBoxColSelect2 = New System.Windows.Forms.CheckBox()
+        Me.ChBoxColSelect3 = New System.Windows.Forms.CheckBox()
         Me.GBoxCompareStyle.SuspendLayout()
         Me.GBoxStatsDiff.SuspendLayout()
         Me.Panel1.SuspendLayout()
@@ -185,6 +187,8 @@ Partial Class FormSkompare
         '
         'GBoxStatsDiff
         '
+        Me.GBoxStatsDiff.Controls.Add(Me.ChBoxColSelect3)
+        Me.GBoxStatsDiff.Controls.Add(Me.ChBoxColSelect2)
         Me.GBoxStatsDiff.Controls.Add(Me.TBoxColSelect3)
         Me.GBoxStatsDiff.Controls.Add(Me.TBoxColSelect2)
         Me.GBoxStatsDiff.Controls.Add(Me.BtnColor)
@@ -205,6 +209,7 @@ Partial Class FormSkompare
         'TBoxColSelect2
         '
         resources.ApplyResources(Me.TBoxColSelect2, "TBoxColSelect2")
+        Me.TBoxColSelect2.ForeColor = System.Drawing.SystemColors.InactiveCaption
         Me.TBoxColSelect2.Name = "TBoxColSelect2"
         '
         'BtnColor
@@ -327,7 +332,20 @@ Partial Class FormSkompare
         'TBoxColSelect3
         '
         resources.ApplyResources(Me.TBoxColSelect3, "TBoxColSelect3")
+        Me.TBoxColSelect3.ForeColor = System.Drawing.SystemColors.InactiveCaption
         Me.TBoxColSelect3.Name = "TBoxColSelect3"
+        '
+        'ChBoxColSelect2
+        '
+        resources.ApplyResources(Me.ChBoxColSelect2, "ChBoxColSelect2")
+        Me.ChBoxColSelect2.Name = "ChBoxColSelect2"
+        Me.ChBoxColSelect2.UseVisualStyleBackColor = True
+        '
+        'ChBoxColSelect3
+        '
+        resources.ApplyResources(Me.ChBoxColSelect3, "ChBoxColSelect3")
+        Me.ChBoxColSelect3.Name = "ChBoxColSelect3"
+        Me.ChBoxColSelect3.UseVisualStyleBackColor = True
         '
         'FormSkompare
         '
@@ -404,4 +422,6 @@ Partial Class FormSkompare
     Friend WithEvents CBoxOldSheets As ComboBox
     Friend WithEvents CBoxNewSheets As ComboBox
     Friend WithEvents TBoxColSelect3 As TextBox
+    Friend WithEvents ChBoxColSelect2 As CheckBox
+    Friend WithEvents ChBoxColSelect3 As CheckBox
 End Class

@@ -14,8 +14,7 @@ Public Class FormSkompare
     Dim skompareMain = New SkompareMain
 
     Private Sub BtnTest_Click(sender As Object, e As EventArgs) Handles BtnTest.Click
-        skompareMain.AssignSheetsParams(CBoxNewSheets.SelectedItem,
-                                        CBoxOldSheets.SelectedItem)
+        skompareMain.CompareInit()
     End Sub
 
 
@@ -36,105 +35,107 @@ Public Class FormSkompare
     'Metoda po zmáčknutí tlačítka pro porovnání
     Private Sub BtnCompare(sender As Object, e As EventArgs) Handles BtnComp.Click
 
-        Dim progressBar As New FormProgBar
-        skompareMain.PrLbl = progressBar.LblProgBar
-        skompareMain.PrBar = progressBar.ProgBar
+        skompareMain.CompareInit()
 
-        Trace.Listeners.Add(New TextWriterTraceListener("Debug.log", "myListener"))
-        Trace.WriteLine("Starting comparing @ " + DateTime.Now.ToString())
-        Trace.Indent()
+        'Dim progressBar As New FormProgBar
+        'skompareMain.PrLbl = progressBar.LblProgBar
+        'skompareMain.PrBar = progressBar.ProgBar
 
-        Try
-            'Zákaz přepočítávání
-            Trace.WriteLine("Disabling auto-update")
-            skompareMain.autoUpdate(False)
+        'Trace.Listeners.Add(New TextWriterTraceListener("Debug.log", "myListener"))
+        'Trace.WriteLine("Starting comparing @ " + DateTime.Now.ToString())
+        'Trace.Indent()
 
-            'Získání parametrů (názvy, řádky, sloupce) vybraných listů
-            Trace.WriteLine("Getting sheets parameters")
-            skompareMain.GetSheetParams(CBoxNewSheets.GetItemText(CBoxNewSheets.SelectedItem),
-                                        CBoxOldSheets.GetItemText(CBoxOldSheets.SelectedItem))
+        'Try
+        '    'Zákaz přepočítávání
+        '    Trace.WriteLine("Disabling auto-update")
+        '    skompareMain.autoUpdate(False)
 
-            'Zobrazení formuláře s progress barem
-            Trace.WriteLine("Showing progress bar")
-            'Zobrazí formulář
-            progressBar.Show()
-            'Nastaví aktuální hodnotu baru na 1 - začátek
-            progressBar.ProgBar.Value = 1
-            'Nastaví maximum na počet řádků v "novém" listu
-            progressBar.ProgBar.Maximum = skompareMain.NewRows
-            'Přepíše label
-            progressBar.LblProgBar.Text = "Starting"
+        '    'Získání parametrů (názvy, řádky, sloupce) vybraných listů
+        '    Trace.WriteLine("Getting sheets parameters")
+        '    skompareMain.GetSheetParams(CBoxNewSheets.GetItemText(CBoxNewSheets.SelectedItem),
+        '                                CBoxOldSheets.GetItemText(CBoxOldSheets.SelectedItem))
 
-            'Vytvoření souboru pro zápis výsledků
-            progressBar.LblProgBar.Text = "Creating output"
-            skompareMain.CreateResult()
+        '    'Zobrazení formuláře s progress barem
+        '    Trace.WriteLine("Showing progress bar")
+        '    'Zobrazí formulář
+        '    progressBar.Show()
+        '    'Nastaví aktuální hodnotu baru na 1 - začátek
+        '    progressBar.ProgBar.Value = 1
+        '    'Nastaví maximum na počet řádků v "novém" listu
+        '    progressBar.ProgBar.Maximum = skompareMain.NewRows
+        '    'Přepíše label
+        '    progressBar.LblProgBar.Text = "Starting"
 
-            'Spuštění porovnávadla
-            progressBar.LblProgBar.Text = "Starting comparison"
-            Trace.WriteLine("Starting Comparison")
-            skompareMain.Compare()
+        '    'Vytvoření souboru pro zápis výsledků
+        '    progressBar.LblProgBar.Text = "Creating output"
+        '    skompareMain.CreateResult()
 
-            'Zavření progress baru
-            FormProgBar.Hide()
+        '    'Spuštění porovnávadla
+        '    progressBar.LblProgBar.Text = "Starting comparison"
+        '    Trace.WriteLine("Starting Comparison")
+        '    skompareMain.Compare()
 
-            'Povolení přepočítávání
-            Trace.WriteLine("Enabling auto-update")
-            skompareMain.autoUpdate(True)
+        '    'Zavření progress baru
+        '    FormProgBar.Hide()
 
-            'Zavření sešitů
-            skompareMain.OldWb.Close(SaveChanges:=False)
-            skompareMain.NewWb.Close(SaveChanges:=False)
-            skompareMain.xlApp.visible = True
+        '    'Povolení přepočítávání
+        '    Trace.WriteLine("Enabling auto-update")
+        '    skompareMain.autoUpdate(True)
+
+        '    'Zavření sešitů
+        '    skompareMain.OldWb.Close(SaveChanges:=False)
+        '    skompareMain.NewWb.Close(SaveChanges:=False)
+        '    skompareMain.xlApp.visible = True
 
 
-            MsgBox("All done")
-            Trace.WriteLine("ALL DONE")
+        '    MsgBox("All done")
+        '    Trace.WriteLine("ALL DONE")
 
-            'Přenese formulář do popředí
-            Me.Activate()
+        '    'Přenese formulář do popředí
+        '    Me.Activate()
 
-            'Řešení různých výjimek
-        Catch ex As Exception
+        '    'Řešení různých výjimek
+        'Catch ex As Exception
 
-            Trace.WriteLine(ex.StackTrace _
-                            & Environment.NewLine _
-                            & ex.Message)
-            Trace.WriteLine(ex.InnerException)
-            Trace.WriteLine(ex.TargetSite)
-            Trace.WriteLine(ex.Source)
-            Trace.WriteLine(ex.Data)
+        '    Trace.WriteLine(ex.StackTrace _
+        '                    & Environment.NewLine _
+        '                    & ex.Message)
+        '    Trace.WriteLine(ex.InnerException)
+        '    Trace.WriteLine(ex.TargetSite)
+        '    Trace.WriteLine(ex.Source)
+        '    Trace.WriteLine(ex.Data)
 
-            'Nejsou vybrány oba sešity
-            If TypeOf ex Is NullReferenceException _
-                            OrElse TypeOf ex Is System.Runtime.InteropServices.COMException Then
-                Trace.WriteLine("EXCEPTION: " & ex.Message)
-                Trace.Flush()
-                Exit Sub
+        '    'Nejsou vybrány oba sešity
+        '    If TypeOf ex Is NullReferenceException _
+        '                    OrElse TypeOf ex Is System.Runtime.InteropServices.COMException Then
+        '        Trace.WriteLine("EXCEPTION: " & ex.Message)
+        '        Trace.Flush()
+        '        Exit Sub
 
-                'Při chybě kvůli nepřepsání souboru
-            ElseIf TypeOf ex Is System.Runtime.InteropServices.COMException Then
-                MsgBox("Compared sheet will not be overwritten")
-                Trace.WriteLine("EXCEPTION: " & ex.Message)
-                Trace.Flush()
-                Exit Sub
+        '        'Při chybě kvůli nepřepsání souboru
+        '    ElseIf TypeOf ex Is System.Runtime.InteropServices.COMException Then
+        '        MsgBox("Compared sheet will not be overwritten")
+        '        Trace.WriteLine("EXCEPTION: " & ex.Message)
+        '        Trace.Flush()
+        '        Exit Sub
 
-                'Ostatní výjimky
-            Else
+        '        'Ostatní výjimky
+        '    Else
 
-                MsgBox("Exception found: " & ex.Message)
-                Trace.WriteLine("EXCEPTION: " & ex.Message)
-                Trace.Flush()
-                FormProgBar.Hide()
-                Exit Sub
+        '        MsgBox("Exception found: " & ex.Message)
+        '        Trace.WriteLine("EXCEPTION: " & ex.Message)
+        '        Trace.Flush()
+        '        FormProgBar.Hide()
+        '        Exit Sub
 
-            End If
+        '    End If
 
-        End Try
+        'End Try
 
-        Trace.Unindent()
-        Trace.WriteLine("Comparing ended")
-        Trace.WriteLine("___________________________________________________")
-        Trace.Flush()
+        'Trace.Unindent()
+        'Trace.WriteLine("Comparing ended")
+        'Trace.WriteLine("___________________________________________________")
+        'Trace.Flush()
 
     End Sub
 
@@ -166,6 +167,7 @@ Public Class FormSkompare
         Else
             e.Cancel = True
         End If
+
     End Sub
 
     'Mění zadanou barvu podle vepsané hodnoty do textboxu
@@ -288,6 +290,31 @@ Public Class FormSkompare
             advancedVisibility = True
             PanelBottom.Visible = advancedVisibility
             MyBase.Height += PanelBottom.Height
+        End If
+
+    End Sub
+
+    'Changes the color of TBox according to check box
+    Private Sub ChBoxColSelect_CheckedChanged(sender As Object, e As EventArgs) Handles ChBoxColSelect3.CheckedChanged, ChBoxColSelect2.CheckedChanged
+
+        Dim tBox As TextBox = Nothing
+
+        If sender Is ChBoxColSelect2 Then
+            tBox = TBoxColSelect2
+        ElseIf sender Is ChBoxColSelect3 Then
+            tBox = TBoxColSelect3
+        End If
+
+        If sender.Checked Then
+
+            tBox.Enabled = True
+            tBox.ForeColor = SystemColors.WindowText
+
+        ElseIf sender.Checked = False Then
+
+            tBox.Enabled = False
+            tBox.ForeColor = SystemColors.InactiveCaption
+
         End If
 
     End Sub
