@@ -72,31 +72,13 @@ Public Class SkompareMain
     '           Methods
     '###############################################################
 
-    Public Function GetFilePathFD() As String
-
-        Dim fd = FormSkompare.OpenFD
-
-        'Otevře dialogové okno pro výběr souboru
-        fd.Title = "Select file"
-        fd.Filter = "Excel Files|*.xls;*.xlsx;*.xlsm"
-
-        If fd.ShowDialog() = DialogResult.OK Then
-
-            'Získá cestu vybraného souboru jako String
-            GetFilePathFD = FormSkompare.OpenFD.FileName
-            Return GetFilePathFD
-
-        Else
-            Return Nothing
-        End If
-
-    End Function
-
+    '           Opening File
+    '###############################################################
     'Open workbook respective to the old/new button
     Public Sub OpenWorkbook(sender As Object)
 
         'Gets path of the opening file via file dialog
-        Dim FilePath = GetFilePathFD()
+        Dim FilePath = GetFilePathFD(FormSkompare.OpenFD)
 
         If FilePath Is Nothing Then
             MessageBox.Show("Nebyl vybrán soubor")
@@ -123,20 +105,159 @@ Public Class SkompareMain
 
     End Sub
 
+    'Opens file dialog and returns selected file path
+    Private Function GetFilePathFD(fd As FileDialog) As String
+
+        'Otevře dialogové okno pro výběr souboru
+        fd.Title = "Select file"
+        fd.Filter = "Excel Files|*.xls;*.xlsx;*.xlsm"
+
+        If fd.ShowDialog() = DialogResult.OK Then
+
+            'Získá cestu vybraného souboru jako String
+            GetFilePathFD = fd.FileName
+            Return GetFilePathFD
+
+        Else
+            Return Nothing
+        End If
+
+    End Function
+
     'Lists names of worksheets to the UI
-    Sub WriteWorksheetsToUI(wb As Excel.Workbook, cBox As ComboBox)
+    Private Sub WriteWorksheetsToUI(wb As Excel.Workbook, cBox As ComboBox)
 
         'Clears the cBox
         cBox.Items.Clear()
 
         'Writes names of all worksheets in respective workbook to the cBox
         For Each ws As Excel.Worksheet In wb.Worksheets
+
             cBox.Items.Add(ws.Name)
+
+            'Set selected item to something so the cBox doesn't appear empty
+            If cBox.SelectedItem Is Nothing Then
+                cBox.SelectedItem = ws.Name
+            End If
+
         Next
 
     End Sub
 
 
+    '           Data extraction
+    '###############################################################
+
+    'Writes main parameters to the tBox
+    Public Sub ShowMainParams(tBox As RichTextBox)
+
+        'Tries to assign sheet parameters if workbooks are assigned
+        If NewWb IsNot Nothing And
+            OldWb IsNot Nothing Then
+
+            AssignSheetsParams(FormSkompare.CBoxNewSheets.SelectedItem,
+                               FormSkompare.CBoxOldSheets.SelectedItem)
+        Else
+            MessageBox.Show("Nejsou vybrány soubory pro porovnání")
+            Exit Sub
+        End If
+
+        If CheckInput() Then
+
+            'Clears tBox from previous data
+            tBox.Clear()
+
+            tBox.AppendText(vbTab _
+                                + "Nový sešit" _
+                                + vbTab _
+                                + "Starý sešit")
+
+            tBox.AppendText(Environment.NewLine _
+                                + "Sheet name:" _
+                                + vbTab _
+                                + NewSheet.Name _
+                                + vbTab _
+                                + OldSheet.Name)
+
+            tBox.AppendText(Environment.NewLine _
+                                + "Row count:" _
+                                + vbTab _
+                                + CStr(NewRows) _
+                                + vbTab _
+                                + CStr(OldRows))
+
+            tBox.AppendText(Environment.NewLine _
+                                    + "Column count:" _
+                                    + vbTab _
+                                    + CStr(NewCols) _
+                                    + vbTab _
+                                    + CStr(OldCols))
+
+        End If
+
+    End Sub
+
+    'Assigning "new" and "old" sheets to variables and setting their lenghts
+    Private Sub AssignSheetsParams(newSheetName As String, oldSheetName As String)
+
+        If NewWb IsNot Nothing And
+            OldWb IsNot Nothing Then
+
+            'Assigning sheets to variables
+            NewSheet = NewWb.Sheets(newSheetName)
+            OldSheet = NewWb.Sheets(oldSheetName)
+
+            'Getting number of rows and columns in "new" sheet
+            NewRows = GetLast(NewSheet, Excel.XlSearchOrder.xlByColumns).Row
+            NewCols = GetLast(NewSheet, Excel.XlSearchOrder.xlByRows).Column
+
+            'Getting number of rows and columns in "old" sheet
+            OldRows = GetLast(NewSheet, Excel.XlSearchOrder.xlByColumns).Row
+            OldCols = GetLast(NewSheet, Excel.XlSearchOrder.xlByRows).Column
+
+            'Getting the bigger number of rows
+            lenRows = GetBiggerDim(NewRows, OldRows)
+
+        End If
+
+    End Sub
+
+    'Checks if all the key data are filled
+    Private Function CheckInput() As Boolean
+
+        'Is Excel application assigned?
+        If XlApp Is Nothing Then
+            MessageBox.Show("Není přiřazena aplikace Excel")
+            Return False
+
+            'Is "new" workbook assigned?
+        ElseIf NewWb Is Nothing Then
+            MessageBox.Show("Nebyl přiřazen ""nový"" sešit Excel")
+            Return False
+            'Is "old" workbook assigned?
+        ElseIf OldWb Is Nothing Then
+            MessageBox.Show("Nebyl přiřazen ""starý"" sešit Excel")
+            Return False
+
+            'Is "new" worksheet assigned?
+        ElseIf NewSheet Is Nothing Then
+            MessageBox.Show("Nebyl přiřazen ""nový"" list Excel")
+            Return False
+            'Is "old" worksheet assigned?
+        ElseIf OldSheet Is Nothing Then
+            MessageBox.Show("Nebyl přiřazen ""starý"" list Excel")
+            Return False
+
+            'Do both sheets have the same number of columns?
+        ElseIf NewCols <> OldCols Then
+            MessageBox.Show("Počty sloupců v porovnávaných listech se liší")
+            Return False
+
+        Else
+            Return True
+        End If
+
+    End Function
 
 
 

@@ -14,62 +14,16 @@ Public Class FormSkompare
     Dim skompareMain = New SkompareMain
 
     Private Sub BtnTest_Click(sender As Object, e As EventArgs) Handles BtnTest.Click
-
-
-
+        skompareMain.AssignSheetsParams(CBoxNewSheets.SelectedItem,
+                                        CBoxOldSheets.SelectedItem)
     End Sub
 
 
     'Vypisuje data o jednotlivých sešitech do textového pole ve formuláři
     Private Sub ButtonStats(sender As Object, e As EventArgs) Handles BtnStats.Click
 
-        'Vyčištění textboxu
-        TBoxStats.Clear()
+        skompareMain.ShowMainParams(TBoxStats)
 
-        'Deklarace pole parametrů
-        Dim statsArr()() As String
-
-        'Zkontroluje, zda je vybráno
-        If CBoxNewSheets.SelectedIndex >= 0 And
-                CBoxOldSheets.SelectedIndex >= 0 Then
-
-            'Získání parametrů (názvy, řádky, sloupce) vybraných listů
-            Try
-                statsArr = skompareMain.GetSheetParams(CBoxNewSheets.GetItemText(CBoxNewSheets.SelectedItem),
-                                                        CBoxOldSheets.GetItemText(CBoxOldSheets.SelectedItem))
-
-            Catch ex As Exception When TypeOf ex Is NullReferenceException _
-                                OrElse TypeOf ex Is System.Runtime.InteropServices.COMException
-                MsgBox("Select sheets in both workbooks")
-                Exit Sub
-
-            End Try
-
-            'Vypsání parametrů do textboxu
-            TBoxStats.AppendText("Sheet name:" _
-                                + vbTab _
-                                + CBoxOldSheets.GetItemText(CBoxOldSheets.SelectedItem) _
-                                + vbTab _
-                                + CBoxNewSheets.GetItemText(CBoxNewSheets.SelectedItem))
-            TBoxStats.AppendText(Environment.NewLine _
-                                + "Row count:" _
-                                + vbTab _
-                                + statsArr(0)(0) _
-                                + vbTab _
-                                + statsArr(0)(1))
-            TBoxStats.AppendText(Environment.NewLine _
-                                    + "Column count:" _
-                                    + vbTab _
-                                    + statsArr(1)(0) _
-                                    + vbTab _
-                                    + statsArr(1)(1))
-
-        Else
-
-            Throw New System.Exception("Worksheets not selected")
-            MsgBox("Select worksheets in both workbooks")
-
-        End If
     End Sub
 
     'Otevírá dialogové okno pro výběr porovnávaných sešitů
@@ -207,7 +161,7 @@ Public Class FormSkompare
             Catch ex As Exception
             End Try
 
-            skompareMain.XlApp.Quit()
+            skompareMain.Application.Quit()
 
         Else
             e.Cancel = True
