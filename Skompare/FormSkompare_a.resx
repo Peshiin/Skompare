@@ -146,7 +146,7 @@
   <data name="&gt;&gt;BtnNew.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
-  <metadata name="OpenFDNew.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+  <metadata name="OpenFD.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
   <data name="LblNewFile.AutoSize" type="System.Boolean, mscorlib">
@@ -632,33 +632,60 @@
   <data name="&gt;&gt;GBoxCompareStyle.ZOrder" xml:space="preserve">
     <value>4</value>
   </data>
-  <data name="TBoxColSelectSecondary.Location" type="System.Drawing.Point, System.Drawing">
+  <data name="TBoxColSelect3.Location" type="System.Drawing.Point, System.Drawing">
     <value>260, 48</value>
   </data>
-  <data name="TBoxColSelectSecondary.Size" type="System.Drawing.Size, System.Drawing">
+  <data name="TBoxColSelect3.Size" type="System.Drawing.Size, System.Drawing">
     <value>29, 23</value>
   </data>
-  <data name="TBoxColSelectSecondary.TabIndex" type="System.Int32, mscorlib">
-    <value>4</value>
+  <data name="TBoxColSelect3.TabIndex" type="System.Int32, mscorlib">
+    <value>5</value>
   </data>
-  <data name="TBoxColSelectSecondary.Text" xml:space="preserve">
+  <data name="TBoxColSelect3.Text" xml:space="preserve">
     <value>CX</value>
   </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="TBoxColSelectSecondary.TextAlign" type="System.Windows.Forms.HorizontalAlignment, System.Windows.Forms">
+  <data name="TBoxColSelect3.TextAlign" type="System.Windows.Forms.HorizontalAlignment, System.Windows.Forms">
     <value>Center</value>
   </data>
-  <data name="&gt;&gt;TBoxColSelectSecondary.Name" xml:space="preserve">
-    <value>TBoxColSelectSecondary</value>
+  <data name="&gt;&gt;TBoxColSelect3.Name" xml:space="preserve">
+    <value>TBoxColSelect3</value>
   </data>
-  <data name="&gt;&gt;TBoxColSelectSecondary.Type" xml:space="preserve">
+  <data name="&gt;&gt;TBoxColSelect3.Type" xml:space="preserve">
     <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;TBoxColSelectSecondary.Parent" xml:space="preserve">
+  <data name="&gt;&gt;TBoxColSelect3.Parent" xml:space="preserve">
     <value>GBoxStatsDiff</value>
   </data>
-  <data name="&gt;&gt;TBoxColSelectSecondary.ZOrder" xml:space="preserve">
+  <data name="&gt;&gt;TBoxColSelect3.ZOrder" xml:space="preserve">
     <value>0</value>
+  </data>
+  <data name="TBoxColSelect2.Location" type="System.Drawing.Point, System.Drawing">
+    <value>225, 48</value>
+  </data>
+  <data name="TBoxColSelect2.Size" type="System.Drawing.Size, System.Drawing">
+    <value>29, 23</value>
+  </data>
+  <data name="TBoxColSelect2.TabIndex" type="System.Int32, mscorlib">
+    <value>4</value>
+  </data>
+  <data name="TBoxColSelect2.Text" xml:space="preserve">
+    <value>CX</value>
+  </data>
+  <data name="TBoxColSelect2.TextAlign" type="System.Windows.Forms.HorizontalAlignment, System.Windows.Forms">
+    <value>Center</value>
+  </data>
+  <data name="&gt;&gt;TBoxColSelect2.Name" xml:space="preserve">
+    <value>TBoxColSelect2</value>
+  </data>
+  <data name="&gt;&gt;TBoxColSelect2.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;TBoxColSelect2.Parent" xml:space="preserve">
+    <value>GBoxStatsDiff</value>
+  </data>
+  <data name="&gt;&gt;TBoxColSelect2.ZOrder" xml:space="preserve">
+    <value>1</value>
   </data>
   <data name="BtnColor.BackgroundImageLayout" type="System.Windows.Forms.ImageLayout, System.Windows.Forms">
     <value>Stretch</value>
@@ -688,7 +715,7 @@
     <value>GBoxStatsDiff</value>
   </data>
   <data name="&gt;&gt;BtnColor.ZOrder" xml:space="preserve">
-    <value>1</value>
+    <value>2</value>
   </data>
   <data name="TBoxColor.Font" type="System.Drawing.Font, System.Drawing">
     <value>Microsoft Sans Serif, 10pt</value>
@@ -718,7 +745,7 @@
     <value>GBoxStatsDiff</value>
   </data>
   <data name="&gt;&gt;TBoxColor.ZOrder" xml:space="preserve">
-    <value>2</value>
+    <value>3</value>
   </data>
   <data name="LblStringEnd.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -745,7 +772,7 @@
     <value>GBoxStatsDiff</value>
   </data>
   <data name="&gt;&gt;LblStringEnd.ZOrder" xml:space="preserve">
-    <value>3</value>
+    <value>4</value>
   </data>
   <data name="LblStringStart.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -772,7 +799,7 @@
     <value>GBoxStatsDiff</value>
   </data>
   <data name="&gt;&gt;LblStringStart.ZOrder" xml:space="preserve">
-    <value>4</value>
+    <value>5</value>
   </data>
   <data name="LblColor.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -799,7 +826,7 @@
     <value>GBoxStatsDiff</value>
   </data>
   <data name="&gt;&gt;LblColor.ZOrder" xml:space="preserve">
-    <value>5</value>
+    <value>6</value>
   </data>
   <data name="Label1.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -826,7 +853,7 @@
     <value>GBoxStatsDiff</value>
   </data>
   <data name="&gt;&gt;Label1.ZOrder" xml:space="preserve">
-    <value>6</value>
+    <value>7</value>
   </data>
   <data name="TBoxStringEnd.Location" type="System.Drawing.Point, System.Drawing">
     <value>169, 123</value>
@@ -850,34 +877,34 @@
     <value>GBoxStatsDiff</value>
   </data>
   <data name="&gt;&gt;TBoxStringEnd.ZOrder" xml:space="preserve">
-    <value>7</value>
+    <value>8</value>
   </data>
-  <data name="TBoxColSelect.Location" type="System.Drawing.Point, System.Drawing">
-    <value>225, 48</value>
+  <data name="TBoxColSelect1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>190, 48</value>
   </data>
-  <data name="TBoxColSelect.Size" type="System.Drawing.Size, System.Drawing">
+  <data name="TBoxColSelect1.Size" type="System.Drawing.Size, System.Drawing">
     <value>29, 23</value>
   </data>
-  <data name="TBoxColSelect.TabIndex" type="System.Int32, mscorlib">
+  <data name="TBoxColSelect1.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
   </data>
-  <data name="TBoxColSelect.Text" xml:space="preserve">
+  <data name="TBoxColSelect1.Text" xml:space="preserve">
     <value>A</value>
   </data>
-  <data name="TBoxColSelect.TextAlign" type="System.Windows.Forms.HorizontalAlignment, System.Windows.Forms">
+  <data name="TBoxColSelect1.TextAlign" type="System.Windows.Forms.HorizontalAlignment, System.Windows.Forms">
     <value>Center</value>
   </data>
-  <data name="&gt;&gt;TBoxColSelect.Name" xml:space="preserve">
-    <value>TBoxColSelect</value>
+  <data name="&gt;&gt;TBoxColSelect1.Name" xml:space="preserve">
+    <value>TBoxColSelect1</value>
   </data>
-  <data name="&gt;&gt;TBoxColSelect.Type" xml:space="preserve">
+  <data name="&gt;&gt;TBoxColSelect1.Type" xml:space="preserve">
     <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;TBoxColSelect.Parent" xml:space="preserve">
+  <data name="&gt;&gt;TBoxColSelect1.Parent" xml:space="preserve">
     <value>GBoxStatsDiff</value>
   </data>
-  <data name="&gt;&gt;TBoxColSelect.ZOrder" xml:space="preserve">
-    <value>8</value>
+  <data name="&gt;&gt;TBoxColSelect1.ZOrder" xml:space="preserve">
+    <value>9</value>
   </data>
   <data name="TBoxStringStart.Location" type="System.Drawing.Point, System.Drawing">
     <value>169, 99</value>
@@ -901,7 +928,7 @@
     <value>GBoxStatsDiff</value>
   </data>
   <data name="&gt;&gt;TBoxStringStart.ZOrder" xml:space="preserve">
-    <value>9</value>
+    <value>10</value>
   </data>
   <data name="LblStart.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -928,7 +955,7 @@
     <value>GBoxStatsDiff</value>
   </data>
   <data name="&gt;&gt;LblStart.ZOrder" xml:space="preserve">
-    <value>10</value>
+    <value>11</value>
   </data>
   <data name="TBoxStart.Location" type="System.Drawing.Point, System.Drawing">
     <value>260, 23</value>
@@ -955,7 +982,7 @@
     <value>GBoxStatsDiff</value>
   </data>
   <data name="&gt;&gt;TBoxStart.ZOrder" xml:space="preserve">
-    <value>11</value>
+    <value>12</value>
   </data>
   <data name="GBoxStatsDiff.Font" type="System.Drawing.Font, System.Drawing">
     <value>Microsoft Sans Serif, 10pt</value>
@@ -1230,6 +1257,9 @@
   <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
+  <metadata name="$this.TrayHeight" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>47</value>
+  </metadata>
   <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
     <value>6, 13</value>
   </data>
@@ -1239,10 +1269,10 @@
   <data name="$this.Text" xml:space="preserve">
     <value>Škompare 1.0.1</value>
   </data>
-  <data name="&gt;&gt;OpenFDNew.Name" xml:space="preserve">
-    <value>OpenFDNew</value>
+  <data name="&gt;&gt;OpenFD.Name" xml:space="preserve">
+    <value>OpenFD</value>
   </data>
-  <data name="&gt;&gt;OpenFDNew.Type" xml:space="preserve">
+  <data name="&gt;&gt;OpenFD.Type" xml:space="preserve">
     <value>System.Windows.Forms.OpenFileDialog, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;ColorDialog1.Name" xml:space="preserve">

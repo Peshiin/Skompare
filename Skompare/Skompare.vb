@@ -1,14 +1,42 @@
 ﻿Imports Excel = Microsoft.Office.Interop.Excel
+Imports System.Globalization
+Imports System.Threading
+Imports System.Diagnostics
+Imports System.Runtime.InteropServices
 
 Public Class SkompareMain
 
+    '###############################################################
+    '           Properties
+    '###############################################################
+
     'Deklarace aplikace excel
-    Public XlApp As Excel.Application
+    Private XlApp As Excel.Application
+    Property Application As Excel.Application
+        Get
+            Return XlApp
+        End Get
+        Set(value As Excel.Application)
+            XlApp = value
+        End Set
+    End Property
 
     'Deklarace sešitů
-    Public NewWb As Excel.Workbook
-    Public OldWb As Excel.Workbook
-    Public ResultWb As Excel.Workbook
+    Private NewWb As Excel.Workbook
+    Private OldWb As Excel.Workbook
+    Private ResultWb As Excel.Workbook
+    Private Wbs = New Excel.Workbook() {NewWb, OldWb, ResultWb}
+    Property Workbooks As Excel.Workbook()
+        Get
+            Return Wbs
+        End Get
+        Set(value() As Excel.Workbook)
+            Wbs = value
+            NewWb = value(1)
+            OldWb = value(2)
+            NewWb = value(3)
+        End Set
+    End Property
 
     'Deklarace listů
     Public NewSheet As Excel.Worksheet
@@ -28,8 +56,9 @@ Public Class SkompareMain
     'Větší počet řádků
     Public lenCols As Integer
     'Sloupce pro vyhledávání
-    Public ColLookup As Integer
-    Public ColLookupSecondary As Integer
+    Public ColLookupPrim As Integer
+    Public ColLookupSec As Integer
+    Public ColLookupTerc As Integer
 
     'Deklarace polí pro porovnání řádků
     Public NewRowArr As Object(,)
@@ -39,12 +68,94 @@ Public Class SkompareMain
     Public PrBar As Object = FormProgBar.ProgBar
     Public PrLbl As Object = FormProgBar.LblProgBar
 
-    'Metoda pro nastavení automatického přepočítávání/updatů sešitu
+    '###############################################################
+    '           Methods
+    '###############################################################
+
+    Public Function GetFilePathFD() As String
+
+        Dim fd = FormSkompare.OpenFD
+
+        'Otevře dialogové okno pro výběr souboru
+        fd.Title = "Select file"
+        fd.Filter = "Excel Files|*.xls;*.xlsx;*.xlsm"
+
+        If fd.ShowDialog() = DialogResult.OK Then
+
+            'Získá cestu vybraného souboru jako String
+            GetFilePathFD = FormSkompare.OpenFD.FileName
+            Return GetFilePathFD
+
+        Else
+            Return Nothing
+        End If
+
+    End Function
+
+    'Open workbook respective to the old/new button
+    Public Sub OpenWorkbook(sender As Object)
+
+        'Gets path of the opening file via file dialog
+        Dim FilePath = GetFilePathFD()
+
+        If FilePath Is Nothing Then
+            MessageBox.Show("Nebyl vybrán soubor")
+            Exit Sub
+        End If
+
+        'Assigns opened workbook to the class variable
+        'Writes the name of the respective file to the UI
+        'Writes the name of sheets to the UI
+        If sender Is FormSkompare.BtnNew Then
+
+            NewWb = XlApp.Workbooks.Open(FilePath, [ReadOnly]:=True)
+            FormSkompare.LblNewFileName.Text = Dir(FilePath)
+            WriteWorksheetsToUI(NewWb, FormSkompare.CBoxNewSheets)
+
+        ElseIf sender Is FormSkompare.BtnOld Then
+
+            OldWb = XlApp.Workbooks.Open(FilePath, [ReadOnly]:=True)
+            FormSkompare.LblOldFileName.Text = Dir(FilePath)
+            WriteWorksheetsToUI(NewWb, FormSkompare.CBoxOldSheets)
+
+        End If
+
+
+    End Sub
+
+    'Lists names of worksheets to the UI
+    Sub WriteWorksheetsToUI(wb As Excel.Workbook, cBox As ComboBox)
+
+        'Clears the cBox
+        cBox.Items.Clear()
+
+        'Writes names of all worksheets in respective workbook to the cBox
+        For Each ws As Excel.Worksheet In wb.Worksheets
+            cBox.Items.Add(ws.Name)
+        Next
+
+    End Sub
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    'Allow/disable auto updates of Excel App
     Sub autoUpdate(auto As Boolean)
 
         If auto = True Then
 
-            'Povolení přepočítávání, updateování apod. sešitu během výpočtu
+            'Allow auto updates
             With XlApp
                 .Calculation = Excel.XlCalculation.xlCalculationAutomatic
                 .ScreenUpdating = True
@@ -54,7 +165,7 @@ Public Class SkompareMain
 
         ElseIf auto = False Then
 
-            'Zákaz přepočítávání, updateování apod. sešitu během výpočtu
+            'Disable auto updates
             With XlApp
                 .Calculation = Excel.XlCalculation.xlCalculationManual
                 .ScreenUpdating = False
@@ -129,8 +240,8 @@ Public Class SkompareMain
         'Získá číslo sloupce, podle kterého se bude hledat
         Trace.WriteLine("Getting key column")
         PrLbl.Text = "Getting key column"
-        ColLookup = ColSelect(FormSkompare.TBoxColSelect.Text)
-        ColLookupSecondary = ColSelect(FormSkompare.TBoxColSelectSecondary.Text)
+        ColLookupPrim = ColSelect(FormSkompare.TBoxColSelect1.Text)
+        ColLookupSec = ColSelect(FormSkompare.TBoxColSelect2.Text)
 
         'Získání startovacího řádku
         PrLbl.Text = "Checking start row input"
@@ -158,10 +269,10 @@ Public Class SkompareMain
 
         'Získání pole vyhledávaných indexů starého pole
         Dim OldIndArr() As String
-        OldIndArr = GetIndArr(OldArr, ColLookup, OldRows)
+        OldIndArr = GetIndArr(OldArr, ColLookupPrim, OldRows)
         'Deklarace pole se sekundárním vyhledávacím indexem
         Dim OldIndArrSecondary() As String
-        OldIndArrSecondary = GetIndArr(OldArr, ColLookupSecondary, OldRows)
+        OldIndArrSecondary = GetIndArr(OldArr, ColLookupSec, OldRows)
 
         'Získání pole pro kontrolu duplicit (0 = index zatím nenalezen)
         Dim Duplicity(OldRows) As Integer
@@ -179,7 +290,7 @@ Public Class SkompareMain
             MatchFound = False
 
             'Hledaný jedinečný kód
-            SearchString = NewArr(NewRow, ColLookup)
+            SearchString = NewArr(NewRow, ColLookupPrim)
 
             'Vrátí polohu (řádek) hledaného kódu ve "starém" poli
             OldRow = Array.IndexOf(OldIndArr, SearchString)
@@ -193,7 +304,7 @@ Public Class SkompareMain
                     'Získá pole čísel řádků se stejným SearchString
                     duplicityArr = GetDuplicityList(OldIndArr, SearchString)
                     'Nastaví SearchString dle sekundárního klíče
-                    SearchString = NewArr(NewRow, ColLookupSecondary)
+                    SearchString = NewArr(NewRow, ColLookupSec)
 
                     'Prochází pole duplicit  
                     For Each element As String In duplicityArr
@@ -486,8 +597,6 @@ Public Class SkompareMain
         'Výběr, které objekty se upraví podle stisknutého tlačítka
         If sender Is FormSkompare.BtnNew Then 'Stisknuto "nové" tlačítko
 
-            'Otevření souboru v aplikaci Excel
-            NewWb = XlApp.Workbooks.Open(FilePath, [ReadOnly]:=True)
 
         ElseIf sender Is FormSkompare.BtnOld Then 'Stisknuto "staré" tlačítko
 

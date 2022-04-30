@@ -13,6 +13,13 @@ Public Class FormSkompare
     ' Vytvoří instanci třídy SkompareMain
     Dim skompareMain = New SkompareMain
 
+    Private Sub BtnTest_Click(sender As Object, e As EventArgs) Handles BtnTest.Click
+
+
+
+    End Sub
+
+
     'Vypisuje data o jednotlivých sešitech do textového pole ve formuláři
     Private Sub ButtonStats(sender As Object, e As EventArgs) Handles BtnStats.Click
 
@@ -68,38 +75,7 @@ Public Class FormSkompare
     'Otevírá dialogové okno pro výběr porovnávaných sešitů
     Private Sub ButtonSelectFile(sender As Object, e As EventArgs) Handles BtnNew.Click, BtnOld.Click
 
-        'Deklarace názvu/cesty nového sešitu
-        Dim FileName As String
-        'Deklarace listboxu a labelu pro výpis názvů
-        Dim Lbox As Object
-        Dim nameLbl As Object
-
-        'Otevře dialogové okno pro výběr souboru
-        OpenFDNew.Title = "Select file"
-        OpenFDNew.Filter = "Excel Files|*.xls;*.xlsx;*.xlsm"
-        OpenFDNew.ShowDialog()
-
-        'Získá cestu vybraného souboru jako String
-        FileName = OpenFDNew.FileName
-
-        'Spuštění otevírací funkce
-        Try
-            skompareMain.OpenExcel(FileName, sender)
-        Catch ex As System.Runtime.InteropServices.COMException
-            MsgBox("Nebyl vybrán soubor")
-            Exit Sub
-        End Try
-
-        'Výběr, které objekty se upraví podle stisknutého tlačítka
-        If sender Is BtnNew Then 'Stisknuto "nové" tlačítko
-            nameLbl = LblNewFileName
-            Lbox = CBoxNewSheets
-            skompareMain.WriteFileData(skompareMain.NewWb, FileName, CBoxNewSheets, LblNewFileName)
-        ElseIf sender Is BtnOld Then 'Stisknuto "staré" tlačítko
-            nameLbl = LblOldFileName
-            Lbox = CBoxOldSheets
-            skompareMain.WriteFileData(skompareMain.OldWb, FileName, CBoxOldSheets, LblOldFileName)
-        End If
+        skompareMain.OpenWorkbook(sender)
 
     End Sub
 
@@ -212,7 +188,7 @@ Public Class FormSkompare
     Private Sub Skompare_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
         'Vytvoření aplikace excel, se ktrou se dále bude pracovat
-        skompareMain.XlApp = New Excel.Application
+        skompareMain.Application = New Excel.Application
 
         'Schování panelu "advanced"
         advancedVisibility = False
@@ -341,7 +317,7 @@ Public Class FormSkompare
     Private Sub BtnGetStartPoint_Click(sender As Object, e As EventArgs) Handles BtnGetStartPoint.Click
         skompareMain.GetSheetParams(CBoxNewSheets.GetItemText(CBoxNewSheets.SelectedItem),
                                     CBoxOldSheets.GetItemText(CBoxOldSheets.SelectedItem))
-        TBoxColSelect.Text = skompareMain.GetExcelColumnName(skompareMain.NewSheet.Range("UID").Column)
+        TBoxColSelect1.Text = skompareMain.GetExcelColumnName(skompareMain.NewSheet.Range("UID").Column)
         TBoxStart.Text = skompareMain.NewSheet.Range("Header").Rows.Count + 1
     End Sub
 
@@ -362,9 +338,5 @@ Public Class FormSkompare
 
     End Sub
 
-    Private Sub BtnTest_Click(sender As Object, e As EventArgs) Handles BtnTest.Click
-
-
-    End Sub
 End Class
 
