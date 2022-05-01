@@ -75,8 +75,11 @@ Public Class SkompareMain
     Private OldRowArr As Object(,)
 
     'Deklarace proměnných pro ovládání progress baru a jeho popisku
-    Private PrBar As Object = FormProgBar.ProgBar
-    Private PrLbl As Object = FormProgBar.LblProgBar
+    Private prBar As Object
+    Private prLbl As Object
+
+    'Declaration of color to highlight changes
+    Private highlight As Color
 
     '###############################################################
     '           Methods
@@ -109,7 +112,7 @@ Public Class SkompareMain
 
             OldWb = XlApp.Workbooks.Open(FilePath, [ReadOnly]:=True)
             FormSkompare.LblOldFileName.Text = Dir(FilePath)
-            WriteWorksheetsToUI(NewWb, FormSkompare.CBoxOldSheets)
+            WriteWorksheetsToUI(OldWb, FormSkompare.CBoxOldSheets)
 
         End If
 
@@ -158,8 +161,15 @@ Public Class SkompareMain
 
     '           Data extraction
     '###############################################################
-    'Compare function initiation
+    'Compare function initialization
     Public Sub CompareInit()
+
+        'Initialize progress bar form
+        Dim prBarForm = New FormProgBar
+        prBarForm.Show()
+        prBar = prBarForm.ProgBar
+        prLbl = prBarForm.LblProgBar
+        prBarForm.LblProgBar.Text = "Inicializace porovnání"
 
         'Tries to assign sheet parameters if workbooks are assigned
         If NewWb IsNot Nothing And
@@ -169,11 +179,13 @@ Public Class SkompareMain
                                FormSkompare.CBoxOldSheets.SelectedItem)
         Else
             MessageBox.Show("Nejsou vybrány soubory pro porovnání")
+            prBarForm.Dispose()
             Exit Sub
         End If
 
         'Checks the inputs
         If CheckInput() = False Then
+            prBarForm.Dispose()
             Exit Sub
         End If
 
@@ -182,7 +194,10 @@ Public Class SkompareMain
                            FormSkompare.CBoxOldSheets.SelectedItem)
 
         'Assigns starting row
-        startRow = FormSkompare.TBoxStart.Text
+        startRow = GetStartRow(FormSkompare.TBoxStart.Text)
+
+        'Assigns highlighting color
+        highlight = FormSkompare.TBoxColor.BackColor
 
         'Assigns columns to search by
         'Goes through all the control elements with "ColSelect" tag in FormSkompare
@@ -204,9 +219,45 @@ Public Class SkompareMain
         NewSearchArr = GetSearchArray(NewArr)
         OldSearchArr = GetSearchArray(OldArr)
 
+        'Sets initial value and boundaries of the progress bar
+        ProgressBarInit(prBarForm)
 
+        'Sets auto updating of the XlApp to false
+        autoUpdate(False)
+
+        'Creates "result" workbook to where the actual comparing will be done
+        CreateResult()
+
+        'Comparison itself
+        Compare()
+
+        'Hides progress bar form
+        prBarForm.Dispose()
+
+        'Allows auto updating
+        autoUpdate(True)
+
+        'Closes the originals and showing the result
+        OldWb.Close(SaveChanges:=False)
+        NewWb.Close(SaveChanges:=False)
+        XlApp.Visible = True
+
+        MessageBox.Show("All done")
+        FormSkompare.Activate()
 
     End Sub
+
+    'Gets the number of starting row and does necessary checks
+    Private Function GetStartRow(input As String) As Integer
+
+        'Kontrola na integer
+        If Integer.TryParse(input, GetStartRow) = False Then
+            MessageBox.Show("Zadaná hodnota počátečního řádku musí být typu integer")
+            Exit Function
+        Else
+            Return GetStartRow
+        End If
+    End Function
 
     'Writes main parameters to the tBox
     Public Sub ShowMainParams(tBox As RichTextBox)
@@ -344,7 +395,7 @@ Public Class SkompareMain
 
         Next
 
-            Return returnArr
+        Return returnArr
 
     End Function
 
@@ -359,14 +410,22 @@ Public Class SkompareMain
 
         'Assigns "old" array of compared values
         lastCell = CStr(GetExcelColumnName(lenCols)) & CStr(OldRows)
-        OldArr = CType(NewSheet.Range("A1", lastCell).Value, Object(,))
+        OldArr = CType(OldSheet.Range("A1", lastCell).Value, Object(,))
 
     End Sub
 
 
 
+    '           Others
+    '###############################################################
+    'Initializes progress bar form based on inputs
+    Private Sub ProgressBarInit(prBar As FormProgBar)
 
+        prBar.ProgBar.Minimum = 1
+        prBar.ProgBar.Maximum = lenRows + 1
+        prBar.ProgBar.Value = startRow
 
+    End Sub
 
 
 
@@ -444,37 +503,7 @@ Public Class SkompareMain
     End Function
 
     'Prochází sešity a porovnává řádky (vyznačení změn v řádku řeší samostatná funkce)
-    Public Sub Compare()
-
-        'Kde je více řádků/sloupců, podle toho se vezme délka pole
-        Trace.WriteLine("Getting bigger dimension")
-        PrLbl.Text = "Getting bigger dimension"
-        lenRows = GetBiggerDim(NewRows, OldRows)
-        lenCols = GetBiggerDim(NewCols, OldCols)
-
-        'Vytvoří pole pro porovnávání
-        Trace.WriteLine("Getting arrays")
-        PrLbl.Text = "Getting arrays"
-        Dim NewArr As Object(,) = CType(NewSheet.UsedRange.Value, Object(,))
-        Dim OldArr As Object(,) = CType(OldSheet.UsedRange.Value, Object(,))
-
-        'Získá číslo sloupce, podle kterého se bude hledat
-        Trace.WriteLine("Getting key column")
-        PrLbl.Text = "Getting key column"
-        'ColLookupPrim = ColSelect(FormSkompare.TBoxColSelect1.Text)
-        'ColLookupSec = ColSelect(FormSkompare.TBoxColSelect2.Text)
-
-        'Získání startovacího řádku
-        PrLbl.Text = "Checking start row input"
-        Trace.WriteLine("Checking start row input")
-        Dim StartRow As Int16
-        'Kontrola na integer
-        If Integer.TryParse(FormSkompare.TBoxStart.Text, StartRow) = False Then
-            MsgBox("Start row entered is not integer")
-            Exit Sub
-        Else
-            PrBar.Value = StartRow - 1
-        End If
+    Private Sub Compare()
 
         'Deklarace pomocných proměnných
         'Trackování, zda byla nalezena shoda
@@ -483,38 +512,29 @@ Public Class SkompareMain
         Dim SearchString As String
         'Index ve "starém" poli, kde je hledaná hodnota
         Dim OldRow As Integer
-        'Pomocná proměnná pro hledání duplicit
-        Dim i As Integer
         'Seznam položek s duplicitním UID
-        Dim duplicityArr As String()
-
-        'Získání pole vyhledávaných indexů starého pole
-        Dim OldIndArr() As String
-        'OldIndArr = GetIndArr(OldArr, ColLookupPrim, OldRows)
-        'Deklarace pole se sekundárním vyhledávacím indexem
-        Dim OldIndArrSecondary() As String
-        'OldIndArrSecondary = GetIndArr(OldArr, ColLookupSec, OldRows)
+        Dim duplicityFound As Boolean = False
 
         'Získání pole pro kontrolu duplicit (0 = index zatím nenalezen)
-        Dim Duplicity(OldRows) As Integer
-        For i = 1 To OldRows
-            Duplicity(i) = 0
+        Dim Duplicity(lenRows) As Integer
+        For Each element In Duplicity
+            Duplicity(element) = 0
         Next
 
         'Prohledávací cyklus
-        PrLbl.Text = "Starting looping"
+        prLbl.Text = "Starting looping"
         Trace.WriteLine("Starting looping")
         'Loop v "nových" datech
-        For NewRow = StartRow To NewRows
+        For NewRow = startRow To NewRows
 
             'Shoda nenalezena
             MatchFound = False
 
             'Hledaný jedinečný kód
-            'SearchString = NewArr(NewRow, ColLookupPrim)
+            SearchString = NewSearchArr(NewRow)
 
             'Vrátí polohu (řádek) hledaného kódu ve "starém" poli
-            OldRow = Array.IndexOf(OldIndArr, SearchString)
+            OldRow = Array.IndexOf(OldSearchArr, SearchString)
 
             'Nalezena shoda identifikátoru?
             If OldRow > 0 Then
@@ -522,46 +542,50 @@ Public Class SkompareMain
                 'Kontroluje duplicitu
                 If Duplicity(OldRow) = 1 Then
 
-                    'Získá pole čísel řádků se stejným SearchString
-                    duplicityArr = GetDuplicityList(OldIndArr, SearchString)
-                    'Nastaví SearchString dle sekundárního klíče
-                    'SearchString = NewArr(NewRow, ColLookupSec)
+                    If duplicityFound = False Then
 
-                    'Prochází pole duplicit  
-                    For Each element As String In duplicityArr
-                        Trace.WriteLine(OldIndArrSecondary(element) & " " & SearchString & " " & element)
-                        If OldIndArrSecondary(element) = SearchString Then
-                            OldRow = element
-                            Duplicity(OldRow) = 1
-                        End If
-                    Next
+                        MessageBox.Show("Nalezena duplicita zadaných vyhledávacích klíčů" &
+                                        Environment.NewLine &
+                                        "Skript proběhne s předpokladem max. dvou duplicit." &
+                                        Environment.NewLine &
+                                        "Pokud je předpokládané množství duplicit více, ošetřete vhodným výběrem klíčů.")
+
+                        duplicityFound = True
+
+                    End If
+
+                    OldRow = Array.IndexOf(OldSearchArr, SearchString, OldRow + 1)
 
                 End If
 
-                'Zaznamená nalezení shody
-                MatchFound = True
-                Duplicity(OldRow) = 1
+                If OldRow > 0 Then
 
-                'Porovná buňky v řádku
-                CompareRow(NewArr, OldArr, NewRow, OldRow)
+                    'Zaznamená nalezení shody
+                    MatchFound = True
+                    Duplicity(OldRow) = 1
+
+                    'Porovná buňky v řádku
+                    CompareRow(NewArr, OldArr, NewRow, OldRow)
+
+                End If
 
             End If
 
             If MatchFound = False Then
 
-                NewResSheet.Rows(NewRow).EntireRow.Interior.Color = FormSkompare.TBoxColor.BackColor
+                NewResSheet.Rows(NewRow).EntireRow.Interior.Color = highlight
 
             End If
 
-            PrBar.Value += 1
-            PrLbl.Text = "Progress: " _
-                        & Math.Round((PrBar.Value - StartRow) / (NewRows - StartRow), 2) * 100 _
+            prBar.Value += 1
+            prLbl.Text = "Progress: " _
+                        & Math.Round((prBar.Value - startRow) / (NewRows - startRow), 2) * 100 _
                         & "% (" & NewRow & " out of " & NewRows & ")"
 
         Next
 
         'Smaže nalezené (zeleně označené) řádky ve "zrušeném" listu
-        PrLbl.Text = "Cleaning found rows from Cancelled"
+        prLbl.Text = "Cleaning found rows from Cancelled"
         Trace.WriteLine("Cleaning found rows from Cancelled")
         DeleteRows(OldResSheet, Duplicity)
 
@@ -583,7 +607,7 @@ Public Class SkompareMain
 
         With NewResSheet.Rows(NewR)
 
-            For Val As Integer = 1 To Math.Min(NewCols, OldCols)
+            For Val As Integer = 1 To lenCols
 
                 NewVal = NewA.GetValue(NewR, Val)
                 OldVal = OldA.GetValue(OldR, Val)
@@ -605,12 +629,12 @@ Public Class SkompareMain
 
         'Jen obarvení
         If FormSkompare.RBtnStyle1.Checked Then
-            NewRng.Interior.Color = FormSkompare.TBoxColor.BackColor
+            NewRng.Interior.Color = highlight
             NewRng.Value = NewStr
 
             'Obarvení a komentář
         ElseIf FormSkompare.RBtnStyle2.Checked Then
-            NewRng.Interior.Color = FormSkompare.TBoxColor.BackColor
+            NewRng.Interior.Color = highlight
             NewRng.Value = NewStr
             'Vyhazuje výjimku, pokud je komentář prázdný
             If OldStr = "" Then
@@ -621,7 +645,7 @@ Public Class SkompareMain
 
             'Obarvení a řetězec
         ElseIf FormSkompare.RBtnStyle3.Checked Then
-            NewRng.Interior.Color = FormSkompare.TBoxColor.BackColor
+            NewRng.Interior.Color = highlight
             NewRng.Value = NewStr & " " _
                 & FormSkompare.TBoxStringStart.Text _
                 & OldStr _
@@ -676,9 +700,10 @@ Public Class SkompareMain
 
     'Vytváří výstupní soubor
     Sub CreateResult()
+
         Dim path As String = NewWb.Path
 
-        'Vytvoří výstupní soubor a uloží ho jako formát .xlsx (51), aby se předešlo problémům s kompatibilitou        
+        'Vytvoří výstupní soubor   
         ResultWb = XlApp.Workbooks.Add
         XlApp.ActiveSheet.Name = "NewWbSheet"
         CopyOld(ResultWb, OldWb)

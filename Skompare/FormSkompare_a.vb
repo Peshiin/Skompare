@@ -37,62 +37,14 @@ Public Class FormSkompare
 
         skompareMain.CompareInit()
 
-        'Dim progressBar As New FormProgBar
-        'skompareMain.PrLbl = progressBar.LblProgBar
-        'skompareMain.PrBar = progressBar.ProgBar
-
         'Trace.Listeners.Add(New TextWriterTraceListener("Debug.log", "myListener"))
         'Trace.WriteLine("Starting comparing @ " + DateTime.Now.ToString())
         'Trace.Indent()
 
         'Try
-        '    'Zákaz přepočítávání
-        '    Trace.WriteLine("Disabling auto-update")
-        '    skompareMain.autoUpdate(False)
-
-        '    'Získání parametrů (názvy, řádky, sloupce) vybraných listů
-        '    Trace.WriteLine("Getting sheets parameters")
-        '    skompareMain.GetSheetParams(CBoxNewSheets.GetItemText(CBoxNewSheets.SelectedItem),
-        '                                CBoxOldSheets.GetItemText(CBoxOldSheets.SelectedItem))
-
-        '    'Zobrazení formuláře s progress barem
-        '    Trace.WriteLine("Showing progress bar")
-        '    'Zobrazí formulář
-        '    progressBar.Show()
-        '    'Nastaví aktuální hodnotu baru na 1 - začátek
-        '    progressBar.ProgBar.Value = 1
-        '    'Nastaví maximum na počet řádků v "novém" listu
-        '    progressBar.ProgBar.Maximum = skompareMain.NewRows
-        '    'Přepíše label
-        '    progressBar.LblProgBar.Text = "Starting"
-
-        '    'Vytvoření souboru pro zápis výsledků
-        '    progressBar.LblProgBar.Text = "Creating output"
-        '    skompareMain.CreateResult()
-
-        '    'Spuštění porovnávadla
-        '    progressBar.LblProgBar.Text = "Starting comparison"
-        '    Trace.WriteLine("Starting Comparison")
-        '    skompareMain.Compare()
-
-        '    'Zavření progress baru
-        '    FormProgBar.Hide()
-
-        '    'Povolení přepočítávání
-        '    Trace.WriteLine("Enabling auto-update")
-        '    skompareMain.autoUpdate(True)
-
-        '    'Zavření sešitů
-        '    skompareMain.OldWb.Close(SaveChanges:=False)
-        '    skompareMain.NewWb.Close(SaveChanges:=False)
-        '    skompareMain.xlApp.visible = True
 
 
-        '    MsgBox("All done")
-        '    Trace.WriteLine("ALL DONE")
 
-        '    'Přenese formulář do popředí
-        '    Me.Activate()
 
         '    'Řešení různých výjimek
         'Catch ex As Exception
