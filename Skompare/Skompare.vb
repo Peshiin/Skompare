@@ -185,13 +185,17 @@ Public Class SkompareMain
         startRow = FormSkompare.TBoxStart.Text
 
         'Assigns columns to search by
-        SearchKeysCols(0) = ColSelect(FormSkompare.TBoxColSelect1.Text)
-        If FormSkompare.TBoxColSelect2.Enabled Then
-            SearchKeysCols(1) = ColSelect(FormSkompare.TBoxColSelect2.Text)
-        End If
-        If FormSkompare.TBoxColSelect3.Enabled Then
-            SearchKeysCols(2) = ColSelect(FormSkompare.TBoxColSelect3.Text)
-        End If
+        'Goes through all the control elements with "ColSelect" tag in FormSkompare
+        '!!!!!  does not necessarily find ColSelect1 as first   !!!!!
+        Dim i As Integer = 0
+        For Each control In FormSkompare.GBoxStatsDiff.Controls
+            If control.Tag = "ColSelect" Then
+                If control.Enabled Then
+                    SearchKeysCols(i) = ColSelect(control.Text)
+                    i += 1
+                End If
+            End If
+        Next
 
         'Assigns sheets arrays
         GetSheetArrays()

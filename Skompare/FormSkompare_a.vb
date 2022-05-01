@@ -170,7 +170,7 @@ Public Class FormSkompare
 
     End Sub
 
-    'Mění zadanou barvu podle vepsané hodnoty do textboxu
+    'Changes color of textbox acc. to input RGB and also the text color acc. to contrast to the selected color
     Private Sub TBoxColor_TextChanged(sender As Object, e As EventArgs) Handles TBoxColor.TextChanged
 
         'Rozhodí string na části podle delimiteru

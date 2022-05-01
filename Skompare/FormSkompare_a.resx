@@ -443,105 +443,6 @@
   <data name="&gt;&gt;BtnStats.ZOrder" xml:space="preserve">
     <value>9</value>
   </data>
-  <data name="&gt;&gt;RBtnStyle5.Name" xml:space="preserve">
-    <value>RBtnStyle5</value>
-  </data>
-  <data name="&gt;&gt;RBtnStyle5.Type" xml:space="preserve">
-    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;RBtnStyle5.Parent" xml:space="preserve">
-    <value>GBoxCompareStyle</value>
-  </data>
-  <data name="&gt;&gt;RBtnStyle5.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="&gt;&gt;RBtnStyle6.Name" xml:space="preserve">
-    <value>RBtnStyle6</value>
-  </data>
-  <data name="&gt;&gt;RBtnStyle6.Type" xml:space="preserve">
-    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;RBtnStyle6.Parent" xml:space="preserve">
-    <value>GBoxCompareStyle</value>
-  </data>
-  <data name="&gt;&gt;RBtnStyle6.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="&gt;&gt;RBtnStyle4.Name" xml:space="preserve">
-    <value>RBtnStyle4</value>
-  </data>
-  <data name="&gt;&gt;RBtnStyle4.Type" xml:space="preserve">
-    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;RBtnStyle4.Parent" xml:space="preserve">
-    <value>GBoxCompareStyle</value>
-  </data>
-  <data name="&gt;&gt;RBtnStyle4.ZOrder" xml:space="preserve">
-    <value>2</value>
-  </data>
-  <data name="&gt;&gt;RBtnStyle3.Name" xml:space="preserve">
-    <value>RBtnStyle3</value>
-  </data>
-  <data name="&gt;&gt;RBtnStyle3.Type" xml:space="preserve">
-    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;RBtnStyle3.Parent" xml:space="preserve">
-    <value>GBoxCompareStyle</value>
-  </data>
-  <data name="&gt;&gt;RBtnStyle3.ZOrder" xml:space="preserve">
-    <value>3</value>
-  </data>
-  <data name="&gt;&gt;RBtnStyle2.Name" xml:space="preserve">
-    <value>RBtnStyle2</value>
-  </data>
-  <data name="&gt;&gt;RBtnStyle2.Type" xml:space="preserve">
-    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;RBtnStyle2.Parent" xml:space="preserve">
-    <value>GBoxCompareStyle</value>
-  </data>
-  <data name="&gt;&gt;RBtnStyle2.ZOrder" xml:space="preserve">
-    <value>4</value>
-  </data>
-  <data name="&gt;&gt;RBtnStyle1.Name" xml:space="preserve">
-    <value>RBtnStyle1</value>
-  </data>
-  <data name="&gt;&gt;RBtnStyle1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;RBtnStyle1.Parent" xml:space="preserve">
-    <value>GBoxCompareStyle</value>
-  </data>
-  <data name="&gt;&gt;RBtnStyle1.ZOrder" xml:space="preserve">
-    <value>5</value>
-  </data>
-  <data name="GBoxCompareStyle.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Microsoft Sans Serif, 10pt</value>
-  </data>
-  <data name="GBoxCompareStyle.Location" type="System.Drawing.Point, System.Drawing">
-    <value>557, 181</value>
-  </data>
-  <data name="GBoxCompareStyle.Size" type="System.Drawing.Size, System.Drawing">
-    <value>215, 183</value>
-  </data>
-  <data name="GBoxCompareStyle.TabIndex" type="System.Int32, mscorlib">
-    <value>6</value>
-  </data>
-  <data name="GBoxCompareStyle.Text" xml:space="preserve">
-    <value>Comparison style</value>
-  </data>
-  <data name="&gt;&gt;GBoxCompareStyle.Name" xml:space="preserve">
-    <value>GBoxCompareStyle</value>
-  </data>
-  <data name="&gt;&gt;GBoxCompareStyle.Type" xml:space="preserve">
-    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;GBoxCompareStyle.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;GBoxCompareStyle.ZOrder" xml:space="preserve">
-    <value>4</value>
-  </data>
   <data name="RBtnStyle5.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
@@ -703,6 +604,33 @@
   </data>
   <data name="&gt;&gt;RBtnStyle1.ZOrder" xml:space="preserve">
     <value>5</value>
+  </data>
+  <data name="GBoxCompareStyle.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Microsoft Sans Serif, 10pt</value>
+  </data>
+  <data name="GBoxCompareStyle.Location" type="System.Drawing.Point, System.Drawing">
+    <value>557, 181</value>
+  </data>
+  <data name="GBoxCompareStyle.Size" type="System.Drawing.Size, System.Drawing">
+    <value>215, 183</value>
+  </data>
+  <data name="GBoxCompareStyle.TabIndex" type="System.Int32, mscorlib">
+    <value>6</value>
+  </data>
+  <data name="GBoxCompareStyle.Text" xml:space="preserve">
+    <value>Comparison style</value>
+  </data>
+  <data name="&gt;&gt;GBoxCompareStyle.Name" xml:space="preserve">
+    <value>GBoxCompareStyle</value>
+  </data>
+  <data name="&gt;&gt;GBoxCompareStyle.Type" xml:space="preserve">
+    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;GBoxCompareStyle.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;GBoxCompareStyle.ZOrder" xml:space="preserve">
+    <value>4</value>
   </data>
   <data name="ChBoxColSelect3.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -1272,6 +1200,21 @@
   <data name="&gt;&gt;Panel1.ZOrder" xml:space="preserve">
     <value>12</value>
   </data>
+  <data name="lblTest.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="lblTest.Location" type="System.Drawing.Point, System.Drawing">
+    <value>12, 14</value>
+  </data>
+  <data name="lblTest.Size" type="System.Drawing.Size, System.Drawing">
+    <value>39, 13</value>
+  </data>
+  <data name="lblTest.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="lblTest.Text" xml:space="preserve">
+    <value>Label2</value>
+  </data>
   <data name="&gt;&gt;lblTest.Name" xml:space="preserve">
     <value>lblTest</value>
   </data>
@@ -1307,33 +1250,6 @@
   </data>
   <data name="&gt;&gt;PanelBottom.ZOrder" xml:space="preserve">
     <value>13</value>
-  </data>
-  <data name="lblTest.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="lblTest.Location" type="System.Drawing.Point, System.Drawing">
-    <value>12, 14</value>
-  </data>
-  <data name="lblTest.Size" type="System.Drawing.Size, System.Drawing">
-    <value>39, 13</value>
-  </data>
-  <data name="lblTest.TabIndex" type="System.Int32, mscorlib">
-    <value>0</value>
-  </data>
-  <data name="lblTest.Text" xml:space="preserve">
-    <value>Label2</value>
-  </data>
-  <data name="&gt;&gt;lblTest.Name" xml:space="preserve">
-    <value>lblTest</value>
-  </data>
-  <data name="&gt;&gt;lblTest.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;lblTest.Parent" xml:space="preserve">
-    <value>PanelBottom</value>
-  </data>
-  <data name="&gt;&gt;lblTest.ZOrder" xml:space="preserve">
-    <value>0</value>
   </data>
   <data name="BtnAdvanced.Font" type="System.Drawing.Font, System.Drawing">
     <value>Microsoft Sans Serif, 15pt</value>

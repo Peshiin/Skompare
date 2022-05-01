@@ -43,6 +43,9 @@ Partial Class FormSkompare
         Me.RBtnStyle2 = New System.Windows.Forms.RadioButton()
         Me.RBtnStyle1 = New System.Windows.Forms.RadioButton()
         Me.GBoxStatsDiff = New System.Windows.Forms.GroupBox()
+        Me.ChBoxColSelect3 = New System.Windows.Forms.CheckBox()
+        Me.ChBoxColSelect2 = New System.Windows.Forms.CheckBox()
+        Me.TBoxColSelect3 = New System.Windows.Forms.TextBox()
         Me.TBoxColSelect2 = New System.Windows.Forms.TextBox()
         Me.BtnColor = New System.Windows.Forms.Button()
         Me.TBoxColor = New System.Windows.Forms.TextBox()
@@ -65,9 +68,6 @@ Partial Class FormSkompare
         Me.BtnAdvanced = New System.Windows.Forms.Button()
         Me.CBoxOldSheets = New System.Windows.Forms.ComboBox()
         Me.CBoxNewSheets = New System.Windows.Forms.ComboBox()
-        Me.TBoxColSelect3 = New System.Windows.Forms.TextBox()
-        Me.ChBoxColSelect2 = New System.Windows.Forms.CheckBox()
-        Me.ChBoxColSelect3 = New System.Windows.Forms.CheckBox()
         Me.GBoxCompareStyle.SuspendLayout()
         Me.GBoxStatsDiff.SuspendLayout()
         Me.Panel1.SuspendLayout()
@@ -206,11 +206,31 @@ Partial Class FormSkompare
         Me.GBoxStatsDiff.Name = "GBoxStatsDiff"
         Me.GBoxStatsDiff.TabStop = False
         '
+        'ChBoxColSelect3
+        '
+        resources.ApplyResources(Me.ChBoxColSelect3, "ChBoxColSelect3")
+        Me.ChBoxColSelect3.Name = "ChBoxColSelect3"
+        Me.ChBoxColSelect3.UseVisualStyleBackColor = True
+        '
+        'ChBoxColSelect2
+        '
+        resources.ApplyResources(Me.ChBoxColSelect2, "ChBoxColSelect2")
+        Me.ChBoxColSelect2.Name = "ChBoxColSelect2"
+        Me.ChBoxColSelect2.UseVisualStyleBackColor = True
+        '
+        'TBoxColSelect3
+        '
+        resources.ApplyResources(Me.TBoxColSelect3, "TBoxColSelect3")
+        Me.TBoxColSelect3.ForeColor = System.Drawing.SystemColors.InactiveCaption
+        Me.TBoxColSelect3.Name = "TBoxColSelect3"
+        Me.TBoxColSelect3.Tag = "ColSelect"
+        '
         'TBoxColSelect2
         '
         resources.ApplyResources(Me.TBoxColSelect2, "TBoxColSelect2")
         Me.TBoxColSelect2.ForeColor = System.Drawing.SystemColors.InactiveCaption
         Me.TBoxColSelect2.Name = "TBoxColSelect2"
+        Me.TBoxColSelect2.Tag = "ColSelect"
         '
         'BtnColor
         '
@@ -254,6 +274,7 @@ Partial Class FormSkompare
         '
         resources.ApplyResources(Me.TBoxColSelect1, "TBoxColSelect1")
         Me.TBoxColSelect1.Name = "TBoxColSelect1"
+        Me.TBoxColSelect1.Tag = "ColSelect"
         '
         'TBoxStringStart
         '
@@ -328,24 +349,6 @@ Partial Class FormSkompare
         resources.ApplyResources(Me.CBoxNewSheets, "CBoxNewSheets")
         Me.CBoxNewSheets.FormattingEnabled = True
         Me.CBoxNewSheets.Name = "CBoxNewSheets"
-        '
-        'TBoxColSelect3
-        '
-        resources.ApplyResources(Me.TBoxColSelect3, "TBoxColSelect3")
-        Me.TBoxColSelect3.ForeColor = System.Drawing.SystemColors.InactiveCaption
-        Me.TBoxColSelect3.Name = "TBoxColSelect3"
-        '
-        'ChBoxColSelect2
-        '
-        resources.ApplyResources(Me.ChBoxColSelect2, "ChBoxColSelect2")
-        Me.ChBoxColSelect2.Name = "ChBoxColSelect2"
-        Me.ChBoxColSelect2.UseVisualStyleBackColor = True
-        '
-        'ChBoxColSelect3
-        '
-        resources.ApplyResources(Me.ChBoxColSelect3, "ChBoxColSelect3")
-        Me.ChBoxColSelect3.Name = "ChBoxColSelect3"
-        Me.ChBoxColSelect3.UseVisualStyleBackColor = True
         '
         'FormSkompare
         '
