@@ -95,7 +95,7 @@ Public Class FormSkompare
     Private Sub Skompare_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
         'Vytvoření aplikace excel, se ktrou se dále bude pracovat
-        skompareMain.Application = New Excel.Application
+        skompareMain.XlApp = New Excel.Application
 
         'Schování panelu "advanced"
         advancedVisibility = False
@@ -114,7 +114,7 @@ Public Class FormSkompare
             Catch ex As Exception
             End Try
 
-            skompareMain.Application.Quit()
+            skompareMain.XlApp.Quit()
 
         Else
             e.Cancel = True

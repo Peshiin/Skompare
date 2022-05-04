@@ -12,14 +12,6 @@ Public Class SkompareMain
 
     'Deklarace aplikace excel
     Private XlApp As Excel.Application
-    Property Application As Excel.Application
-        Get
-            Return XlApp
-        End Get
-        Set(value As Excel.Application)
-            XlApp = value
-        End Set
-    End Property
 
     'Deklarace sešitů
     Private NewWb As Excel.Workbook
