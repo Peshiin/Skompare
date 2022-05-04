@@ -17,18 +17,6 @@ Public Class SkompareMain
     Private NewWb As Excel.Workbook
     Private OldWb As Excel.Workbook
     Private ResultWb As Excel.Workbook
-    Private Wbs = New Excel.Workbook() {NewWb, OldWb, ResultWb}
-    Property Workbooks As Excel.Workbook()
-        Get
-            Return Wbs
-        End Get
-        Set(value() As Excel.Workbook)
-            Wbs = value
-            NewWb = value(1)
-            OldWb = value(2)
-            NewWb = value(3)
-        End Set
-    End Property
 
     'Deklarace listů
     Private NewSheet As Excel.Worksheet
@@ -53,6 +41,9 @@ Public Class SkompareMain
 
     'Declaration of the row where the comparing shall start (to ignore header)
     Private startRow As Integer
+
+    'Defines which style of comparing is used
+    Private compStyle As String
 
     'Deklarace polí porovnávaných rozsahů
     Private NewArr As Object(,)
@@ -197,6 +188,11 @@ Public Class SkompareMain
 
         'Assigns starting row
         startRow = GetStartRow(FormSkompare.TBoxStart.Text)
+
+        'Assigns comparing style to the name of the checked radio button
+        compStyle = FormSkompare.GBoxCompareStyle.Controls.OfType(Of RadioButton).
+                        Where(Function(r) r.Checked = True).
+                        FirstOrDefault().Name
 
         'Assigns highlighting color
         highlight = FormSkompare.TBoxColor.BackColor
@@ -635,12 +631,12 @@ Public Class SkompareMain
     Private Sub CompareStyle(NewRng As Excel.Range, NewStr As String, OldStr As String)
 
         'Jen obarvení
-        If FormSkompare.RBtnStyle1.Checked Then
+        If compStyle = "RBtnStyle1" Then
             NewRng.Interior.Color = highlight
             NewRng.Value = NewStr
 
             'Obarvení a komentář
-        ElseIf FormSkompare.RBtnStyle2.Checked Then
+        ElseIf compStyle = "RBtnStyle2" Then
             NewRng.Interior.Color = highlight
             NewRng.Value = NewStr
             'Vyhazuje výjimku, pokud je komentář prázdný
@@ -651,7 +647,7 @@ Public Class SkompareMain
             End If
 
             'Obarvení a řetězec
-        ElseIf FormSkompare.RBtnStyle3.Checked Then
+        ElseIf compStyle = "RBtnStyle3" Then
             NewRng.Interior.Color = highlight
             NewRng.Value = NewStr & " " _
                 & FormSkompare.TBoxStringStart.Text _
@@ -659,7 +655,7 @@ Public Class SkompareMain
                 & FormSkompare.TBoxStringEnd.Text _
 
             'Jen komentář
-        ElseIf FormSkompare.RBtnStyle4.Checked Then
+        ElseIf compStyle = "RBtnStyle4" Then
             NewRng.Value = NewStr
             'Vyhazuje výjimku, pokud je komentář prázdný
             If OldStr = "" Then
@@ -669,14 +665,14 @@ Public Class SkompareMain
             End If
 
             'Jen řetězec
-        ElseIf FormSkompare.RBtnStyle5.Checked Then
+        ElseIf compStyle = "RBtnStyle5" Then
             NewRng.Value = NewStr & " " _
                 & FormSkompare.TBoxStringStart.Text _
                 & OldStr _
                 & FormSkompare.TBoxStringEnd.Text _
 
             'Řetězec v komentáři
-        ElseIf FormSkompare.RBtnStyle6.Checked Then
+        ElseIf compStyle = "RBtnStyle6" Then
             NewRng.Value = NewStr
             'Vyhazuje výjimku, pokud je komentář prázdný
             If OldStr = "" Then
