@@ -96,11 +96,21 @@ Public Class SkompareMain
         'Writes the name of sheets to the UI
         If sender Is FormSkompare.BtnNew Then
 
+            'Closes previously opened workbook
+            If NewWb IsNot Nothing Then
+                NewWb.Close()
+            End If
+
             NewWb = XlApp.Workbooks.Open(FilePath, [ReadOnly]:=True)
             FormSkompare.LblNewFileName.Text = Dir(FilePath)
             WriteWorksheetsToUI(NewWb, FormSkompare.CBoxNewSheets)
 
         ElseIf sender Is FormSkompare.BtnOld Then
+
+            If OldWb IsNot Nothing Then
+                'Closes previously opened workbook
+                OldWb.Close()
+            End If
 
             OldWb = XlApp.Workbooks.Open(FilePath, [ReadOnly]:=True)
             FormSkompare.LblOldFileName.Text = Dir(FilePath)
@@ -230,9 +240,9 @@ Public Class SkompareMain
         autoUpdate(True)
 
         'Closes the originals and showing the result
-        OldWb.Close(SaveChanges:=False)
-        NewWb.Close(SaveChanges:=False)
         XlApp.Visible = True
+        XlApp.Windows(NewWb.Name).Visible = False
+        XlApp.Windows(OldWb.Name).Visible = False
 
         MessageBox.Show("All done")
         FormSkompare.Activate()
@@ -597,22 +607,27 @@ Public Class SkompareMain
         Dim NewVal As String
         Dim OldVal As String
 
-        With NewResSheet.Rows(NewR)
+        Try
 
-            For Val As Integer = 1 To lenCols
+            With NewResSheet.Rows(NewR)
 
-                NewVal = NewA.GetValue(NewR, Val)
-                OldVal = OldA.GetValue(OldR, Val)
+                For Val As Integer = 1 To lenCols
 
-                If NewVal <> OldVal Then
+                    NewVal = NewA.GetValue(NewR, Val)
+                    OldVal = OldA.GetValue(OldR, Val)
 
-                    CompareStyle(.Cells(1, Val), NewVal, OldVal)
+                    If NewVal <> OldVal Then
 
-                End If
+                        CompareStyle(.Cells(1, Val), NewVal, OldVal)
 
-            Next
+                    End If
 
-        End With
+                Next
+
+            End With
+
+        Catch
+        End Try
 
     End Sub
 
@@ -718,7 +733,7 @@ Public Class SkompareMain
     'Metoda pro vymazání nalezených (označeno zeleně) řádek ve "zrušeném" listu
     Sub DeleteRows(sheet As Excel.Worksheet, indexArray() As Integer)
 
-        For i As Integer = indexArray.Length - 1 To FormSkompare.TBoxStart.Text Step -1
+        For i As Integer = indexArray.Length - 1 To startRow Step -1
 
             If indexArray(i) = 1 Then
 
@@ -758,38 +773,6 @@ Public Class SkompareMain
         Return columnName
     End Function
 
-    'Metoda pro nalezení duplicitních jedinečných kódů
-    Public Function GetDuplicityList(arr As Array, str As String) As String()
-
-        Dim row = 0
-        Dim duplicityList As New List(Of String)
-
-        For Each element In arr
-            If CStr(element) = str Then
-                duplicityList.Add(row)
-            End If
-            row += 1
-        Next
-
-        GetDuplicityList = duplicityList.ToArray
-
-    End Function
-
-    'Vrátí pole indexů, podle kterých se vyhledává
-    Function GetIndArr(array As Object, col As Integer, len As Integer)
-
-        Dim IndArr(len) As String
-
-        For i = 1 To len
-
-            IndArr(i) = array(i, col)
-
-        Next
-
-        Return IndArr
-
-    End Function
-
     'Vrátí poslední buňku ve sloupci/řádku
     Private Function GetLast(ws As Excel.Worksheet, order As Excel.XlSearchOrder) As Excel.Range
         GetLast = ws.Cells.Find(What:="*",
@@ -800,68 +783,5 @@ Public Class SkompareMain
                                   SearchDirection:=Excel.XlSearchDirection.xlPrevious,
                                   MatchCase:=False)
     End Function
-
-    'Získává data o počtech řádků a sloupců v jednotlivých sešitech
-    Public Function GetSheetParams(newSheetName As String, oldSheetName As String)
-
-        'Přiřazením globálním proměnným
-        OldSheet = OldWb.Worksheets(oldSheetName)
-        NewSheet = NewWb.Worksheets(newSheetName)
-
-        'Deklarace pole
-        Dim returnArr()() As String = New String(1)() {}
-        returnArr(0) = New String(1) {}
-        returnArr(1) = New String(1) {}
-
-        returnArr(0)(0) = CStr(GetLast(OldSheet, order:=Excel.XlSearchOrder.xlByColumns).Row)
-        returnArr(0)(1) = CStr(GetLast(NewSheet, order:=Excel.XlSearchOrder.xlByColumns).Row)
-
-        returnArr(1)(0) = CStr(GetLast(OldSheet, order:=Excel.XlSearchOrder.xlByRows).Column)
-        returnArr(1)(1) = CStr(GetLast(NewSheet, order:=Excel.XlSearchOrder.xlByRows).Column)
-
-        OldRows = returnArr(0)(0)
-        NewRows = returnArr(0)(1)
-
-        OldCols = returnArr(1)(0)
-        NewCols = returnArr(1)(1)
-
-        Return returnArr
-
-    End Function
-
-    'Otevírá sešity pro porovnání
-    Public Sub OpenExcel(FilePath As String, sender As Object)
-
-        'Výběr, které objekty se upraví podle stisknutého tlačítka
-        If sender Is FormSkompare.BtnNew Then 'Stisknuto "nové" tlačítko
-
-
-        ElseIf sender Is FormSkompare.BtnOld Then 'Stisknuto "staré" tlačítko
-
-            'Otevření souboru v aplikaci Excel
-            OldWb = XlApp.Workbooks.Open(FilePath, [ReadOnly]:=True)
-
-        End If
-
-    End Sub
-
-    'Vypisuje listy sešitů do přehledového okénka
-    Sub WriteFileData(Wb As Excel.Workbook, FileName As String, Cbox As Object, nameLbl As Object)
-
-        'Vypsání názvu souboru do formuláře (Dir() vybere pouze název souboru a ne celou cestu)
-        nameLbl.Text = Dir(FileName)
-
-        'Vyčištění ListBoxu od popisku
-        Cbox.Items.Clear()
-        'Vypsání názvů listů ve vybraném sešitu
-        For Each sheet In Wb.Worksheets
-            Cbox.Items.Add(sheet.Name)
-        Next
-
-        'Nastaví do comboboxu hodnotu prvního listu
-        Dim sheetOne As Excel.Worksheet = Wb.Worksheets(1)
-        Cbox.SelectedIndex = Cbox.FindStringExact(sheetOne.Name)
-
-    End Sub
 
 End Class
