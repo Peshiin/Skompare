@@ -11,7 +11,7 @@ Public Class SkompareMain
     '###############################################################
 
     'Deklarace aplikace excel
-    Private XlApp As Excel.Application
+    Public XlApp As Excel.Application
 
     'Deklarace sešitů
     Private NewWb As Excel.Workbook
