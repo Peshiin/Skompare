@@ -37,9 +37,7 @@ Public Class FormSkompare
 
         skompareMain.CompareInit()
 
-        'Trace.Listeners.Add(New TextWriterTraceListener("Debug.log", "myListener"))
-        'Trace.WriteLine("Starting comparing @ " + DateTime.Now.ToString())
-        'Trace.Indent()
+
 
         'Try
 
@@ -47,42 +45,7 @@ Public Class FormSkompare
 
 
         '    'Řešení různých výjimek
-        'Catch ex As Exception
-
-        '    Trace.WriteLine(ex.StackTrace _
-        '                    & Environment.NewLine _
-        '                    & ex.Message)
-        '    Trace.WriteLine(ex.InnerException)
-        '    Trace.WriteLine(ex.TargetSite)
-        '    Trace.WriteLine(ex.Source)
-        '    Trace.WriteLine(ex.Data)
-
-        '    'Nejsou vybrány oba sešity
-        '    If TypeOf ex Is NullReferenceException _
-        '                    OrElse TypeOf ex Is System.Runtime.InteropServices.COMException Then
-        '        Trace.WriteLine("EXCEPTION: " & ex.Message)
-        '        Trace.Flush()
-        '        Exit Sub
-
-        '        'Při chybě kvůli nepřepsání souboru
-        '    ElseIf TypeOf ex Is System.Runtime.InteropServices.COMException Then
-        '        MsgBox("Compared sheet will not be overwritten")
-        '        Trace.WriteLine("EXCEPTION: " & ex.Message)
-        '        Trace.Flush()
-        '        Exit Sub
-
-        '        'Ostatní výjimky
-        '    Else
-
-        '        MsgBox("Exception found: " & ex.Message)
-        '        Trace.WriteLine("EXCEPTION: " & ex.Message)
-        '        Trace.Flush()
-        '        FormProgBar.Hide()
-        '        Exit Sub
-
-        '    End If
-
-        'End Try
+        'Catch 
 
         'Trace.Unindent()
         'Trace.WriteLine("Comparing ended")

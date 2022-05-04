@@ -154,96 +154,6 @@ Public Class SkompareMain
 
     '           Data extraction
     '###############################################################
-    'Compare function initialization
-    Public Sub CompareInit()
-
-        'Initialize progress bar form
-        Dim prBarForm = New FormProgBar
-        prBarForm.Show()
-        prBar = prBarForm.ProgBar
-        prLbl = prBarForm.LblProgBar
-        prBarForm.LblProgBar.Text = "Inicializace porovnání"
-
-        'Tries to assign sheet parameters if workbooks are assigned
-        If NewWb IsNot Nothing And
-            OldWb IsNot Nothing Then
-
-            AssignSheetsParams(FormSkompare.CBoxNewSheets.SelectedItem,
-                               FormSkompare.CBoxOldSheets.SelectedItem)
-        Else
-            MessageBox.Show("Nejsou vybrány soubory pro porovnání")
-            prBarForm.Dispose()
-            Exit Sub
-        End If
-
-        'Checks the inputs
-        If CheckInput() = False Then
-            prBarForm.Dispose()
-            Exit Sub
-        End If
-
-        'Assigns sheets variables
-        AssignSheetsParams(FormSkompare.CBoxNewSheets.SelectedItem,
-                           FormSkompare.CBoxOldSheets.SelectedItem)
-
-        'Assigns starting row
-        startRow = GetStartRow(FormSkompare.TBoxStart.Text)
-
-        'Assigns comparing style to the name of the checked radio button
-        compStyle = FormSkompare.GBoxCompareStyle.Controls.OfType(Of RadioButton).
-                        Where(Function(r) r.Checked = True).
-                        FirstOrDefault().Name
-
-        'Assigns highlighting color
-        highlight = FormSkompare.TBoxColor.BackColor
-
-        'Assigns columns to search by
-        'Goes through all the control elements with "ColSelect" tag in FormSkompare
-        '!!!!!  does not necessarily find ColSelect1 as first   !!!!!
-        Dim i As Integer = 0
-        For Each control In FormSkompare.GBoxStatsDiff.Controls
-            If control.Tag = "ColSelect" Then
-                If control.Enabled Then
-                    SearchKeysCols(i) = ColSelect(control.Text)
-                    i += 1
-                End If
-            End If
-        Next
-
-        'Assigns sheets arrays
-        GetSheetArrays()
-
-        'Assigns search arrays
-        NewSearchArr = GetSearchArray(NewArr)
-        OldSearchArr = GetSearchArray(OldArr)
-
-        'Sets initial value and boundaries of the progress bar
-        ProgressBarInit(prBarForm)
-
-        'Sets auto updating of the XlApp to false
-        autoUpdate(False)
-
-        'Creates "result" workbook to where the actual comparing will be done
-        CreateResult()
-
-        'Comparison itself
-        Compare()
-
-        'Hides progress bar form
-        prBarForm.Dispose()
-
-        'Allows auto updating
-        autoUpdate(True)
-
-        'Closes the originals and showing the result
-        XlApp.Visible = True
-        XlApp.Windows(NewWb.Name).Visible = False
-        XlApp.Windows(OldWb.Name).Visible = False
-
-        MessageBox.Show("All done")
-        FormSkompare.Activate()
-
-    End Sub
 
     'Gets the number of starting row and does necessary checks
     Private Function GetStartRow(input As String) As Integer
@@ -412,52 +322,7 @@ Public Class SkompareMain
 
     End Sub
 
-
-
-    '           Others
-    '###############################################################
-    'Initializes progress bar form based on inputs
-    Private Sub ProgressBarInit(prBar As FormProgBar)
-
-        prBar.ProgBar.Minimum = 1
-        prBar.ProgBar.Maximum = lenRows + 1
-        prBar.ProgBar.Value = startRow
-
-    End Sub
-
-
-
-
-
-
-    'Allow/disable auto updates of Excel App
-    Sub autoUpdate(auto As Boolean)
-
-        If auto = True Then
-
-            'Allow auto updates
-            With XlApp
-                .Calculation = Excel.XlCalculation.xlCalculationAutomatic
-                .ScreenUpdating = True
-                .DisplayStatusBar = True
-                .EnableEvents = True
-            End With
-
-        ElseIf auto = False Then
-
-            'Disable auto updates
-            With XlApp
-                .Calculation = Excel.XlCalculation.xlCalculationManual
-                .ScreenUpdating = False
-                .DisplayStatusBar = False
-                .EnableEvents = False
-            End With
-
-        End If
-
-    End Sub
-
-    'Vrací číslo sloupce, podle kterého se vyhledává
+    'Gets number of the input column
     Private Function ColSelect(TboxVal As String) As Integer
 
         'Přepis písmene sloupce na číslo
@@ -500,7 +365,185 @@ Public Class SkompareMain
 
     End Function
 
-    'Prochází sešity a porovnává řádky (vyznačení změn v řádku řeší samostatná funkce)
+    'Returns bigger value from the two input
+    Function GetBiggerDim(x As Integer, y As Integer) As Integer
+
+        If x > y Then
+            GetBiggerDim = x
+        Else
+            GetBiggerDim = y
+        End If
+
+        Return GetBiggerDim
+
+    End Function
+
+    'Gets letter of a column from input number
+    Public Function GetExcelColumnName(columnNumber As Integer) As String
+
+        Dim columnName As String = String.Empty
+        Dim modulo As Integer
+
+        While columnNumber > 0
+            modulo = (columnNumber - 1) Mod 26
+            columnName = Convert.ToChar(65 + modulo).ToString() & columnName
+            columnNumber = CInt((columnNumber - modulo) / 26)
+        End While
+
+        Return columnName
+    End Function
+
+    'Gets last cell in column/row
+    Private Function GetLast(ws As Excel.Worksheet, order As Excel.XlSearchOrder) As Excel.Range
+        GetLast = ws.Cells.Find(What:="*",
+                                  After:=ws.Cells(1, 1),
+                                  LookIn:=Excel.XlFindLookIn.xlFormulas,
+                                  LookAt:=Excel.XlLookAt.xlPart,
+                                  SearchOrder:=order,
+                                  SearchDirection:=Excel.XlSearchDirection.xlPrevious,
+                                  MatchCase:=False)
+    End Function
+
+    '           Comparing
+    '###############################################################
+
+    'Compare function initialization
+    Public Sub CompareInit()
+
+        'Initializes tracing for debugging
+        Trace.Listeners.Add(New TextWriterTraceListener("Debug.log", "myListener"))
+        Trace.WriteLine("Starting comparing @ " + DateTime.Now.ToString())
+        Trace.Indent()
+
+        'Initialize progress bar form
+        Dim prBarForm = New FormProgBar
+        prBarForm.Show()
+        prBar = prBarForm.ProgBar
+        prLbl = prBarForm.LblProgBar
+        prBarForm.LblProgBar.Text = "Inicializace porovnání"
+
+        Try
+            'Tries to assign sheet parameters if workbooks are assigned
+            If NewWb IsNot Nothing And
+                OldWb IsNot Nothing Then
+
+                AssignSheetsParams(FormSkompare.CBoxNewSheets.SelectedItem,
+                                   FormSkompare.CBoxOldSheets.SelectedItem)
+            Else
+                MessageBox.Show("Nejsou vybrány soubory pro porovnání")
+                prBarForm.Dispose()
+                Exit Sub
+            End If
+
+            'Checks the inputs
+            If CheckInput() = False Then
+                prBarForm.Dispose()
+                Exit Sub
+            End If
+
+            'Assigns sheets variables
+            AssignSheetsParams(FormSkompare.CBoxNewSheets.SelectedItem,
+                               FormSkompare.CBoxOldSheets.SelectedItem)
+
+            'Assigns starting row
+            startRow = GetStartRow(FormSkompare.TBoxStart.Text)
+
+            'Assigns comparing style to the name of the checked radio button
+            compStyle = FormSkompare.GBoxCompareStyle.Controls.OfType(Of RadioButton).
+                            Where(Function(r) r.Checked = True).
+                            FirstOrDefault().Name
+
+            'Assigns highlighting color
+            highlight = FormSkompare.TBoxColor.BackColor
+
+            'Assigns columns to search by
+            'Goes through all the control elements with "ColSelect" tag in FormSkompare
+            '!!!!!  does not necessarily find ColSelect1 as first   !!!!!
+            Dim i As Integer = 0
+            For Each control In FormSkompare.GBoxStatsDiff.Controls
+                If control.Tag = "ColSelect" Then
+                    If control.Enabled Then
+                        SearchKeysCols(i) = ColSelect(control.Text)
+                        i += 1
+                    End If
+                End If
+            Next
+
+            'Assigns sheets arrays
+            GetSheetArrays()
+
+            'Assigns search arrays
+            NewSearchArr = GetSearchArray(NewArr)
+            OldSearchArr = GetSearchArray(OldArr)
+
+            'Sets initial value and boundaries of the progress bar
+            ProgressBarInit(prBarForm)
+
+            'Sets auto updating of the XlApp to false
+            autoUpdate(False)
+
+            'Creates "result" workbook to where the actual comparing will be done
+            CreateResult()
+
+            'Comparison itself
+            Compare()
+
+            'Hides progress bar form
+            prBarForm.Dispose()
+
+            'Allows auto updating
+            autoUpdate(True)
+
+            'Closes the originals and showing the result
+            XlApp.Visible = True
+            XlApp.Windows(NewWb.Name).Visible = False
+            XlApp.Windows(OldWb.Name).Visible = False
+
+            MessageBox.Show("All done")
+            FormSkompare.Activate()
+
+
+        Catch ex As Exception
+
+            Trace.WriteLine(ex.StackTrace _
+                            & Environment.NewLine _
+                            & ex.Message)
+            Trace.WriteLine(ex.InnerException)
+            Trace.WriteLine(ex.TargetSite)
+            Trace.WriteLine(ex.Source)
+            Trace.WriteLine(ex.Data)
+
+            prBarForm.Dispose()
+
+            'Nejsou vybrány oba sešity
+            If TypeOf ex Is NullReferenceException _
+                            OrElse TypeOf ex Is System.Runtime.InteropServices.COMException Then
+                Trace.WriteLine("EXCEPTION: " & ex.Message)
+                Trace.Flush()
+                Exit Sub
+
+                'Při chybě kvůli nepřepsání souboru
+            ElseIf TypeOf ex Is System.Runtime.InteropServices.COMException Then
+                MsgBox("Compared sheet will not be overwritten")
+                Trace.WriteLine("EXCEPTION: " & ex.Message)
+                Trace.Flush()
+                Exit Sub
+
+                'Ostatní výjimky
+            Else
+
+                MsgBox("Exception found: " & ex.Message)
+                Trace.WriteLine("EXCEPTION: " & ex.Message)
+                Trace.Flush()
+                Exit Sub
+
+            End If
+
+        End Try
+
+    End Sub
+
+    'Goes through the worksheets and compares rows
     Private Sub Compare()
 
         'Deklarace pomocných proměnných
@@ -596,7 +639,7 @@ Public Class SkompareMain
 
     End Sub
 
-    'Vyznačuje změny v řádku
+    'Compares values in single rows
     Sub CompareRow(NewA As Array, OldA As Array, NewR As Integer, OldR As Integer)
 
         'Deklarace pomocných proměnných
@@ -627,7 +670,7 @@ Public Class SkompareMain
 
     End Sub
 
-    'Rozhoduje, jak se vyznačí změna
+    'Defines how the differences found shall be highlighted
     Private Sub CompareStyle(NewRng As Excel.Range, NewStr As String, OldStr As String)
 
         'Jen obarvení
@@ -686,7 +729,45 @@ Public Class SkompareMain
         End If
     End Sub
 
-    'Metoda pro kopírování listů do výstupního souboru
+    '           Others
+    '###############################################################
+    'Initializes progress bar form based on inputs
+    Private Sub ProgressBarInit(prBar As FormProgBar)
+
+        prBar.ProgBar.Minimum = 1
+        prBar.ProgBar.Maximum = lenRows + 1
+        prBar.ProgBar.Value = startRow
+
+    End Sub
+
+    'Allow/disable auto updates of Excel App
+    Sub autoUpdate(auto As Boolean)
+
+        If auto = True Then
+
+            'Allow auto updates
+            With XlApp
+                .Calculation = Excel.XlCalculation.xlCalculationAutomatic
+                .ScreenUpdating = True
+                .DisplayStatusBar = True
+                .EnableEvents = True
+            End With
+
+        ElseIf auto = False Then
+
+            'Disable auto updates
+            With XlApp
+                .Calculation = Excel.XlCalculation.xlCalculationManual
+                .ScreenUpdating = False
+                .DisplayStatusBar = False
+                .EnableEvents = False
+            End With
+
+        End If
+
+    End Sub
+
+    'Copy sheets from "old" workbook to the "result" one
     Sub CopyOld(res As Excel.Workbook, old As Excel.Workbook)
 
         Dim oldSheets As Excel.Sheets = old.Worksheets()
@@ -701,7 +782,7 @@ Public Class SkompareMain
 
     End Sub
 
-    'Vytváří výstupní soubor
+    'Creates "result" workbook
     Sub CreateResult()
 
         Dim path As String = NewWb.Path
@@ -726,7 +807,7 @@ Public Class SkompareMain
 
     End Sub
 
-    'Metoda pro vymazání nalezených (označeno zeleně) řádek ve "zrušeném" listu
+    'Deletes "found" rows from "Cancelled" sheet in "result" workbook
     Sub DeleteRows(sheet As Excel.Worksheet, indexArray() As Integer)
 
         For i As Integer = indexArray.Length - 1 To startRow Step -1
@@ -740,44 +821,5 @@ Public Class SkompareMain
         Next
 
     End Sub
-
-    'Poskytuje hodnotu pro velikost pole (který sešit má víc řádků/sloupců)
-    Function GetBiggerDim(x As Integer, y As Integer) As Integer
-
-        If x > y Then
-            GetBiggerDim = x
-        Else
-            GetBiggerDim = y
-        End If
-
-        Return GetBiggerDim
-
-    End Function
-
-    'Převádí číslo sloupce na písmeno
-    Public Function GetExcelColumnName(columnNumber As Integer) As String
-
-        Dim columnName As String = String.Empty
-        Dim modulo As Integer
-
-        While columnNumber > 0
-            modulo = (columnNumber - 1) Mod 26
-            columnName = Convert.ToChar(65 + modulo).ToString() & columnName
-            columnNumber = CInt((columnNumber - modulo) / 26)
-        End While
-
-        Return columnName
-    End Function
-
-    'Vrátí poslední buňku ve sloupci/řádku
-    Private Function GetLast(ws As Excel.Worksheet, order As Excel.XlSearchOrder) As Excel.Range
-        GetLast = ws.Cells.Find(What:="*",
-                                  After:=ws.Cells(1, 1),
-                                  LookIn:=Excel.XlFindLookIn.xlFormulas,
-                                  LookAt:=Excel.XlLookAt.xlPart,
-                                  SearchOrder:=order,
-                                  SearchDirection:=Excel.XlSearchDirection.xlPrevious,
-                                  MatchCase:=False)
-    End Function
 
 End Class
