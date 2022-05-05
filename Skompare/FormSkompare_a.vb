@@ -14,7 +14,7 @@ Public Class FormSkompare
     Dim skompareMain = New SkompareMain
 
     Private Sub BtnTest_Click(sender As Object, e As EventArgs) Handles BtnTest.Click
-        skompareMain.CompareInit()
+        skompareMain.CheckColumns()
     End Sub
 
 

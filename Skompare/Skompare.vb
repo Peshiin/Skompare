@@ -160,6 +160,9 @@ Public Class SkompareMain
     End Sub
 
 
+
+
+
     '           Data extraction
     '###############################################################
 
@@ -416,6 +419,9 @@ Public Class SkompareMain
                                   MatchCase:=False)
     End Function
 
+
+
+
     '           Comparing
     '###############################################################
 
@@ -441,6 +447,7 @@ Public Class SkompareMain
 
                 AssignSheetsParams(FormSkompare.CBoxNewSheets.SelectedItem,
                                    FormSkompare.CBoxOldSheets.SelectedItem)
+                CheckColumns()
             Else
                 MessageBox.Show("Nejsou vybrány soubory pro porovnání")
                 prBarForm.Dispose()
@@ -497,8 +504,8 @@ Public Class SkompareMain
             'Creates "result" workbook to where the actual comparing will be done
             CreateResult()
 
-            'Checks the number of columns and asks to add them
-
+            'Removes background color from "Cancelled"
+            RemoveBackground(OldResSheet)
 
             'Comparison itself
             Compare()
@@ -514,7 +521,6 @@ Public Class SkompareMain
             XlApp.Windows(NewWb.Name).Visible = False
             XlApp.Windows(OldWb.Name).Visible = False
 
-            MessageBox.Show("All done")
             FormSkompare.Activate()
 
 
@@ -748,6 +754,10 @@ Public Class SkompareMain
         End If
     End Sub
 
+
+
+
+
     '           Others
     '###############################################################
     'Initializes progress bar form based on inputs
@@ -841,8 +851,51 @@ Public Class SkompareMain
 
     End Sub
 
-    'Asks about different columns
-    Private Sub ColumnCheck()
+    'Checks the number of columns in both sheets and lets the user to unite this
+    Private Sub CheckColumns()
+
+        If NewCols <> OldCols Then
+
+            If MessageBox.Show("Rozdílný počet sloupců ve vybraných listech." &
+                                Environment.NewLine &
+                               "Chcete se pokusit o úpravu?",
+                               "Close",
+                               MessageBoxButtons.YesNo,
+                               MessageBoxIcon.Question) = Windows.Forms.DialogResult.Yes Then
+
+                MessageBox.Show("Následně se otevře aplikace pro přidání sloupců" &
+                                Environment.NewLine &
+                                "Přidejte sloupce tam, kde chybí, ale" &
+                                Environment.NewLine &
+                                Environment.NewLine &
+                                "!!! NEZAVÍREJTE OKNO EXCELU !!!")
+
+                XlApp.Visible = True
+
+                '262144 makes the message box TopMost
+                MsgBox("Hotovo?" & Environment.NewLine & "Doplnili jste všechny sloupce na správná místa?", 262144)
+
+                XlApp.Visible = False
+
+                AssignSheetsParams(FormSkompare.CBoxNewSheets.SelectedItem,
+                                   FormSkompare.CBoxOldSheets.SelectedItem)
+
+                MessageBox.Show(OldCols & " " & NewCols)
+
+            End If
+
+        End If
+
+    End Sub
+
+    'Deletes background color from OldResSheet
+    Private Sub RemoveBackground(ws As Excel.Worksheet)
+
+        For row As Integer = startRow To GetLast(ws, Excel.XlSearchOrder.xlByColumns).Row
+
+            ws.Range("A" & row).EntireRow.Interior.Color = Excel.XlColorIndex.xlColorIndexNone
+
+        Next
 
     End Sub
 
