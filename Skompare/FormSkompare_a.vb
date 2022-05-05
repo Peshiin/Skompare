@@ -167,14 +167,17 @@ Public Class FormSkompare
         Me.Controls.Clear()
         InitializeComponent()
 
+        If PanelBottom.Visible = False Then
+            MyBase.Height -= PanelBottom.Height
+        End If
+
     End Sub
 
     'Najde velikost záhlaví a pozici UID kódu podle pojmenovaného rozsahu v sešitu
     Private Sub BtnGetStartPoint_Click(sender As Object, e As EventArgs) Handles BtnGetStartPoint.Click
-        skompareMain.GetSheetParams(CBoxNewSheets.GetItemText(CBoxNewSheets.SelectedItem),
-                                    CBoxOldSheets.GetItemText(CBoxOldSheets.SelectedItem))
-        TBoxColSelect1.Text = skompareMain.GetExcelColumnName(skompareMain.NewSheet.Range("UID").Column)
-        TBoxStart.Text = skompareMain.NewSheet.Range("Header").Rows.Count + 1
+
+        skompareMain.GetStart()
+
     End Sub
 
     'Schovává/zobrazuje panel "advanced/pokročilé" pro detailnější nastavení

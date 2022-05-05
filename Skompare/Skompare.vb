@@ -899,4 +899,40 @@ Public Class SkompareMain
 
     End Sub
 
+    'Gets starting points of tagged document
+    Public Sub GetStart()
+
+        If OldWb IsNot Nothing And NewWb IsNot Nothing Then
+            AssignSheetsParams(FormSkompare.CBoxNewSheets.SelectedItem,
+                            FormSkompare.CBoxOldSheets.SelectedItem)
+        Else
+            MessageBox.Show("Vyberte oba sešity i listy")
+            Exit Sub
+        End If
+
+        Try
+
+            FormSkompare.TBoxColSelect1.Text = GetExcelColumnName(NewSheet.Range("UID").Column)
+
+
+            FormSkompare.ChBoxColSelect2.Checked = True
+            FormSkompare.TBoxColSelect2.Enabled = True
+            FormSkompare.TBoxColSelect2.ForeColor = SystemColors.WindowText
+            FormSkompare.TBoxColSelect2.Text = GetExcelColumnName(NewSheet.Range("KKS_1").Column)
+
+
+            FormSkompare.ChBoxColSelect3.Checked = True
+            FormSkompare.TBoxColSelect3.Enabled = True
+            FormSkompare.TBoxColSelect3.ForeColor = SystemColors.WindowText
+            FormSkompare.TBoxColSelect3.Text = GetExcelColumnName(NewSheet.Range("KKS_2").Column)
+
+
+
+            FormSkompare.TBoxStart.Text = NewSheet.Range("Header").Rows.Count + 1
+
+        Catch
+
+        End Try
+    End Sub
+
 End Class
