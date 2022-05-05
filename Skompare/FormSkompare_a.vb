@@ -37,21 +37,6 @@ Public Class FormSkompare
 
         skompareMain.CompareInit()
 
-
-
-        'Try
-
-
-
-
-        '    'Řešení různých výjimek
-        'Catch 
-
-        'Trace.Unindent()
-        'Trace.WriteLine("Comparing ended")
-        'Trace.WriteLine("___________________________________________________")
-        'Trace.Flush()
-
     End Sub
 
     'Metoda při načtení hlavního formuláře

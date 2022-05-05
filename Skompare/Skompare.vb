@@ -35,6 +35,8 @@ Public Class SkompareMain
     Private lenRows As Integer
     'Větší počet řádků
     Private lenCols As Integer
+    'Stores if there is different nubmer of columns in the two workbooks
+    Private differentCols As Boolean = False
 
     'Sloupce pro vyhledávání
     Private SearchKeysCols(2) As Integer
@@ -88,9 +90,12 @@ Public Class SkompareMain
         If sender Is FormSkompare.BtnNew Then
 
             'Closes previously opened workbook
-            If NewWb IsNot Nothing Then
-                NewWb.Close()
-            End If
+            Try
+                If NewWb IsNot Nothing Then
+                    NewWb.Close()
+                End If
+            Catch
+            End Try
 
             NewWb = XlApp.Workbooks.Open(FilePath, [ReadOnly]:=True)
             FormSkompare.LblNewFileName.Text = Dir(FilePath)
@@ -98,10 +103,13 @@ Public Class SkompareMain
 
         ElseIf sender Is FormSkompare.BtnOld Then
 
-            If OldWb IsNot Nothing Then
-                'Closes previously opened workbook
-                OldWb.Close()
-            End If
+            Try
+                If OldWb IsNot Nothing Then
+                    'Closes previously opened workbook
+                    OldWb.Close()
+                End If
+            Catch
+            End Try
 
             OldWb = XlApp.Workbooks.Open(FilePath, [ReadOnly]:=True)
             FormSkompare.LblOldFileName.Text = Dir(FilePath)
@@ -254,6 +262,7 @@ Public Class SkompareMain
         ElseIf NewWb Is Nothing Then
             MessageBox.Show("Nebyl přiřazen ""nový"" sešit Excel")
             Return False
+
             'Is "old" workbook assigned?
         ElseIf OldWb Is Nothing Then
             MessageBox.Show("Nebyl přiřazen ""starý"" sešit Excel")
@@ -263,6 +272,7 @@ Public Class SkompareMain
         ElseIf NewSheet Is Nothing Then
             MessageBox.Show("Nebyl přiřazen ""nový"" list Excel")
             Return False
+
             'Is "old" worksheet assigned?
         ElseIf OldSheet Is Nothing Then
             MessageBox.Show("Nebyl přiřazen ""starý"" list Excel")
@@ -271,9 +281,11 @@ Public Class SkompareMain
             'Do both sheets have the same number of columns?
         ElseIf NewCols <> OldCols Then
             MessageBox.Show("Počty sloupců v porovnávaných listech se liší")
-            Return False
+            differentCols = True
+            Return True
 
         Else
+            differentCols = False
             Return True
         End If
 
@@ -485,6 +497,9 @@ Public Class SkompareMain
             'Creates "result" workbook to where the actual comparing will be done
             CreateResult()
 
+            'Checks the number of columns and asks to add them
+
+
             'Comparison itself
             Compare()
 
@@ -540,6 +555,11 @@ Public Class SkompareMain
             End If
 
         End Try
+
+        Trace.Unindent()
+        Trace.WriteLine("Comparing ended")
+        Trace.WriteLine("___________________________________________________")
+        Trace.Flush()
 
     End Sub
 
@@ -650,17 +670,16 @@ Public Class SkompareMain
 
             With NewResSheet.Rows(NewR)
 
-                For Val As Integer = 1 To lenCols
+                For col As Integer = 1 To lenCols
 
-                    NewVal = NewA.GetValue(NewR, Val)
-                    OldVal = OldA.GetValue(OldR, Val)
+                    NewVal = NewA.GetValue(NewR, col)
+                    OldVal = OldA.GetValue(OldR, col)
 
-                    If NewVal <> OldVal Then
+                    If String.Compare(NewVal, OldVal, True) Then
 
-                        CompareStyle(.Cells(1, Val), NewVal, OldVal)
+                        CompareStyle(.Cells(1, col), NewVal, OldVal)
 
                     End If
-
                 Next
 
             End With
@@ -819,6 +838,11 @@ Public Class SkompareMain
             End If
 
         Next
+
+    End Sub
+
+    'Asks about different columns
+    Private Sub ColumnCheck()
 
     End Sub
 
