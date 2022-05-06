@@ -1,4 +1,5 @@
 ﻿Imports Excel = Microsoft.Office.Interop.Excel
+Imports Outlook = Microsoft.Office.Interop.Outlook
 Imports System.Globalization
 Imports System.Threading
 Imports System.Diagnostics
@@ -65,6 +66,11 @@ Public Class SkompareMain
 
     'Declaration of color to highlight changes
     Private highlight As Color
+    'Start and end strings for marking changes
+    Private startStr As String
+    Private endStr As String
+
+
 
     '###############################################################
     '           Methods
@@ -281,8 +287,31 @@ Public Class SkompareMain
             MessageBox.Show("Nebyl přiřazen ""starý"" list Excel")
             Return False
 
-            'Do both sheets have the same number of columns?
-        ElseIf NewCols <> OldCols Then
+        ElseIf startRow > NewRows Then
+            MessageBox.Show("Zadaný počáteční řádek je vyšší než počet řádků v sešitu.")
+            Return False
+
+            'Is any style defining radio button checked?
+        Else
+            Dim styleChecked = False
+
+            For Each control In FormSkompare.GBoxCompareStyle.Controls.OfType(Of RadioButton)
+                If control.Checked Then
+                    styleChecked = True
+                End If
+            Next
+
+            If styleChecked = False Then
+                MessageBox.Show("Zaškrtněte způsob označování změn.")
+            End If
+
+            Return styleChecked
+
+        End If
+
+        'Do both sheets have the same number of columns?
+        If NewCols <> OldCols Then
+
             MessageBox.Show("Počty sloupců v porovnávaných listech se liší")
             differentCols = True
             Return True
@@ -428,8 +457,15 @@ Public Class SkompareMain
     'Compare function initialization
     Public Sub CompareInit()
 
+        'Checks if Debug.log exists and deletes it
+        Dim debugFilePath As String = My.Application.Info.DirectoryPath & "\\Debug.log"
+        If System.IO.File.Exists(debugFilePath) Then
+            My.Computer.FileSystem.DeleteFile(debugFilePath)
+        End If
+
         'Initializes tracing for debugging
-        Trace.Listeners.Add(New TextWriterTraceListener("Debug.log", "myListener"))
+        Dim debug As New TextWriterTraceListener(My.Application.Info.DirectoryPath & "\\Debug.log", "myListener")
+        Trace.Listeners.Add(debug)
         Trace.WriteLine("Starting comparing @ " + DateTime.Now.ToString())
         Trace.Indent()
 
@@ -441,12 +477,18 @@ Public Class SkompareMain
         prBarForm.LblProgBar.Text = "Inicializace porovnání"
 
         Try
+
             'Tries to assign sheet parameters if workbooks are assigned
             If NewWb IsNot Nothing And
-                OldWb IsNot Nothing Then
+                    OldWb IsNot Nothing Then
 
                 AssignSheetsParams(FormSkompare.CBoxNewSheets.SelectedItem,
                                    FormSkompare.CBoxOldSheets.SelectedItem)
+
+                'Assigns starting row
+                startRow = GetStartRow(FormSkompare.TBoxStart.Text)
+
+                'Checks the number of columns and lets the user to change them
                 CheckColumns()
             Else
                 MessageBox.Show("Nejsou vybrány soubory pro porovnání")
@@ -460,20 +502,15 @@ Public Class SkompareMain
                 Exit Sub
             End If
 
-            'Assigns sheets variables
-            AssignSheetsParams(FormSkompare.CBoxNewSheets.SelectedItem,
-                               FormSkompare.CBoxOldSheets.SelectedItem)
-
-            'Assigns starting row
-            startRow = GetStartRow(FormSkompare.TBoxStart.Text)
-
             'Assigns comparing style to the name of the checked radio button
             compStyle = FormSkompare.GBoxCompareStyle.Controls.OfType(Of RadioButton).
                             Where(Function(r) r.Checked = True).
                             FirstOrDefault().Name
 
-            'Assigns highlighting color
+            'Assigns highlighting color and strings
             highlight = FormSkompare.TBoxColor.BackColor
+            startStr = FormSkompare.TBoxStringStart.Text
+            endStr = FormSkompare.TBoxStringEnd.Text
 
             'Assigns columns to search by
             'Goes through all the control elements with "ColSelect" tag in FormSkompare
@@ -505,7 +542,7 @@ Public Class SkompareMain
             CreateResult()
 
             'Removes background color from "Cancelled"
-            RemoveBackground(OldResSheet)
+            'RemoveBackground(OldResSheet)
 
             'Comparison itself
             Compare()
@@ -529,36 +566,11 @@ Public Class SkompareMain
             Trace.WriteLine(ex.StackTrace _
                             & Environment.NewLine _
                             & ex.Message)
-            Trace.WriteLine(ex.InnerException)
-            Trace.WriteLine(ex.TargetSite)
-            Trace.WriteLine(ex.Source)
-            Trace.WriteLine(ex.Data)
+            Trace.Flush()
 
             prBarForm.Dispose()
 
-            'Nejsou vybrány oba sešity
-            If TypeOf ex Is NullReferenceException _
-                            OrElse TypeOf ex Is System.Runtime.InteropServices.COMException Then
-                Trace.WriteLine("EXCEPTION: " & ex.Message)
-                Trace.Flush()
-                Exit Sub
-
-                'Při chybě kvůli nepřepsání souboru
-            ElseIf TypeOf ex Is System.Runtime.InteropServices.COMException Then
-                MsgBox("Compared sheet will not be overwritten")
-                Trace.WriteLine("EXCEPTION: " & ex.Message)
-                Trace.Flush()
-                Exit Sub
-
-                'Ostatní výjimky
-            Else
-
-                MsgBox("Exception found: " & ex.Message)
-                Trace.WriteLine("EXCEPTION: " & ex.Message)
-                Trace.Flush()
-                Exit Sub
-
-            End If
+            BugReport(ex)
 
         End Try
 
@@ -718,9 +730,9 @@ Public Class SkompareMain
         ElseIf compStyle = "RBtnStyle3" Then
             NewRng.Interior.Color = highlight
             NewRng.Value = NewStr & " " _
-                & FormSkompare.TBoxStringStart.Text _
+                & startStr _
                 & OldStr _
-                & FormSkompare.TBoxStringEnd.Text _
+                & endStr _
 
             'Jen komentář
         ElseIf compStyle = "RBtnStyle4" Then
@@ -735,9 +747,9 @@ Public Class SkompareMain
             'Jen řetězec
         ElseIf compStyle = "RBtnStyle5" Then
             NewRng.Value = NewStr & " " _
-                & FormSkompare.TBoxStringStart.Text _
+                & startStr _
                 & OldStr _
-                & FormSkompare.TBoxStringEnd.Text _
+                & endStr _
 
             'Řetězec v komentáři
         ElseIf compStyle = "RBtnStyle6" Then
@@ -746,9 +758,9 @@ Public Class SkompareMain
             If OldStr = "" Then
                 NewRng.AddComment("-")
             Else
-                NewRng.AddComment(FormSkompare.TBoxStringStart.Text _
+                NewRng.AddComment(startStr _
                                   & OldStr _
-                                  & FormSkompare.TBoxStringEnd.Text)
+                                  & endStr)
             End If
 
         End If
@@ -933,6 +945,75 @@ Public Class SkompareMain
         Catch
 
         End Try
+    End Sub
+
+    'Sent email with bug report
+    Public Sub BugReport(ex As Exception)
+
+        If MessageBox.Show("Chcete odeslat oznámení o výjimce?" &
+                            Environment.NewLine &
+                           "Pozor! porovnávané sešity budou přiloženy k emailu." &
+                            Environment.NewLine &
+                           "Před odesláním je budete moci odebrat",
+                            "Close",
+                            MessageBoxButtons.YesNo,
+                            MessageBoxIcon.Question) = Windows.Forms.DialogResult.Yes Then
+
+            Try
+                Dim Outl As Object
+                Dim omsg As Object
+
+                'Opens outlook to write new email
+                Outl = New Outlook.Application
+                omsg = Outl.CreateItem(0) '=Outlook.OlItemType.olMailItem'
+
+                'Content of the email
+                omsg.Subject = "Skompare - oznámení o neošetřené výjimce"
+                'Adressee
+                omsg.To = "pavel.pechman@doosan.com"
+                'Attaches "new" file
+                omsg.Attachments.Add(NewWb.Path & "\\" & NewWb.Name, Outlook.OlAttachmentType.olByValue)
+                'Attaches "old" file
+                omsg.Attachments.Add(OldWb.Path & "\\" & OldWb.Name, Outlook.OlAttachmentType.olByValue)
+                'Attaches "debug" file
+                omsg.Attachments.Add(My.Application.Info.DirectoryPath & "\\Debug.log", Outlook.OlAttachmentType.olByValue)
+                'Writes the body of the email
+                omsg.body = "V programu nastala neošetřená výjimka @ " &
+                               DateTime.Now.ToString() &
+                               Environment.NewLine &
+                               ex.StackTrace &
+                               Environment.NewLine &
+                               ex.Message &
+                               Environment.NewLine &
+                               Environment.NewLine &
+                               "Nastavení aplikace: " &
+                               Environment.NewLine &
+                               Environment.NewLine &
+                               "Nový sešit: " & NewWb.Name & " Nový list: " & NewSheet.Name &
+                               Environment.NewLine &
+                               "Starý sešit: " & OldWb.Name & " Starý list: " & OldSheet.Name &
+                               Environment.NewLine &
+                               "Počáteční řádek: " & startRow &
+                               Environment.NewLine &
+                               "Sloupce pro vyhledání: " & SearchKeysCols(0) & " " & SearchKeysCols(1) & " " & SearchKeysCols(2) &
+                               Environment.NewLine &
+                               "Počáteční a koncový řetězec: " & startStr & " " & endStr &
+                               Environment.NewLine &
+                               "Způsob značení změn: " & compStyle
+
+                'Displays message to user
+                omsg.Display(True)
+
+            Catch
+                MessageBox.Show("Vytvoření reportu neproběhlo správně." &
+                                Environment.NewLine &
+                                "Pokud problém přetrvává, můžete kontaktovat pavel.pechman@doosan.com." &
+                                Environment.NewLine &
+                                "Ideálně včetně porovnávaných souborů a výstřižku nastavení aplikace.")
+            End Try
+
+        End If
+
     End Sub
 
 End Class
