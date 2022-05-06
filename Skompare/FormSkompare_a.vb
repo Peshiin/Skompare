@@ -8,9 +8,6 @@ Imports Skompare.SkompareMain
 
 Public Class FormSkompare
 
-    'Pro kontrolu viditelnosti panelu "advanced/pokročilé"
-    Dim advancedVisibility As Boolean
-
     ' Vytvoří instanci třídy SkompareMain
     Dim skompareMain = New SkompareMain
 
@@ -47,8 +44,7 @@ Public Class FormSkompare
         skompareMain.XlApp = New Excel.Application
 
         'Schování panelu "advanced"
-        advancedVisibility = False
-        PanelBottom.Visible = advancedVisibility
+        PanelBottom.Visible = False
         MyBase.Height -= PanelBottom.Height
 
     End Sub
@@ -168,7 +164,8 @@ Public Class FormSkompare
         Me.Controls.Clear()
         InitializeComponent()
 
-        If PanelBottom.Visible = False Then
+        If PanelBottom.Visible Then
+            PanelBottom.Visible = False
             MyBase.Height -= PanelBottom.Height
         End If
 
@@ -184,15 +181,13 @@ Public Class FormSkompare
     'Schovává/zobrazuje panel "advanced/pokročilé" pro detailnější nastavení
     Private Sub BtnAdvanced_Click(sender As Object, e As EventArgs) Handles BtnAdvanced.Click
 
-        If advancedVisibility Then
+        If PanelBottom.Visible Then
             'Schování panelu "advanced"
-            advancedVisibility = False
-            PanelBottom.Visible = advancedVisibility
+            PanelBottom.Visible = False
             MyBase.Height -= PanelBottom.Height
         Else
             'Zobrazení panelu "advanced"
-            advancedVisibility = True
-            PanelBottom.Visible = advancedVisibility
+            PanelBottom.Visible = True
             MyBase.Height += PanelBottom.Height
         End If
 
