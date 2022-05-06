@@ -846,6 +846,10 @@ Public Class SkompareMain
         NewResSheet = XlApp.ActiveSheet
         NewResSheet.Name = OldSheet.Name
 
+        ResultWb.Unprotect()
+        NewResSheet.Unprotect()
+        OldResSheet.Unprotect()
+
     End Sub
 
     'Deletes "found" rows from "Cancelled" sheet in "result" workbook
