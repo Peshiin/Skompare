@@ -24,7 +24,7 @@ Partial Class FormSkompare
     Private Sub InitializeComponent()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(FormSkompare))
         Me.BtnNew = New System.Windows.Forms.Button()
-        Me.OpenFDNew = New System.Windows.Forms.OpenFileDialog()
+        Me.OpenFD = New System.Windows.Forms.OpenFileDialog()
         Me.LblNewFile = New System.Windows.Forms.Label()
         Me.LblNewFileName = New System.Windows.Forms.Label()
         Me.LblNewSheets = New System.Windows.Forms.Label()
@@ -43,7 +43,10 @@ Partial Class FormSkompare
         Me.RBtnStyle2 = New System.Windows.Forms.RadioButton()
         Me.RBtnStyle1 = New System.Windows.Forms.RadioButton()
         Me.GBoxStatsDiff = New System.Windows.Forms.GroupBox()
-        Me.TBoxColSelectSecondary = New System.Windows.Forms.TextBox()
+        Me.ChBoxColSelect3 = New System.Windows.Forms.CheckBox()
+        Me.ChBoxColSelect2 = New System.Windows.Forms.CheckBox()
+        Me.TBoxColSelect3 = New System.Windows.Forms.TextBox()
+        Me.TBoxColSelect2 = New System.Windows.Forms.TextBox()
         Me.BtnColor = New System.Windows.Forms.Button()
         Me.TBoxColor = New System.Windows.Forms.TextBox()
         Me.LblStringEnd = New System.Windows.Forms.Label()
@@ -51,7 +54,7 @@ Partial Class FormSkompare
         Me.LblColor = New System.Windows.Forms.Label()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.TBoxStringEnd = New System.Windows.Forms.TextBox()
-        Me.TBoxColSelect = New System.Windows.Forms.TextBox()
+        Me.TBoxColSelect1 = New System.Windows.Forms.TextBox()
         Me.TBoxStringStart = New System.Windows.Forms.TextBox()
         Me.LblStart = New System.Windows.Forms.Label()
         Me.TBoxStart = New System.Windows.Forms.TextBox()
@@ -77,9 +80,9 @@ Partial Class FormSkompare
         Me.BtnNew.Name = "BtnNew"
         Me.BtnNew.UseVisualStyleBackColor = True
         '
-        'OpenFDNew
+        'OpenFD
         '
-        Me.OpenFDNew.FileName = "OpenFileDialogNew"
+        Me.OpenFD.FileName = "OpenFileDialogNew"
         '
         'LblNewFile
         '
@@ -184,7 +187,10 @@ Partial Class FormSkompare
         '
         'GBoxStatsDiff
         '
-        Me.GBoxStatsDiff.Controls.Add(Me.TBoxColSelectSecondary)
+        Me.GBoxStatsDiff.Controls.Add(Me.ChBoxColSelect3)
+        Me.GBoxStatsDiff.Controls.Add(Me.ChBoxColSelect2)
+        Me.GBoxStatsDiff.Controls.Add(Me.TBoxColSelect3)
+        Me.GBoxStatsDiff.Controls.Add(Me.TBoxColSelect2)
         Me.GBoxStatsDiff.Controls.Add(Me.BtnColor)
         Me.GBoxStatsDiff.Controls.Add(Me.TBoxColor)
         Me.GBoxStatsDiff.Controls.Add(Me.LblStringEnd)
@@ -192,7 +198,7 @@ Partial Class FormSkompare
         Me.GBoxStatsDiff.Controls.Add(Me.LblColor)
         Me.GBoxStatsDiff.Controls.Add(Me.Label1)
         Me.GBoxStatsDiff.Controls.Add(Me.TBoxStringEnd)
-        Me.GBoxStatsDiff.Controls.Add(Me.TBoxColSelect)
+        Me.GBoxStatsDiff.Controls.Add(Me.TBoxColSelect1)
         Me.GBoxStatsDiff.Controls.Add(Me.TBoxStringStart)
         Me.GBoxStatsDiff.Controls.Add(Me.LblStart)
         Me.GBoxStatsDiff.Controls.Add(Me.TBoxStart)
@@ -200,10 +206,31 @@ Partial Class FormSkompare
         Me.GBoxStatsDiff.Name = "GBoxStatsDiff"
         Me.GBoxStatsDiff.TabStop = False
         '
-        'TBoxColSelectSecondary
+        'ChBoxColSelect3
         '
-        resources.ApplyResources(Me.TBoxColSelectSecondary, "TBoxColSelectSecondary")
-        Me.TBoxColSelectSecondary.Name = "TBoxColSelectSecondary"
+        resources.ApplyResources(Me.ChBoxColSelect3, "ChBoxColSelect3")
+        Me.ChBoxColSelect3.Name = "ChBoxColSelect3"
+        Me.ChBoxColSelect3.UseVisualStyleBackColor = True
+        '
+        'ChBoxColSelect2
+        '
+        resources.ApplyResources(Me.ChBoxColSelect2, "ChBoxColSelect2")
+        Me.ChBoxColSelect2.Name = "ChBoxColSelect2"
+        Me.ChBoxColSelect2.UseVisualStyleBackColor = True
+        '
+        'TBoxColSelect3
+        '
+        resources.ApplyResources(Me.TBoxColSelect3, "TBoxColSelect3")
+        Me.TBoxColSelect3.ForeColor = System.Drawing.SystemColors.InactiveCaption
+        Me.TBoxColSelect3.Name = "TBoxColSelect3"
+        Me.TBoxColSelect3.Tag = "ColSelect"
+        '
+        'TBoxColSelect2
+        '
+        resources.ApplyResources(Me.TBoxColSelect2, "TBoxColSelect2")
+        Me.TBoxColSelect2.ForeColor = System.Drawing.SystemColors.InactiveCaption
+        Me.TBoxColSelect2.Name = "TBoxColSelect2"
+        Me.TBoxColSelect2.Tag = "ColSelect"
         '
         'BtnColor
         '
@@ -243,10 +270,11 @@ Partial Class FormSkompare
         resources.ApplyResources(Me.TBoxStringEnd, "TBoxStringEnd")
         Me.TBoxStringEnd.Name = "TBoxStringEnd"
         '
-        'TBoxColSelect
+        'TBoxColSelect1
         '
-        resources.ApplyResources(Me.TBoxColSelect, "TBoxColSelect")
-        Me.TBoxColSelect.Name = "TBoxColSelect"
+        resources.ApplyResources(Me.TBoxColSelect1, "TBoxColSelect1")
+        Me.TBoxColSelect1.Name = "TBoxColSelect1"
+        Me.TBoxColSelect1.Tag = "ColSelect"
         '
         'TBoxStringStart
         '
@@ -355,7 +383,7 @@ Partial Class FormSkompare
     End Sub
 
     Friend WithEvents BtnNew As Button
-    Friend WithEvents OpenFDNew As OpenFileDialog
+    Friend WithEvents OpenFD As OpenFileDialog
     Friend WithEvents LblNewFile As Label
     Friend WithEvents LblNewFileName As Label
     Friend WithEvents LblNewSheets As Label
@@ -376,7 +404,7 @@ Partial Class FormSkompare
     Friend WithEvents LblStart As Label
     Friend WithEvents TBoxStart As TextBox
     Friend WithEvents Label1 As Label
-    Friend WithEvents TBoxColSelect As TextBox
+    Friend WithEvents TBoxColSelect1 As TextBox
     Friend WithEvents LblStringEnd As Label
     Friend WithEvents LblStringStart As Label
     Friend WithEvents LblColor As Label
@@ -390,10 +418,13 @@ Partial Class FormSkompare
     Friend WithEvents BtnTest As Button
     Friend WithEvents BtnGetStartPoint As Button
     Friend WithEvents Panel1 As Panel
-    Friend WithEvents TBoxColSelectSecondary As TextBox
+    Friend WithEvents TBoxColSelect2 As TextBox
     Friend WithEvents PanelBottom As Panel
     Friend WithEvents lblTest As Label
     Friend WithEvents BtnAdvanced As Button
     Friend WithEvents CBoxOldSheets As ComboBox
     Friend WithEvents CBoxNewSheets As ComboBox
+    Friend WithEvents TBoxColSelect3 As TextBox
+    Friend WithEvents ChBoxColSelect2 As CheckBox
+    Friend WithEvents ChBoxColSelect3 As CheckBox
 End Class
