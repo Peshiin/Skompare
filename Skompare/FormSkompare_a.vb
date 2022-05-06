@@ -2,6 +2,7 @@
 Imports System.Diagnostics
 Imports System.Runtime.InteropServices
 Imports System.Globalization
+Imports Microsoft.Win32
 Imports System.Threading
 Imports Skompare.SkompareMain
 
@@ -14,7 +15,7 @@ Public Class FormSkompare
     Dim skompareMain = New SkompareMain
 
     Private Sub BtnTest_Click(sender As Object, e As EventArgs) Handles BtnTest.Click
-        skompareMain.BugReport()
+
     End Sub
 
 

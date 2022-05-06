@@ -542,7 +542,7 @@ Public Class SkompareMain
             CreateResult()
 
             'Removes background color from "Cancelled"
-            'RemoveBackground(OldResSheet)
+            RemoveBackground(OldResSheet)
 
             'Comparison itself
             Compare()
