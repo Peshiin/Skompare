@@ -460,7 +460,10 @@ Public Class SkompareMain
         'Checks if Debug.log exists and deletes it
         Dim debugFilePath As String = My.Application.Info.DirectoryPath & "\\Debug.log"
         If System.IO.File.Exists(debugFilePath) Then
-            My.Computer.FileSystem.DeleteFile(debugFilePath)
+            Try
+                My.Computer.FileSystem.DeleteFile(debugFilePath)
+            Catch
+            End Try
         End If
 
         'Initializes tracing for debugging
@@ -542,7 +545,7 @@ Public Class SkompareMain
             CreateResult()
 
             'Removes background color from "Cancelled"
-            RemoveBackground(OldResSheet)
+            'RemoveBackground(OldResSheet)
 
             'Comparison itself
             Compare()
