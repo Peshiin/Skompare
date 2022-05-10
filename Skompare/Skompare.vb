@@ -244,12 +244,12 @@ Public Class SkompareMain
             OldSheet = OldWb.Sheets(oldSheetName)
 
             'Getting number of rows and columns in "new" sheet
-            NewRows = GetLast(NewSheet, Excel.XlSearchOrder.xlByColumns).Row
-            NewCols = GetLast(NewSheet, Excel.XlSearchOrder.xlByRows).Column
+            NewRows = GetLast(NewSheet, Excel.XlSearchOrder.xlByColumns)
+            NewCols = GetLast(NewSheet, Excel.XlSearchOrder.xlByRows)
 
             'Getting number of rows and columns in "old" sheet
-            OldRows = GetLast(OldSheet, Excel.XlSearchOrder.xlByColumns).Row
-            OldCols = GetLast(OldSheet, Excel.XlSearchOrder.xlByRows).Column
+            OldRows = GetLast(OldSheet, Excel.XlSearchOrder.xlByColumns)
+            OldCols = GetLast(OldSheet, Excel.XlSearchOrder.xlByRows)
 
             'Getting the bigger number of rows
             lenRows = GetBiggerDim(NewRows, OldRows)
@@ -438,14 +438,31 @@ Public Class SkompareMain
     End Function
 
     'Gets last cell in column/row
-    Private Function GetLast(ws As Excel.Worksheet, order As Excel.XlSearchOrder) As Excel.Range
-        GetLast = ws.Cells.Find(What:="*",
-                                  After:=ws.Cells(1, 1),
-                                  LookIn:=Excel.XlFindLookIn.xlFormulas,
+    Private Function GetLast(ws As Excel.Worksheet, order As Excel.XlSearchOrder) As Integer
+        Dim last As Excel.Range
+
+        last = ws.Cells.Find(What:="*",
+                                  After:=ws.Range("A1"),'Cells(1, 1),
+                                  LookIn:=Excel.XlFindLookIn.xlValues,'Excel.XlFindLookIn.xlFormulas,
                                   LookAt:=Excel.XlLookAt.xlPart,
                                   SearchOrder:=order,
                                   SearchDirection:=Excel.XlSearchDirection.xlPrevious,
                                   MatchCase:=False)
+
+        'Looking for last row
+        If order = Excel.XlSearchOrder.xlByColumns Then
+            If last.Row < ws.UsedRange.Rows.Count Then
+                GetLast = ws.UsedRange.Rows.Count
+                Exit Function
+            End If
+            'looking for last column
+        ElseIf order = Excel.XlSearchOrder.xlByRows Then
+            If last.Column < ws.UsedRange.Columns.Count Then
+                GetLast = ws.UsedRange.Columns.Count
+                Exit Function
+            End If
+        End If
+
     End Function
 
 
