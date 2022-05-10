@@ -454,14 +454,22 @@ Public Class SkompareMain
             If last.Row < ws.UsedRange.Rows.Count Then
                 GetLast = ws.UsedRange.Rows.Count
                 Exit Function
+            Else
+                GetLast = last.Row
+                Exit Function
             End If
             'looking for last column
         ElseIf order = Excel.XlSearchOrder.xlByRows Then
             If last.Column < ws.UsedRange.Columns.Count Then
                 GetLast = ws.UsedRange.Columns.Count
                 Exit Function
+            Else
+                GetLast = last.Column
+                Exit Function
             End If
         End If
+
+        Return Nothing
 
     End Function
 
@@ -664,7 +672,7 @@ Public Class SkompareMain
                     Duplicity(OldRow) = 1
 
                     'Porovná buňky v řádku
-                    CompareRow(NewArr, OldArr, NewRow, OldRow)
+                    CompareRow(NewRow, OldRow)
 
                 End If
 
@@ -698,7 +706,7 @@ Public Class SkompareMain
     End Sub
 
     'Compares values in single rows
-    Sub CompareRow(NewA As Array, OldA As Array, NewR As Integer, OldR As Integer)
+    Sub CompareRow(NewR As Integer, OldR As Integer)
 
         'Deklarace pomocných proměnných
         Dim NewVal As String
@@ -710,10 +718,10 @@ Public Class SkompareMain
 
                 For col As Integer = 1 To lenCols
 
-                    NewVal = NewA.GetValue(NewR, col)
-                    OldVal = OldA.GetValue(OldR, col)
+                    NewVal = NewArr.GetValue(NewR, col)
+                    OldVal = OldArr.GetValue(OldR, col)
 
-                    If String.Compare(NewVal, OldVal, True) Then
+                    If String.Compare(NewVal, OldVal, True, CultureInfo.InvariantCulture) Then
 
                         CompareStyle(.Cells(1, col), NewVal, OldVal)
 
@@ -730,6 +738,9 @@ Public Class SkompareMain
     'Defines how the differences found shall be highlighted
     Private Sub CompareStyle(NewRng As Excel.Range, NewStr As String, OldStr As String)
 
+        'Sets range format to Text
+        NewRng.NumberFormat = "@"
+
         'Jen obarvení
         If compStyle = "RBtnStyle1" Then
             NewRng.Interior.Color = highlight
@@ -737,6 +748,7 @@ Public Class SkompareMain
 
             'Obarvení a komentář
         ElseIf compStyle = "RBtnStyle2" Then
+
             NewRng.Interior.Color = highlight
             NewRng.Value = NewStr
             'Vyhazuje výjimku, pokud je komentář prázdný
@@ -916,8 +928,6 @@ Public Class SkompareMain
                 AssignSheetsParams(FormSkompare.CBoxNewSheets.SelectedItem,
                                    FormSkompare.CBoxOldSheets.SelectedItem)
 
-                MessageBox.Show(OldCols & " " & NewCols)
-
             End If
 
         End If
@@ -927,7 +937,7 @@ Public Class SkompareMain
     'Deletes background color from OldResSheet
     Private Sub RemoveBackground(ws As Excel.Worksheet)
 
-        For row As Integer = startRow To GetLast(ws, Excel.XlSearchOrder.xlByColumns).Row
+        For row As Integer = startRow To GetLast(ws, Excel.XlSearchOrder.xlByColumns)
 
             ws.Range("A" & row).EntireRow.Interior.Color = Excel.XlColorIndex.xlColorIndexNone
 
