@@ -9,6 +9,8 @@ using System.Reflection;
 using Skompare;
 using System.Net;
 using System.Net.Http;
+using System.IO;
+using System.Text;
 
 namespace AutoUpdater
 {
@@ -22,7 +24,9 @@ namespace AutoUpdater
         {
             App.EnableVisualStyles();
             App.SetCompatibleTextRenderingDefault(false);
-            App.Run(new Form1());
+            //App.Run(new Form1());
+            DemoClass demo = new DemoClass();
+            demo.Demo();
         }
 
 
@@ -43,25 +47,21 @@ namespace AutoUpdater
             string version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
             Console.WriteLine(version);
 
-
-
-
-
             if (latestRelease.TagName != version)
             {
-                Console.WriteLine("New release is available");
-                var asset = client.Repository.Release.GetAsset("Peshiin", "Skompare", latestRelease.Id);
-                Console.WriteLine(asset.Id);
-
-                string downloadUrl = $"https://api.github.com/repos/Peshiin/Skompare/releases/assets/{asset.Id}";
-                Uri downloadUri = new Uri(downloadUrl);
 
                 // Download with WebClient
                 var webClient = new WebClient();
+                webClient.Headers.Add(HttpRequestHeader.UserAgent, "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.77 Safari/537.36");
 
                 // Download the file
-                webClient.DownloadFileAsync(downloadUri, "C:/Users/pechm/Desktop/AutoUpdater/File.zip");
+                var downloadLocation = @"C:\Users\n5ver\Desktop\skomparedown";
 
+                //File.WriteAllBytes(Path.Combine(downloadLocation, "test.zip"), inMemoryFile);
+                var downloadUrl = string.Format("https://github.com/Peshiin/Skompare/releases/download/{0}/release.zip", latestRelease.TagName);
+                byte[] fileInMemory = webClient.DownloadData(downloadUrl);
+
+                File.WriteAllBytes(Path.Combine(downloadLocation, "test.zip"), fileInMemory);
             }
            
             Console.WriteLine("Ending");
