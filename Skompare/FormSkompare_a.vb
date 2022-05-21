@@ -56,6 +56,7 @@ Public Class FormSkompare
             Try
                 skompareMain.ResultWb.Close(SaveChanges:=False)
             Catch ex As Exception
+                Console.WriteLine(ex.Message)
             End Try
 
             skompareMain.XlApp.Quit()

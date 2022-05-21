@@ -235,27 +235,33 @@ Public Class SkompareMain
 
     'Assigning "new" and "old" sheets to variables and setting their lenghts
     Private Sub AssignSheetsParams(newSheetName As String, oldSheetName As String)
+        Try
 
-        If NewWb IsNot Nothing And
+            If NewWb IsNot Nothing And
             OldWb IsNot Nothing Then
 
-            'Assigning sheets to variables
-            NewSheet = NewWb.Sheets(newSheetName)
-            OldSheet = OldWb.Sheets(oldSheetName)
+                'Assigning sheets to variables
+                NewSheet = NewWb.Sheets(newSheetName)
+                OldSheet = OldWb.Sheets(oldSheetName)
 
-            'Getting number of rows and columns in "new" sheet
-            NewRows = GetLast(NewSheet, Excel.XlSearchOrder.xlByColumns)
-            NewCols = GetLast(NewSheet, Excel.XlSearchOrder.xlByRows)
+                'Getting number of rows and columns in "new" sheet
+                NewRows = GetLast(NewSheet, Excel.XlSearchOrder.xlByColumns)
+                NewCols = GetLast(NewSheet, Excel.XlSearchOrder.xlByRows)
 
-            'Getting number of rows and columns in "old" sheet
-            OldRows = GetLast(OldSheet, Excel.XlSearchOrder.xlByColumns)
-            OldCols = GetLast(OldSheet, Excel.XlSearchOrder.xlByRows)
+                'Getting number of rows and columns in "old" sheet
+                OldRows = GetLast(OldSheet, Excel.XlSearchOrder.xlByColumns)
+                OldCols = GetLast(OldSheet, Excel.XlSearchOrder.xlByRows)
 
-            'Getting the bigger number of rows
-            lenRows = GetBiggerDim(NewRows, OldRows)
-            lenCols = GetBiggerDim(NewCols, OldCols)
+                'Getting the bigger number of rows
+                lenRows = GetBiggerDim(NewRows, OldRows)
+                lenCols = GetBiggerDim(NewCols, OldCols)
 
-        End If
+            End If
+
+        Catch ex As Exception
+            MessageBox.Show(ex.Message)
+            Exit Sub
+        End Try
 
     End Sub
 
@@ -448,6 +454,11 @@ Public Class SkompareMain
                                   SearchOrder:=order,
                                   SearchDirection:=Excel.XlSearchDirection.xlPrevious,
                                   MatchCase:=False)
+
+        'checks if "last" has any value
+        If last Is Nothing Then
+            Throw New Exception("Vybraný list (" & ws.Name & ") je pravděpodobně prázdný.")
+        End If
 
         'Looking for last row
         If order = Excel.XlSearchOrder.xlByColumns Then
