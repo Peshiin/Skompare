@@ -48,8 +48,6 @@ namespace AutoUpdater
             {
                 // Sends bugReport
                 MessageBox.Show(ex.Message);
-                Skompare.SkompareMain skompare = new Skompare.SkompareMain();
-                skompare.BugReport(ex);
             }
         }
     }
