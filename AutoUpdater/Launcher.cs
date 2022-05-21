@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Octokit;
 using System.Reflection;
-using Skompare;
 using System.Net;
 using System.Net.Http;
 using System.IO;
@@ -16,50 +15,69 @@ using System.Runtime.InteropServices;
 
 namespace AutoUpdater
 {
-    internal static class Program
+    internal static class Launcher
     {
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool SetForegroundWindow(IntPtr hWnd);
+
         /// <summary>
-        /// The main entry point for the application.
+        /// Checks for a new version of the application and launches the application
         /// </summary>
         [STAThread]
         static void Main()
         {
-            AutoUpdaterClass demo = new AutoUpdaterClass();
-            demo.Update();
+            try
+            {
+                //Gets location of current assembly executable - AutoUpdater.exe
+                string assemblyPath = System.Reflection.Assembly.GetExecutingAssembly().Location;
+                //Gets path to current assembly directory
+                string dirPath = new FileInfo(assemblyPath).DirectoryName;
+
+                AutoUpdaterClass demo = new AutoUpdaterClass();
+                demo.Update(dirPath);
+
+                //Starts the updated application
+                Process process = Process.Start(dirPath + "\\Skompare.exe");
+                //Gets window handle for the started process to set it on foreground
+                IntPtr processHandle = process.MainWindowHandle;
+                //Sets the app window on foreground
+                SetForegroundWindow(processHandle);
+            }
+            catch (Exception ex)
+            {
+                // Sends bugReport
+                MessageBox.Show(ex.Message);
+                Skompare.SkompareMain skompare = new Skompare.SkompareMain();
+                skompare.BugReport(ex);
+            }
         }
     }
 
     public class AutoUpdaterClass
     {
-
-        [DllImport("user32.dll")]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern bool SetForegroundWindow(IntPtr hWnd);
-
-        public void Update()
+        public void Update(string dirPath)
         {
             // Sets client for Github access
             var client = new GitHubClient(new ProductHeaderValue("SkompareUpdate"));
 
             // Gets the latest release of the application
             var latestRelease = client.Repository.Release.GetLatest("Peshiin", "Skompare").Result;
+            string latestVersion = latestRelease.TagName.Substring(1, 7);
             Console.WriteLine(latestRelease.TagName);
 
-            //Gets location of current assembly executable - AutoUpdater.exe
-            string assemblyPath = System.Reflection.Assembly.GetExecutingAssembly().Location;
-            //Gets path to current assembly directory
-            string dirPath = new FileInfo(assemblyPath).DirectoryName;
             //Gets version info of Skompare.exe
             var versionInfo = FileVersionInfo.GetVersionInfo(dirPath+"\\Skompare.exe");
             //Extracts version number from version info
             string version = versionInfo.FileVersion;
 
-            if (latestRelease.TagName != version)
+
+            if (latestVersion != version)
             {
                 //Shows the dialog of different versions
                 DialogResult dialogResult = MessageBox.Show("Chcete nainstalovat poslední verzi aplikace?" +
                                                             Environment.NewLine +
-                                                            version +"->"+latestRelease.TagName,
+                                                            version +"->"+ latestVersion,
                                                            "Close",
                                                            MessageBoxButtons.YesNo,
                                                            MessageBoxIcon.Question);
@@ -92,14 +110,6 @@ namespace AutoUpdater
                     }
                 }
             }
-            //Starts the updated application
-            Process process = Process.Start(dirPath + "\\Skompare.exe");
-            //Gets window handle for the started process to set it on foreground
-            IntPtr processHandle = process.MainWindowHandle;
-            //Sets the app window on foreground
-            SetForegroundWindow(processHandle);
         }
     }
-
-
 }
