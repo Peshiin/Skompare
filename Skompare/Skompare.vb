@@ -762,7 +762,13 @@ Public Class SkompareMain
 
             NewRng.Interior.Color = highlight
             NewRng.Value = NewStr
-            'Vyhazuje výjimku, pokud je komentář prázdný
+
+            'Deletes existing comment if it exists
+            If NewRng.Comment IsNot Nothing Then
+                NewRng.Comment.Delete()
+            End If
+
+            'If the old value was nothing, dash will be written in the comment
             If OldStr = "" Then
                 NewRng.AddComment("-")
             Else
@@ -779,8 +785,15 @@ Public Class SkompareMain
 
             'Jen komentář
         ElseIf compStyle = "RBtnStyle4" Then
+
             NewRng.Value = NewStr
-            'Vyhazuje výjimku, pokud je komentář prázdný
+
+            'Deletes existing comment if it exists
+            If NewRng.Comment IsNot Nothing Then
+                NewRng.Comment.Delete()
+            End If
+
+            'If the old value was nothing, dash will be written in the comment
             If OldStr = "" Then
                 NewRng.AddComment("-")
             Else
@@ -796,8 +809,15 @@ Public Class SkompareMain
 
             'Řetězec v komentáři
         ElseIf compStyle = "RBtnStyle6" Then
+
             NewRng.Value = NewStr
-            'Vyhazuje výjimku, pokud je komentář prázdný
+
+            'Deletes existing comment if it exists
+            If NewRng.Comment IsNot Nothing Then
+                NewRng.Comment.Delete()
+            End If
+
+            'If the old value was nothing, dash will be written in the comment
             If OldStr = "" Then
                 NewRng.AddComment("-")
             Else
