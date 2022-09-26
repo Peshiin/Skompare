@@ -14,6 +14,10 @@ Public Class SkompareMain
     'Deklarace aplikace excel
     Public XlApp As Excel.Application
 
+    'Deklarace cest k sešitům
+    Private NewPath As String
+    Private OldPath As String
+
     'Deklarace sešitů
     Private NewWb As Excel.Workbook
     Private OldWb As Excel.Workbook
@@ -103,6 +107,7 @@ Public Class SkompareMain
             Catch
             End Try
 
+            NewPath = FilePath
             NewWb = XlApp.Workbooks.Open(FilePath, [ReadOnly]:=True)
             FormSkompare.LblNewFileName.Text = Dir(FilePath)
             WriteWorksheetsToUI(NewWb, FormSkompare.CBoxNewSheets)
@@ -117,6 +122,7 @@ Public Class SkompareMain
             Catch
             End Try
 
+            OldPath = FilePath
             OldWb = XlApp.Workbooks.Open(FilePath, [ReadOnly]:=True)
             FormSkompare.LblOldFileName.Text = Dir(FilePath)
             WriteWorksheetsToUI(OldWb, FormSkompare.CBoxOldSheets)
@@ -508,6 +514,10 @@ Public Class SkompareMain
         Trace.WriteLine("Starting comparing @ " + DateTime.Now.ToString())
         Trace.Indent()
 
+        'Checks open workbooks and opens them from NewPath/OldPath
+        NewWb = XlApp.Workbooks.Open(NewPath, [ReadOnly]:=True)
+        OldWb = XlApp.Workbooks.Open(OldPath, [ReadOnly]:=True)
+
         'Initialize progress bar form
         Dim prBarForm = New FormProgBar
         prBarForm.Show()
@@ -592,10 +602,10 @@ Public Class SkompareMain
             'Allows auto updating
             autoUpdate(True)
 
-            'Closes the originals and showing the result
+            'Closes the originals and shows the result
             XlApp.Visible = True
-            XlApp.Windows(NewWb.Name).Visible = False
-            XlApp.Windows(OldWb.Name).Visible = False
+            NewWb.Close(SaveChanges:=False)
+            OldWb.Close(SaveChanges:=False)
 
             FormSkompare.Activate()
 
@@ -608,8 +618,6 @@ Public Class SkompareMain
             Trace.Flush()
 
             prBarForm.Dispose()
-
-            BugReport(ex)
 
         End Try
 
@@ -1010,75 +1018,6 @@ Public Class SkompareMain
         Catch
 
         End Try
-    End Sub
-
-    'Sent email with bug report
-    Public Sub BugReport(ex As Exception)
-
-        If MessageBox.Show("Chcete odeslat oznámení o výjimce?" &
-                            Environment.NewLine &
-                           "Pozor! porovnávané sešity budou přiloženy k emailu." &
-                            Environment.NewLine &
-                           "Před odesláním je budete moci odebrat",
-                            "Close",
-                            MessageBoxButtons.YesNo,
-                            MessageBoxIcon.Question) = Windows.Forms.DialogResult.Yes Then
-
-            Try
-                Dim Outl As Object
-                Dim omsg As Object
-
-                'Opens outlook to write new email
-                Outl = New Outlook.Application
-                omsg = Outl.CreateItem(0) '=Outlook.OlItemType.olMailItem'
-
-                'Content of the email
-                omsg.Subject = "Skompare - oznámení o neošetřené výjimce"
-                'Adressee
-                omsg.To = "pavel.pechman@doosan.com"
-                'Attaches "new" file
-                omsg.Attachments.Add(NewWb.Path & "\\" & NewWb.Name, Outlook.OlAttachmentType.olByValue)
-                'Attaches "old" file
-                omsg.Attachments.Add(OldWb.Path & "\\" & OldWb.Name, Outlook.OlAttachmentType.olByValue)
-                'Attaches "debug" file
-                omsg.Attachments.Add(My.Application.Info.DirectoryPath & "\\Debug.log", Outlook.OlAttachmentType.olByValue)
-                'Writes the body of the email
-                omsg.body = "V programu nastala neošetřená výjimka @ " &
-                               DateTime.Now.ToString() &
-                               Environment.NewLine &
-                               ex.StackTrace &
-                               Environment.NewLine &
-                               ex.Message &
-                               Environment.NewLine &
-                               Environment.NewLine &
-                               "Nastavení aplikace: " &
-                               Environment.NewLine &
-                               Environment.NewLine &
-                               "Nový sešit: " & NewWb.Name & " Nový list: " & NewSheet.Name &
-                               Environment.NewLine &
-                               "Starý sešit: " & OldWb.Name & " Starý list: " & OldSheet.Name &
-                               Environment.NewLine &
-                               "Počáteční řádek: " & startRow &
-                               Environment.NewLine &
-                               "Sloupce pro vyhledání: " & SearchKeysCols(0) & " " & SearchKeysCols(1) & " " & SearchKeysCols(2) &
-                               Environment.NewLine &
-                               "Počáteční a koncový řetězec: " & startStr & " " & endStr &
-                               Environment.NewLine &
-                               "Způsob značení změn: " & compStyle
-
-                'Displays message to user
-                omsg.Display(True)
-
-            Catch
-                MessageBox.Show("Vytvoření reportu neproběhlo správně." &
-                                Environment.NewLine &
-                                "Pokud problém přetrvává, můžete kontaktovat pavel.pechman@doosan.com." &
-                                Environment.NewLine &
-                                "Ideálně včetně porovnávaných souborů a výstřižku nastavení aplikace.")
-            End Try
-
-        End If
-
     End Sub
 
 End Class
