@@ -4,6 +4,8 @@ Imports System.Globalization
 Imports System.Threading
 Imports System.Diagnostics
 Imports System.Runtime.InteropServices
+Imports Microsoft.Vbe.Interop
+Imports System.Reflection
 
 Public Class SkompareMain
 
@@ -73,7 +75,6 @@ Public Class SkompareMain
     'Start and end strings for marking changes
     Private startStr As String
     Private endStr As String
-
 
 
     '###############################################################
@@ -879,6 +880,75 @@ Public Class SkompareMain
 
     End Sub
 
+    'Copies modules and macros from oldWb
+    Sub CopyMacros(res As Excel.Workbook, old As Excel.Workbook)
+
+        Dim dest As VBComponent
+
+        Dim found As Boolean
+        found = False
+
+        Try
+            'Iterate existing workbook And copy over the code modules
+            For Each source As VBComponent In old.VBProject.VBComponents
+
+                'Do we have any code lines in the code module to copy?
+                If source.CodeModule.CountOfLines > 0 Then
+
+                    'We need to check whether we already have a code module with that name in our workbook
+                    'This will be for the sheets And workbook And we assume that we have already copied the sheets accordingly
+                    For Each destNew As VBComponent In res.VBProject.VBComponents
+
+                        If destNew.Name = source.CodeModule.Name Then
+
+                            destNew.CodeModule.InsertLines(1, source.CodeModule.Lines(1, source.CodeModule.CountOfLines))
+                            found = True
+
+                            'We've found the matching codemodule so lets exit
+                            Exit For
+
+                        Else 'we have To create the code Module
+
+                            found = False 'Set found To False so we can add the codemodule. 
+
+                        End If
+
+                    Next
+
+                    If (found = False) Then
+
+                        dest = res.VBProject.VBComponents.Add(vbext_ComponentType.vbext_ct_StdModule)
+                        dest.CodeModule.AddFromString(source.CodeModule.Lines(1, source.CodeModule.CountOfLines))
+
+                        dest.Name = source.Name
+                        Marshal.ReleaseComObject(dest)
+                        Marshal.ReleaseComObject(source)
+                        dest = Nothing
+
+                    End If
+                End If
+            Next
+
+        Catch ex As Exception
+            'Known problem with security settings
+            If ex.HResult = -2146827284 Then
+                MessageBox.Show("Je zakázán programový přístup k VBA projektu. " &
+                                "Pro zapnutí v aplikaci Excel:" &
+                                Environment.NewLine &
+                                "Soubor -> Možnosti -> Centrum zabezpečení -> Nastavení centra zabezpečení -> Nastavení maker -> Důvěřovat přístupu k objektovému modelu projektu VBA" &
+                                Environment.NewLine & Environment.NewLine &
+                                "Porovnání teď proběhne bez přenosu maker do výsledného sešitu.")
+            Else
+
+                MessageBox.Show(ex.Message & Environment.NewLine & ex.HResult)
+
+            End If
+
+        End Try
+
+    End Sub
+
+
     'Copy sheets from "old" workbook to the "result" one
     Sub CopyOld(res As Excel.Workbook, old As Excel.Workbook)
 
@@ -891,6 +961,8 @@ Public Class SkompareMain
             x += 1
 
         Next
+
+        CopyMacros(res, old)
 
     End Sub
 
@@ -948,7 +1020,7 @@ Public Class SkompareMain
                                "Chcete se pokusit o úpravu?",
                                "Close",
                                MessageBoxButtons.YesNo,
-                               MessageBoxIcon.Question) = Windows.Forms.DialogResult.Yes Then
+                               MessageBoxIcon.Question) = System.Windows.Forms.DialogResult.Yes Then
 
                 MessageBox.Show("Následně se otevře aplikace pro přidání sloupců" &
                                 Environment.NewLine &
