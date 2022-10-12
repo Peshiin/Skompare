@@ -949,66 +949,45 @@ Public Class SkompareMain
     End Sub
 
 
-    'Copy formulas (that means also values) from dest sheet to tar sheet
-    Sub CopySheetFormulas(dest As Excel.Worksheet, source As Excel.Worksheet)
+    'Copy sheets from "old" workbook to the "result" one
+    Sub CopyOld(res As Excel.Workbook, old As Excel.Workbook)
 
-        Try
-            Dim rng As Excel.Range
+        Dim oldSheets As Excel.Sheets = old.Worksheets()
+        Dim x As Integer = 1
 
-            For Each cell As Excel.Range In source.UsedRange.Cells
+        For Each sheet As Excel.Worksheet In oldSheets
 
-                rng = dest.Range(GetExcelColumnName(cell.Column) & cell.Row)
-                rng.Formula = cell.FormulaLocal
+            sheet.Copy(After:=res.Worksheets(x))
+            x += 1
 
-            Next
+        Next
 
-        Catch ex As Exception
-            MessageBox.Show(ex.Message & Environment.NewLine &
-                            ex.StackTrace & Environment.NewLine)
-        End Try
+        CopyMacros(res, old)
+
     End Sub
 
     'Creates "result" workbook
     Sub CreateResult()
 
-        XlApp.DisplayAlerts = False
+        Dim path As String = NewWb.Path
 
         'Vytvoří výstupní soubor   
         ResultWb = XlApp.Workbooks.Add
         XlApp.ActiveSheet.Name = "NewWbSheet"
+        CopyOld(ResultWb, OldWb)
 
-        'Copies newSheet to ResultWb
-        ResultWb.Worksheets.Add(After:=ResultWb.Sheets(1))
-        NewResSheet = ResultWb.ActiveSheet
-        NewResSheet.Name = OldSheet.Name
-        CopySheetFormulas(ResultWb.ActiveSheet, NewSheet)
-
-        'Goes through sheets in OldWb and copies them into ResultWb with exception of compared sheet
-        For Each sheet As Excel.Worksheet In OldWb.Worksheets
-
-            If sheet.Name <> OldSheet.Name Then
-                ResultWb.Worksheets.Add(After:=ResultWb.Sheets(ResultWb.Sheets.Count))
-                ResultWb.ActiveSheet.Name = sheet.Name
-
-                CopySheetFormulas(ResultWb.ActiveSheet, sheet)
-
-            End If
-
-        Next
-
-        'Copies oldSheet to ResultWb and renames to "Cancelled"
-        ResultWb.Worksheets.Add(After:=ResultWb.Sheets(NewResSheet.Name))
-        OldResSheet = ResultWb.ActiveSheet
-        OldResSheet.Name = "Cancelled"
-        CopySheetFormulas(OldResSheet, OldSheet)
-
-        'Deletes sheet that gets automatically created when creating new workbook
+        'Vymazání listu, který se tvoří automaticky s novým sešitem
+        XlApp.DisplayAlerts = False
         ResultWb.Sheets("NewWbSheet").Delete
-
-        'Copies VBA project
-        CopyMacros(ResultWb, OldWb)
-
         XlApp.DisplayAlerts = True
+
+        'Zkopírování listů a přiřazení do proměnných
+        OldResSheet = ResultWb.Worksheets(OldSheet.Name)
+        OldResSheet.Name = "Cancelled"
+
+        NewSheet.Copy(Before:=OldResSheet)
+        NewResSheet = XlApp.ActiveSheet
+        NewResSheet.Name = OldSheet.Name
 
         ResultWb.Unprotect()
         NewResSheet.Unprotect()
