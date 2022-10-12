@@ -970,11 +970,16 @@ Public Class SkompareMain
     Sub CreateResult()
 
         Dim path As String = NewWb.Path
+        Dim formulaText As String
 
         'Vytvoří výstupní soubor   
         ResultWb = XlApp.Workbooks.Add
         XlApp.ActiveSheet.Name = "NewWbSheet"
         CopyOld(ResultWb, OldWb)
+
+        'Assigns OldResSheet
+        OldResSheet = ResultWb.Worksheets(OldSheet.Name)
+        OldResSheet.Name = "Cancelled"
 
         'Vymazání listu, který se tvoří automaticky s novým sešitem
         XlApp.DisplayAlerts = False
@@ -982,12 +987,33 @@ Public Class SkompareMain
         XlApp.DisplayAlerts = True
 
         'Zkopírování listů a přiřazení do proměnných
-        OldResSheet = ResultWb.Worksheets(OldSheet.Name)
-        OldResSheet.Name = "Cancelled"
-
         NewSheet.Copy(Before:=OldResSheet)
         NewResSheet = XlApp.ActiveSheet
         NewResSheet.Name = OldSheet.Name
+
+        'Loops through created workbook to remove references to old workbook and sheet
+        For Each sheet As Excel.Worksheet In ResultWb.Sheets
+
+            For Each cell As Excel.Range In sheet.UsedRange.Cells
+
+                If cell.HasFormula Then
+
+                    'Removes absolute file path to old workbook
+                    cell.Formula = RemoveAbsoluteReference(cell)
+                    formulaText = cell.Formula.ToString
+
+                    'Changes the formula not to refer to old ws now named "Cancelled" but to the new sheet
+                    If InStr(1, formulaText, "Cancelled", CompareMethod.Text) <> 0 Then
+
+                        cell.Formula = formulaText.Replace("Cancelled", NewSheet.Name)
+
+                    End If
+
+                End If
+
+            Next
+
+        Next
 
         ResultWb.Unprotect()
         NewResSheet.Unprotect()
@@ -1044,6 +1070,34 @@ Public Class SkompareMain
         End If
 
     End Sub
+
+    'Deletes absolute reference (to another workbook) from the formula in cell
+    Private Function RemoveAbsoluteReference(cell As Excel.Range) As String
+
+        Try
+            Dim formulaText As String = cell.Formula.ToString
+
+            'Name of the workbook in abosolute path is enclosed in [] and these cannot be put in the name of workbook or worksheet
+            Dim pathEndChar As String = "]"
+            Dim pathEndPosition = InStr(1, formulaText, pathEndChar, CompareMethod.Text)
+
+            If pathEndPosition <> 0 Then
+
+                'Returns formula string without path to original workbook
+                RemoveAbsoluteReference = "=" & formulaText.Substring(pathEndPosition)
+
+            Else
+
+                RemoveAbsoluteReference = formulaText
+
+            End If
+
+        Catch ex As Exception
+            MessageBox.Show(ex.StackTrace)
+            RemoveAbsoluteReference = ""
+        End Try
+
+    End Function
 
     'Deletes background color from OldResSheet
     Private Sub RemoveBackground(ws As Excel.Worksheet)
