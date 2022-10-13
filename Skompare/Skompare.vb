@@ -948,6 +948,17 @@ Public Class SkompareMain
 
     End Sub
 
+    'Copies named ranges from one workbook to another
+    Sub CopyNamedRanges(source As Excel.Workbook, dest As Excel.Workbook)
+
+        For Each namedRange In source.Names
+
+            dest.Names.Add(namedRange.Name, namedRange.RefersTo)
+
+        Next namedRange
+
+    End Sub
+
 
     'Copy sheets from "old" workbook to the "result" one
     Sub CopyOld(res As Excel.Workbook, old As Excel.Workbook)
@@ -962,6 +973,7 @@ Public Class SkompareMain
 
         Next
 
+        CopyNamedRanges(res, old)
         CopyMacros(res, old)
 
     End Sub
@@ -1080,11 +1092,14 @@ Public Class SkompareMain
             'Name of the workbook in abosolute path is enclosed in [] and these cannot be put in the name of workbook or worksheet
             Dim pathEndChar As String = "]"
             Dim pathEndPosition = InStr(1, formulaText, pathEndChar, CompareMethod.Text)
+            'Dim path As String
 
             If pathEndPosition <> 0 Then
 
+                'path = OldWb.FullName.Replace(OldWb.Name, "[" & OldWb.Name & "]")
+
                 'Returns formula string without path to original workbook
-                RemoveAbsoluteReference = "=" & formulaText.Substring(pathEndPosition)
+                RemoveAbsoluteReference = formulaText.Replace("[" & OldWb.Name & "]", "")
 
             Else
 
