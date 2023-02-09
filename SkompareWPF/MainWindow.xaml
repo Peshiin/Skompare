@@ -1,0 +1,54 @@
+﻿<Window x:Class="SkompareWPF.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SkompareWPF" 
+        xmlns:components="clr-namespace:SkompareWPF.Components"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="600" Width="800"
+        Closing="Window_Closing">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition x:Name="LanguageSwitcherRow" Height="50" />
+            <RowDefinition x:Name="FileOpenerRow" Height="100" />
+            <RowDefinition x:Name="SheetSelectorRow" Height="60" />
+            <RowDefinition x:Name="SettingsRow" Height="200" />
+            <RowDefinition x:Name="ButtonsRow" Height="60" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="1*" />
+        </Grid.ColumnDefinitions>
+
+        <StackPanel Grid.Row="0" Grid.Column="1"
+                    Margin="10">
+            <Button x:Name="LanguageSwitcherButton"
+                    MinHeight="20" MinWidth="40"
+                    HorizontalAlignment="Right" 
+                    Click="LanguageSwitcherButton_Click">
+                <TextBlock Margin="6 2 6 2"
+                           VerticalAlignment="Center" HorizontalAlignment="Center">
+                    Language
+                </TextBlock>
+            </Button>                    
+        </StackPanel>
+
+        <StackPanel x:Name="OldFileStackPanel"
+                    Grid.Row="1" Grid.Column="0"
+                    Margin="5"
+                    VerticalAlignment="Center" HorizontalAlignment="Stretch">
+            <components:OpenFileControl x:Name="OldFileControl"
+                                        Label="Old file: "/>
+        </StackPanel>
+
+        <StackPanel x:Name="NewFileStackPanel"
+                    Grid.Row="1" Grid.Column="1"
+                    Margin="5"
+                    VerticalAlignment="Center" HorizontalAlignment="Stretch">
+            <components:OpenFileControl x:Name="NewFileControl"
+                                        Label="New file: "/>
+        </StackPanel>
+
+    </Grid>
+</Window>
