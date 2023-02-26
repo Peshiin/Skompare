@@ -1,8 +1,10 @@
-﻿using Microsoft.Win32;
+﻿using Microsoft.Office.Interop.Excel;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -121,6 +123,11 @@ namespace SkompareWPF.Components
         private void FileTextBox_PreviewDragOver(object sender, DragEventArgs e)
         {
             e.Handled = true;
+        }
+
+        private void SheetComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            XlFile.SelectedSheet = SheetComboBox.SelectedItem as Worksheet;
         }
     }
 }

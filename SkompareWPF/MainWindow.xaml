@@ -6,15 +6,16 @@
         xmlns:local="clr-namespace:SkompareWPF" 
         xmlns:components="clr-namespace:SkompareWPF.Components"
         mc:Ignorable="d"
-        Title="MainWindow" Height="600" Width="800"
+        Title="MainWindow" Width="800" Height="400"
+        MinHeight="380"
         Closing="Window_Closing">
+    
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition x:Name="LanguageSwitcherRow" Height="50" />
-            <RowDefinition x:Name="FileOpenerRow" Height="100" />
-            <RowDefinition x:Name="SheetSelectorRow" Height="60" />
-            <RowDefinition x:Name="SettingsRow" Height="200" />
-            <RowDefinition x:Name="ButtonsRow" Height="60" />
+            <RowDefinition x:Name="FileOpenerRow" Height="100"/>
+            <RowDefinition x:Name="SettingsRow" Height="130"/>
+            <RowDefinition x:Name="ButtonsRow"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*" />
@@ -29,9 +30,8 @@
                     Click="LanguageSwitcherButton_Click">
                 <TextBlock Margin="6 2 6 2"
                            VerticalAlignment="Center" HorizontalAlignment="Center">
-                    Language
                 </TextBlock>
-            </Button>                    
+            </Button>
         </StackPanel>
 
         <StackPanel x:Name="OldFileStackPanel"
@@ -50,5 +50,233 @@
                                         Label="New file: "/>
         </StackPanel>
 
+        <StackPanel Grid.Row="2" Grid.ColumnSpan="2">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="0.5*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <!--Selected sheets' parameters display-->
+                <StackPanel Grid.Column="0"
+                            Margin="15">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition x:Name="OldSheetName"/>
+                            <RowDefinition x:Name="OldRows"/>
+                            <RowDefinition x:Name="OldColumns"/>
+                            <RowDefinition x:Name="NewSheetName"/>
+                            <RowDefinition x:Name="NewRows"/>
+                            <RowDefinition x:Name="NewColumns"/>
+                        </Grid.RowDefinitions>
+
+                        <StackPanel Grid.Row="0" Grid.Column="0">
+                            <TextBlock Text="Old sheet: "/>
+                        </StackPanel>
+                        <StackPanel Grid.Row="0" Grid.Column="1">
+                            <TextBlock Text="{Binding OldFile.SelectedSheet.Name}"/>
+                        </StackPanel>
+                        <StackPanel Grid.Row="1" Grid.Column="0">
+                            <TextBlock Text="Rows: "
+                                       Margin="10 0 0 0"/>
+                        </StackPanel>
+                        <StackPanel Grid.Row="1" Grid.Column="1">
+                            <TextBlock Text="{Binding OldFile.RowsCount}"/>
+                        </StackPanel>
+                        <StackPanel Grid.Row="2" Grid.Column="0">
+                            <TextBlock Text="Columns: "
+                                       Margin="10 0 0 0"/>
+                        </StackPanel>
+                        <StackPanel Grid.Row="2" Grid.Column="1">
+                            <TextBlock Text="{Binding OldFile.ColumnsCount}"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Row="3" Grid.Column="0">
+                            <TextBlock Text="New sheet: "/>
+                        </StackPanel>
+                        <StackPanel Grid.Row="3" Grid.Column="1">
+                            <TextBlock Text="{Binding NewFile.SelectedSheet.Name}"/>
+                        </StackPanel>
+                        <StackPanel Grid.Row="4" Grid.Column="0">
+                            <TextBlock Text="Rows: "
+                                       Margin="10 0 0 0"/>
+                        </StackPanel>
+                        <StackPanel Grid.Row="4" Grid.Column="1">
+                            <TextBlock Text="{Binding NewFile.RowsCount}"/>
+                        </StackPanel>
+                        <StackPanel Grid.Row="5" Grid.Column="0">
+                            <TextBlock Text="Columns: "
+                                       Margin="10 0 0 0"/>
+                        </StackPanel>
+                        <StackPanel Grid.Row="5" Grid.Column="1">
+                            <TextBlock Text="{Binding NewFile.ColumnsCount}"/>
+                        </StackPanel>
+
+                    </Grid>
+                </StackPanel>
+
+                <!--Comparison settings-->
+                <StackPanel Grid.Column="1"
+                            Margin="10">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Grid.Row="0" Grid.Column="0">
+                            <TextBlock Text="Start row: " />
+                        </StackPanel>
+                        <StackPanel Grid.Row="0" Grid.Column="1">
+                            <TextBox x:Name="StartRowTextBox"
+                                     Text="1"
+                                     PreviewTextInput="StartRowTextBox_PreviewTextInput"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Row="1" Grid.Column="0"
+                                    VerticalAlignment="Center">
+                            <TextBlock Text="Search by column: " />
+                        </StackPanel>
+                        <StackPanel Grid.Row="1" Grid.Column="1">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <CheckBox x:Name="SearchColumnBCheckBox"
+                                          Grid.Row="0" Grid.Column="1"
+                                          IsChecked="False"/>
+                                <CheckBox x:Name="SearchColumnCCheckBox"
+                                          Grid.Row="0" Grid.Column="2"/>
+                                <TextBox x:Name="SearchColumnATextBox"
+                                         Grid.Row="1" Grid.Column="0"
+                                         Text="A"
+                                         TextAlignment="Center"
+                                         PreviewTextInput="SearchColumnTextBox_PreviewTextInput"/>
+                                <TextBox x:Name="SearchColumnBTextBox"
+                                         Grid.Row="1" Grid.Column="1"
+                                         Text="B"
+                                         TextAlignment="Center"
+                                         IsEnabled="{Binding ElementName=SearchColumnBCheckBox, Path=IsChecked}"
+                                         PreviewTextInput="SearchColumnTextBox_PreviewTextInput"/>
+                                <TextBox x:Name="SearchColumnCTextBox"
+                                         Grid.Row="1" Grid.Column="2"
+                                         Text="C"
+                                         TextAlignment="Center"
+                                         IsEnabled="{Binding ElementName=SearchColumnCCheckBox, Path=IsChecked}"
+                                         PreviewTextInput="SearchColumnTextBox_PreviewTextInput"/>
+                            </Grid>
+                        </StackPanel>
+
+                        <StackPanel Grid.Row="2" Grid.Column="0"
+                                    VerticalAlignment="Center">
+                            <TextBlock Text="Highlight color: " />
+                        </StackPanel>
+                        <StackPanel Grid.Row="2" Grid.Column="1"
+                                    VerticalAlignment="Center">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="25"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Button x:Name="SelectColorButton"
+                                        Grid.Column="0"
+                                        Width="25" Height="25"
+                                        Click="SelectColorButton_Click">
+                                    <Image Source="Components/Icons/SelectColorIcon.png"
+                                           Stretch="Fill"/>
+                                </Button>
+                                <StackPanel Grid.Column="1"
+                                            VerticalAlignment="Center"
+                                            Margin="5 0 0 0">
+                                    <TextBox x:Name="SelectColorTextBox"
+                                             Background="#FF6600"
+                                             Text="255,128,0"
+                                             TextChanged="SelectColorTextBox_TextChanged"/>
+                                </StackPanel>                                
+                            </Grid>
+                        </StackPanel>
+
+                        <StackPanel Grid.Row="3" Grid.Column="0">
+                            <TextBlock Text="Start string: " />
+                        </StackPanel>
+                        <StackPanel Grid.Row="3" Grid.Column="1">
+                            <TextBox x:Name="StartStringTextBox"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Row="4" Grid.Column="0">
+                            <TextBlock Text="End string: " />
+                        </StackPanel>
+                        <StackPanel Grid.Row="4" Grid.Column="1">
+                            <TextBox x:Name="EndStringTextBox"/>
+                        </StackPanel>
+                    </Grid>
+                </StackPanel>
+                
+                <!--Changes display settings-->
+                <StackPanel Grid.Column="2"
+                            Margin="10">
+                    
+                    <StackPanel Orientation="Horizontal">
+                        <RadioButton x:Name="HighlightOnlyRadioButton"
+                                     GroupName="ChangesHighlight"/>
+                        <TextBlock Text="Highlight only"/>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal">
+                        <RadioButton x:Name="HighlightCommentRadioButton"
+                                     GroupName="ChangesHighlight"
+                                     IsChecked="True"/>
+                        <TextBlock Text="Highlight and comment"/>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal">
+                        <RadioButton x:Name="HighlightStringRadioButton"
+                                     GroupName="ChangesHighlight"/>
+                        <TextBlock Text="Highlight and string addition"/>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal">
+                        <RadioButton x:Name="CommentOnlyRadioButton"
+                                     GroupName="ChangesHighlight"/>
+                        <TextBlock Text="Comment only"/>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal">
+                        <RadioButton x:Name="StringOnlyRadioButton"
+                                     GroupName="ChangesHighlight"/>
+                        <TextBlock Text="String addition only"/>
+                    </StackPanel> 
+                    
+                </StackPanel>
+                
+            </Grid>
+        </StackPanel>
+
+        <StackPanel Grid.Row="3" Grid.Column="2"
+                    Margin="10"
+                    HorizontalAlignment="Right">
+            <Button x:Name="StartCompareButton"
+                    Width="100" Height="40">
+                <TextBlock Text="Start"/>
+            </Button>
+        </StackPanel>
     </Grid>
 </Window>

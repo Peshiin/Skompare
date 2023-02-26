@@ -28,7 +28,8 @@
                             VerticalAlignment="Center" HorizontalAlignment="Left"
                             Margin="5">
                     <Label Content="{Binding Label, ElementName=thisControl}"
-                           FontSize="12"/>
+                           FontSize="12"
+                           HorizontalContentAlignment="Left"/>
                 </StackPanel>
 
                 <StackPanel Grid.Column="1"
@@ -74,7 +75,8 @@
                     <ComboBox x:Name="SheetComboBox"
                               Padding="4"
                               ItemsSource="{Binding XlFile.Worksheets}"
-                              DisplayMemberPath="Name"/>
+                              DisplayMemberPath="Name"
+                              SelectionChanged="SheetComboBox_SelectionChanged"/>
                 </StackPanel>
             </Grid>
         </StackPanel>
