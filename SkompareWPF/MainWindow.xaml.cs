@@ -29,8 +29,8 @@ namespace SkompareWPF
     public partial class MainWindow : Window
     {
         private MainHandler MainHandler;
-        private Color HighlightColor;
         private SolidColorBrush HighlightBrush = new SolidColorBrush();
+        private string selectedRadioButton = string.Empty;
         public MainWindow()
         {
             InitializeComponent();
@@ -39,6 +39,13 @@ namespace SkompareWPF
 
             OldFileControl.XlFile = MainHandler.OldFile;
             NewFileControl.XlFile = MainHandler.NewFile;
+
+            MainHandler.HighlightColor = ((SolidColorBrush)SelectColorTextBox.Background).Color;
+            MainHandler.ChangesHighlight = selectedRadioButton;
+            MainHandler.StartRow = int.Parse(StartRowTextBox.Text);
+            MainHandler.StartString = StartStringTextBox.Text;
+            MainHandler.EndString = EndStringTextBox.Text;
+            MainHandler.SearchColumns[0] = SearchColumnATextBox.Text;
         }
 
         private void LanguageSwitcherButton_Click(object sender, RoutedEventArgs e)
@@ -78,8 +85,8 @@ namespace SkompareWPF
                 else
                     SelectColorTextBox.Foreground = Brushes.Black;
 
-                HighlightColor = Color.FromArgb(255, (byte)red, (byte)green, (byte)blue);
-                HighlightBrush.Color = HighlightColor;
+                MainHandler.HighlightColor = Color.FromArgb(255, (byte)red, (byte)green, (byte)blue);
+                HighlightBrush.Color = MainHandler.HighlightColor;
                 SelectColorTextBox.Background = HighlightBrush;
                 SelectColorTextBox.Text = red + "," + green + "," + blue;
             }
@@ -88,31 +95,34 @@ namespace SkompareWPF
         private void SelectColorTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             string[] colors = (SelectColorTextBox.Text).Split(',');
-
-            try
+            
+            if(MainHandler != null)
             {
-                int red = int.Parse(colors[0]);
-                int green = int.Parse(colors[1]);
-                int blue = int.Parse(colors[2]);
-
-                bool IsLowContrast = false;
-
-                if ((red < 200 && green < 200 && blue < 200)
-                    || (red < 150 && green < 150))
+                try
                 {
-                    IsLowContrast = true;
+                    int red = int.Parse(colors[0]);
+                    int green = int.Parse(colors[1]);
+                    int blue = int.Parse(colors[2]);
+
+                    bool IsLowContrast = false;
+
+                    if ((red < 200 && green < 200 && blue < 200)
+                        || (red < 150 && green < 150))
+                    {
+                        IsLowContrast = true;
+                    }
+
+                    if (IsLowContrast)
+                        SelectColorTextBox.Foreground = Brushes.White;
+                    else
+                        SelectColorTextBox.Foreground = Brushes.Black;
+
+                    MainHandler.HighlightColor = Color.FromArgb(255, (byte)red, (byte)green, (byte)blue);
+                    HighlightBrush.Color = MainHandler.HighlightColor;
+                    SelectColorTextBox.Background = HighlightBrush;
                 }
-
-                if (IsLowContrast)
-                    SelectColorTextBox.Foreground = Brushes.White;
-                else
-                    SelectColorTextBox.Foreground = Brushes.Black;
-
-                HighlightColor = Color.FromArgb(255, (byte)red, (byte)green, (byte)blue);
-                HighlightBrush.Color = HighlightColor;
-                SelectColorTextBox.Background = HighlightBrush;
+                catch (Exception ex) { }
             }
-            catch (Exception ex) { }
         }
 
         private void StartRowTextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
@@ -125,6 +135,69 @@ namespace SkompareWPF
         {
             Regex regex = new Regex("[^A-Z]");
             e.Handled = regex.IsMatch(e.Text);
+        }
+
+        private void ChangesHighlightRadioButton_Checked(object sender, RoutedEventArgs e)
+        {
+            if (MainHandler != null)
+                MainHandler.ChangesHighlight = (e.Source as RadioButton).Name;
+            else
+                selectedRadioButton = (e.Source as RadioButton).Name;
+        }
+
+        private void StartRowTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (MainHandler != null)
+                MainHandler.StartRow = int.Parse((e.Source as TextBox).Text);
+        }
+
+        private void StringTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (MainHandler == null)
+                return;
+            else if ((e.Source as TextBox).Name == nameof(StartStringTextBox))
+                MainHandler.StartString = (e.Source as TextBox).Text;
+            else if ((e.Source as TextBox).Name == nameof(EndStringTextBox))
+                MainHandler.EndString = (e.Source as TextBox).Text;
+        }
+
+        private void SearchColumnTextBox_Changed(object sender, TextChangedEventArgs e)
+        {
+            if(MainHandler == null)
+                return ;
+
+            else if ((e.Source as TextBox).Name == nameof(SearchColumnATextBox))
+                MainHandler.SearchColumns[0] = (e.Source as TextBox).Text;
+            else if ((e.Source as TextBox).Name == nameof(SearchColumnBTextBox))
+                MainHandler.SearchColumns[1] = (e.Source as TextBox).Text;
+            else if ((e.Source as TextBox).Name == nameof(SearchColumnCTextBox))
+                MainHandler.SearchColumns[2] = (e.Source as TextBox).Text;
+        }
+
+        private void SearchColumnCheckBox_Changed(object sender, RoutedEventArgs e)
+        {
+            if (MainHandler == null)
+                return;
+
+            else if ((e.Source as CheckBox).Name == nameof(SearchColumnBCheckBox))
+            {
+                if ((e.Source as CheckBox).IsChecked == true)
+                    MainHandler.SearchColumns[1] = SearchColumnBTextBox.Text;
+                else
+                    MainHandler.SearchColumns[1] = string.Empty;
+            }
+            else if ((e.Source as CheckBox).Name == nameof(SearchColumnCCheckBox))
+            {
+                if ((e.Source as CheckBox).IsChecked == true)
+                    MainHandler.SearchColumns[2] = SearchColumnCTextBox.Text;
+                else
+                    MainHandler.SearchColumns[2] = string.Empty;
+            }
+        }
+
+        private void StartCompareButton_Click(object sender, RoutedEventArgs e)
+        {
+            MainHandler.CompareInit();
         }
     }
 }

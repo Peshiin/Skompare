@@ -66,7 +66,7 @@ namespace SkompareWPF
         }
         public int RowsCount { get; private set; }
         public int ColumnsCount { get; private set; }
-        private string FilePath { get; set; }
+        public string FilePath { get; private set; }
         private OpenFileControl Control { get; set; }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -109,7 +109,7 @@ namespace SkompareWPF
 
             if(FilePath != null)
             {
-                Workbook = XlApp.Workbooks.Open(FilePath);
+                Workbook = XlApp.Workbooks.Open(FilePath, ReadOnly: true);
                 InvokeChange(nameof(Workbook));
             }
         }
