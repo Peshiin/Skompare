@@ -12,11 +12,10 @@ using System.Windows.Media;
 using System.Diagnostics;
 using System.Windows.Forms;
 using Microsoft.Office.Interop.Excel;
-using static System.Net.Mime.MediaTypeNames;
 using System.IO;
-using static System.Net.WebRequestMethods;
-using System.Windows.Input;
 using System.Globalization;
+using System.Runtime.InteropServices;
+using System.Collections;
 
 namespace SkompareWPF
 {
@@ -27,10 +26,10 @@ namespace SkompareWPF
         public XlFile NewFile { get; private set; }
         private Workbook ResultWorkbook { get; set; }
         private Worksheet ResultWorksheet { get; set; }
-        private object[,] NewArray { get; set; }
-        private object[,] OldArray { get; set; }
-        private string[] NewSearchArr { get; set; }
-        private string[] OldSearchArr { get; set; } 
+        private List<List<string>> NewList { get; set; }
+        private List<List<string>> OldList { get; set; }
+        private List<string> NewSearchList { get; set; }
+        private List<string> OldSearchList { get; set; } 
         public Color HighlightColor { get; set; }
         public string ChangesHighlight { get; set; } = string.Empty;
         public List<string> SearchColumns { get; set; } = new List<string>(3);
@@ -73,12 +72,12 @@ namespace SkompareWPF
                 CheckColumns();
 
                 //Assigns sheets arrays
-                NewArray = GetSheetArray(NewFile.SelectedSheet, NewFile.RowsCount, NewFile.ColumnsCount);
-                OldArray = GetSheetArray(OldFile.SelectedSheet, OldFile.RowsCount, OldFile.ColumnsCount);
+                NewList = GetSheet2DList(NewFile.SelectedSheet, NewFile.RowsCount, NewFile.ColumnsCount);
+                OldList = GetSheet2DList(OldFile.SelectedSheet, OldFile.RowsCount, OldFile.ColumnsCount);
 
                 //Assigns search arrays
-                NewSearchArr = GetSearchArray(NewArray);
-                OldSearchArr = GetSearchArray(OldArray);
+                NewSearchList = GetSearchList(NewList);
+                OldSearchList = GetSearchList(OldList);
 
                 //Sets auto updating of the XlApp to false
                 //autoUpdate(False);
@@ -105,6 +104,8 @@ namespace SkompareWPF
                                 Environment.NewLine +
                                 ex.Message);
                 Trace.Flush();
+                ResultWorkbook.Close(SaveChanges: false);
+                Marshal.ReleaseComObject(ResultWorkbook);
             }
 
             Trace.Unindent();
@@ -161,7 +162,7 @@ namespace SkompareWPF
         /// <returns></returns>
         private void CreateResult()
         {
-            string tempFilePath = Path.GetTempPath() + "\\SkompareTempFile" + Path.GetExtension(OldFile.FilePath);
+            string tempFilePath = Path.GetTempPath() + "SkompareTempFile" + Path.GetExtension(OldFile.FilePath);
             OldFile.Workbook.SaveCopyAs(tempFilePath);
             Trace.WriteLine("Created result as temporary: " + tempFilePath);
 
@@ -177,6 +178,7 @@ namespace SkompareWPF
             }
             ResultWorkbook.Worksheets[OldFile.SelectedSheet.Index].Name = "Cancelled";
             NewFile.SelectedSheet.Copy(Before: ResultWorkbook.Worksheets["Cancelled"]);
+            ResultWorksheet = ResultWorkbook.Worksheets[NewFile.SelectedSheet.Name];
 
             ResultWorkbook.Unprotect();
             ResultWorksheet.Unprotect();
@@ -187,27 +189,31 @@ namespace SkompareWPF
         /// </summary>
         private void Compare()
         {
-            bool matchFound = false;
             bool duplicityFound = false;
-            string searchString = string.Empty;
-            int oldRowIndex = -1;
+            string searchString;
+            int oldRowIndex;
 
-            bool[] duplicity = new bool[CompareRowsCount];
-            for (int i = 0; i <= duplicity.Count(); i++)
-                duplicity[i] = false;
+            List<bool> duplicity = new List<bool>();
+            for (int i = 0; i < CompareRowsCount; i++)
+                duplicity.Add(false);
 
             Trace.WriteLine("Starting looping");
-
-            for(int newRowIndex = StartRow; newRowIndex < NewFile.RowsCount; newRowIndex++)
+            for(int newRowIndex = StartRow - 1; newRowIndex < NewFile.RowsCount; newRowIndex++)
             {
                 Trace.WriteLine("Row index: " + newRowIndex);
-                matchFound = false;
-                searchString = NewSearchArr[newRowIndex];
 
-                oldRowIndex = Array.IndexOf(OldSearchArr, searchString);
+                searchString = NewSearchList[newRowIndex];
+                Trace.WriteLine("Searching for: " + searchString);
 
-                if (oldRowIndex <= 0)
+                oldRowIndex = OldSearchList.IndexOf(searchString);
+                Trace.WriteLine("Found at row " + oldRowIndex+1 + " of old sheet");
+
+                if (oldRowIndex < 0)
+                {
+                    ResultWorksheet.Rows[newRowIndex + 1].EntireRow.Interior.Color =
+                        System.Drawing.Color.FromArgb(HighlightColor.R, HighlightColor.G, HighlightColor.B);
                     continue;
+                }
 
                 if (duplicity[oldRowIndex])
                 {
@@ -220,20 +226,16 @@ namespace SkompareWPF
                                         "Pokud je předpokládané množství duplicit více, ošetřete vhodným výběrem klíčů.");
                         duplicityFound = true;
                     }
-
-                    oldRowIndex = Array.IndexOf(OldSearchArr, searchString, oldRowIndex + 1);
+                    else
+                        oldRowIndex = OldSearchList.IndexOf(searchString, oldRowIndex + 1);
                 }
 
-                if(oldRowIndex > 0)
+                if(oldRowIndex >= 0)
                 {
-                    matchFound = true;
                     duplicity[oldRowIndex] = true;
 
                     CompareRow(newRowIndex, oldRowIndex);
                 }
-
-                if (!matchFound)
-                    ResultWorksheet.Rows.EntireRow.Interior.Color = HighlightColor;
             }
 
             Trace.WriteLine("Deleting rows from \"Cancelled\"");
@@ -246,12 +248,12 @@ namespace SkompareWPF
         /// </summary>
         /// <param name="sheet"></param>
         /// <param name="indexArray"></param>
-        private void DeleteRows(Worksheet sheet, bool[] indexArray)
+        private void DeleteRows(Worksheet sheet, List<bool> indexArray)
         {
-            for(int i = indexArray.Length - 1; i >= StartRow; i--)
+            for(int i = indexArray.Count - 1; i >= StartRow - 1; i--)
             {
                 if (indexArray[i])
-                    sheet.Rows[i].EntireRow.Delete();
+                    sheet.Rows[i + 1].EntireRow.Delete();
             }
         }
 
@@ -261,35 +263,53 @@ namespace SkompareWPF
         /// </summary>
         /// <param name="inputArray"></param>
         /// <returns></returns>
-        private string[] GetSearchArray(Object[,] inputArray)
+        private List<string> GetSearchList(List<List<string>> inputArray)
         {
-            int inputLength = inputArray.GetLength(1);
-            string[] returnArray = new string[inputLength];
+            int inputLength = inputArray.Count();
+            List<string> returnList = new List<string>();
+            while (returnList.Count < StartRow - 1)
+                returnList.Add(null);
 
-            for(int row = StartRow; row <= inputLength; row++)
+            for(int row = StartRow - 1; row < inputLength; row++)
             {
+                returnList.Add(string.Empty);
+
                 foreach(string key in SearchColumns)
                 {
                     if (key != string.Empty && key != "")
-                        returnArray[row] += key;
+                    {
+                        returnList[row] += inputArray[row][GetColumnNumber(key) - 1];
+                    }
                 }
             }
 
-            return returnArray;
-        }        
-        
+            return returnList;
+        }
+
         /// <summary>
-        /// Gets array of values from range to be compared
+        /// Returns range of Excel worksheet as List of Lists<string>
         /// </summary>
         /// <param name="sheet"></param>
         /// <param name="rows"></param>
         /// <param name="columns"></param>
         /// <returns></returns>
-        private object[,] GetSheetArray(Worksheet sheet, int rows, int columns)
+        private List<List<string>> GetSheet2DList(Worksheet sheet, int rows, int columns)
         {
-            string lastCell = columns.ToString() + rows.ToString();
+            List<List<string>> returnList = new List<List<string>>();
+            List<string> rowList;
 
-            return (Object[,])sheet.Range["A1", lastCell].Value;
+            for(int row = 1; row <= rows; row++)
+            {
+                rowList = new List<string>();
+                for (int col = 1; col <= columns; col++)
+                    if(sheet.Cells[row, col].Value != null)
+                        rowList.Add(sheet.Cells[row, col].Value.ToString());
+                    else
+                        rowList.Add(null);
+                returnList.Add(rowList);
+            }
+
+            return returnList;
         }
 
         
@@ -300,24 +320,31 @@ namespace SkompareWPF
         /// <param name="OldR"></param>
         private void CompareRow(int newR, int oldR)
         {
-            string newVal;
-            string oldVal;
-            Range row = ResultWorksheet.Rows[newR];
+            string newVal = null;
+            string oldVal = null;
+            Range row = ResultWorksheet.Rows[newR + 1];
 
             try
             {
-                for(int column = 1; column <= NewFile.ColumnsCount; column++)
+                for(int column = 0; column < NewFile.ColumnsCount; column++)
                 {
-                    newVal = NewArray.GetValue(newR, column) as string;
-                    oldVal = OldArray.GetValue(oldR, column) as string;
+                    if (NewList[newR][column] != null)
+                        newVal = NewList[newR][column].ToString();
 
-                    if (string.Compare(newVal, oldVal, true, CultureInfo.InvariantCulture) == 0)
-                        CompareStyle(row.Cells[1, column], newVal, oldVal);
+                    if (OldList[oldR][column] != null)
+                        oldVal = OldList[oldR][column].ToString();
+
+                    if (newVal == null && oldVal == null)
+                        continue;
+                    else if(newVal == null && oldVal != null)
+                        CompareStyle(row.Cells[column + 1], newVal, oldVal);
+                    else if(!newVal.Equals(oldVal, StringComparison.InvariantCultureIgnoreCase))
+                        CompareStyle(row.Cells[column + 1], newVal, oldVal);
                 }
             }
             catch(Exception ex)
             {
-                Trace.WriteLine(ex.Message);
+                Trace.WriteLine(ex.StackTrace);
             }
         }
 
@@ -330,27 +357,32 @@ namespace SkompareWPF
         /// <param name="oldStr"></param>
         private void CompareStyle(Range newRng, string newStr, string oldStr)
         {
-            // sets range format to "Text"
-            if(newStr.Contains("."))
+            if(newStr == null)
+                newRng.NumberFormat = "General";
+            else if (newStr.Contains("."))
+                // sets range format to "Text"
                 newRng.NumberFormat = "@";
             else
                 newRng.NumberFormat = "General";
 
             if(ChangesHighlight == "HighlightOnlyRadioButton")
             {
-                newRng.Interior.Color = HighlightColor;
+                newRng.Interior.Color
+                    = System.Drawing.Color.FromArgb(HighlightColor.R, HighlightColor.G, HighlightColor.B);
                 newRng.Value = newStr;
             }
 
             else if(ChangesHighlight == "HighlightCommentRadioButton")
             {
-                newRng.Interior.Color = HighlightColor;
-                newRng.Value = newStr;
+                newRng.Interior.Color
+                    = System.Drawing.Color.FromArgb(HighlightColor.R, HighlightColor.G, HighlightColor.B);
+                if(newStr != null)
+                    newRng.Value = newStr;
 
                 if (newRng.Comment != null)
                     newRng.Comment.Delete();
 
-                if (oldStr == "" || oldStr == string.Empty)
+                if (oldStr == null || oldStr == "" || oldStr == string.Empty)
                     newRng.AddComment("-");
                 else
                     newRng.AddComment(StartString + oldStr + EndString);
@@ -358,7 +390,8 @@ namespace SkompareWPF
 
             else if(ChangesHighlight == "HighlightStringRadioButton")
             {
-                newRng.Interior.Color = HighlightColor;
+                newRng.Interior.Color
+                    = System.Drawing.Color.FromArgb(HighlightColor.R, HighlightColor.G, HighlightColor.B);
                 newRng.Value = newStr + " " + StartString + oldStr + EndString;
             }
 
@@ -379,6 +412,24 @@ namespace SkompareWPF
             {
                 newRng.Value = newStr + " " + StartString + oldStr + EndString;
             }
+        }
+
+        /// <summary>
+        /// Gets Excel column number from letter 
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        private int GetColumnNumber(string name)
+        {
+            int number = 0;
+            int pow = 1;
+            for (int i = name.Length - 1; i >= 0; i--)
+            {
+                number += (name[i] - 'A' + 1) * pow;
+                pow *= 26;
+            }
+
+            return number;
         }
     }
 }

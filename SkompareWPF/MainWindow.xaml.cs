@@ -55,9 +55,17 @@ namespace SkompareWPF
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            Excel.Application xlApp = MainHandler.XlApp;
-            xlApp.Quit();
-            Marshal.ReleaseComObject(xlApp);
+            try
+            {
+                MainHandler.OldFile.Workbook.Close(SaveChanges: false);
+                MainHandler.NewFile.Workbook.Close(SaveChanges: false);
+            }
+            catch(Exception ex)
+            {
+                Trace.WriteLine(ex.Message);
+            }
+            MainHandler.XlApp.Quit();
+            Marshal.ReleaseComObject(MainHandler.XlApp);
         }
 
         private void SelectColorButton_Click(object sender, RoutedEventArgs e)
