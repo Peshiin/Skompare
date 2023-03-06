@@ -27,7 +27,7 @@ namespace SkompareWPF
             {
                 return workbook;
             }
-            private set
+            set
             {
                 workbook = value;
                 Worksheets.Clear();

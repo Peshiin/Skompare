@@ -69,6 +69,9 @@ namespace SkompareWPF
 
             try
             {
+                OldFile.Workbook = XlApp.Workbooks.Open(OldFile.FilePath);
+                NewFile.Workbook = XlApp.Workbooks.Open(NewFile.FilePath);
+
                 CheckColumns();
 
                 //Assigns sheets arrays
@@ -94,8 +97,14 @@ namespace SkompareWPF
                 //autoUpdate(True);
 
                 //Closes the originals and shows the result
-                OldFile.Workbook.Close(SaveChanges: false);
-                NewFile.Workbook.Close(SaveChanges: false);
+                if (OldFile.Workbook != NewFile.Workbook)
+                {
+                    OldFile.Workbook.Close(SaveChanges: false);
+                    NewFile.Workbook.Close(SaveChanges: false);
+                }
+                else
+                    OldFile.Workbook.Close(SaveChanges: false);
+
                 XlApp.Visible = true;
             }
             catch(Exception ex)
