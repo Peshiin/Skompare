@@ -16,6 +16,8 @@ using System.IO;
 using System.Globalization;
 using System.Runtime.InteropServices;
 using System.Collections;
+using System.Reflection;
+using System.Text.RegularExpressions;
 
 namespace SkompareWPF
 {
@@ -87,6 +89,27 @@ namespace SkompareWPF
 
                 //Creates "result" workbook to where the actual comparing will be done
                 CreateResult();
+                // Removes absolute file reference from header
+                if(StartRow > 1)
+                {
+                    Range header = ResultWorksheet.Range["A1:" + GetExcelColumnName(NewFile.ColumnsCount) + (StartRow - 1).ToString()];
+                    string headerValue;
+                    string fileReference;
+                    foreach (Range cell in header)
+                    {
+                        //C:\Users\pechm\Desktop\skompare test\[newTest.xlsx]
+                        headerValue = Convert.ToString(cell.Formula);
+                        fileReference = "[" + NewFile.Workbook.Name + "]"; //NewFile.Workbook.Path + "\\
+                        if (headerValue == null)
+                            continue;
+                        Trace.WriteLine(fileReference + " " + headerValue);
+                        while(headerValue.Contains(fileReference))
+                        {
+                            headerValue = headerValue.Replace(fileReference, "");
+                            cell.Formula = headerValue;
+                        }
+                    }
+                }
 
                 CompareRowsCount = Math.Max(OldFile.RowsCount, NewFile.RowsCount);
 
@@ -215,7 +238,7 @@ namespace SkompareWPF
                 Trace.WriteLine("Searching for: " + searchString);
 
                 oldRowIndex = OldSearchList.IndexOf(searchString);
-                Trace.WriteLine("Found at row " + oldRowIndex+1 + " of old sheet");
+                Trace.WriteLine("Found at row " + (oldRowIndex + 1) + " of old sheet");
 
                 if (oldRowIndex < 0)
                 {
@@ -287,7 +310,7 @@ namespace SkompareWPF
                 {
                     if (key != string.Empty && key != "")
                     {
-                        returnList[row] += inputArray[row][GetColumnNumber(key) - 1];
+                        returnList[row] += inputArray[row][GetExcelColumnNumber(key) - 1];
                     }
                 }
             }
@@ -428,7 +451,7 @@ namespace SkompareWPF
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        private int GetColumnNumber(string name)
+        private int GetExcelColumnNumber(string name)
         {
             int number = 0;
             int pow = 1;
@@ -439,6 +462,20 @@ namespace SkompareWPF
             }
 
             return number;
+        }
+
+        private string GetExcelColumnName(int columnNumber)
+        {
+            string columnName = "";
+
+            while (columnNumber > 0)
+            {
+                int modulo = (columnNumber - 1) % 26;
+                columnName = Convert.ToChar('A' + modulo) + columnName;
+                columnNumber = (columnNumber - modulo) / 26;
+            }
+
+            return columnName;
         }
     }
 }

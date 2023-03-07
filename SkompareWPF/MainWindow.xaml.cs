@@ -155,8 +155,16 @@ namespace SkompareWPF
 
         private void StartRowTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (MainHandler != null)
+            try
+            {
+                if (MainHandler == null)
+                    return;
+                if ((e.Source as TextBox).Text == null)
+                    return;
+
                 MainHandler.StartRow = int.Parse((e.Source as TextBox).Text);
+            }
+            catch(Exception) { }
         }
 
         private void StringTextBox_TextChanged(object sender, TextChangedEventArgs e)
