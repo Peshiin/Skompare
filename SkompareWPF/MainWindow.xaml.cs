@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -16,7 +17,6 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
-using System.Windows.Shapes;
 using WinForms = System.Windows.Forms;
 using Excel = Microsoft.Office.Interop.Excel;
 using System.Text.RegularExpressions;
@@ -233,6 +233,10 @@ namespace SkompareWPF
             {
                 if (MainHandler.NewFile.Workbook == null || MainHandler.OldFile.Workbook == null)
                     throw new Exception("Nebyl správně vybrán porovnávaný sešit");
+
+                if (Path.GetExtension(MainHandler.OldFile.FilePath) !=
+                    Path.GetExtension(MainHandler.NewFile.FilePath))
+                    throw new Exception("Formáty souborů se neshodují. Porovnávejte soubory se stejným formátem");
 
                 MainHandler.CompareInit();
             }
