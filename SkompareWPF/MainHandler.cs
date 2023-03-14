@@ -238,7 +238,7 @@ namespace SkompareWPF
                 Trace.WriteLine("Searching for: " + searchString);
 
                 oldRowIndex = OldSearchList.IndexOf(searchString);
-                Trace.WriteLine("Found at row " + (oldRowIndex + 1) + " of old sheet");
+                Trace.WriteLine("Found at row " + oldRowIndex + " of old sheet");
 
                 if (oldRowIndex < 0)
                 {
@@ -255,7 +255,12 @@ namespace SkompareWPF
                                         Environment.NewLine +
                                         "Skript proběhne s předpokladem max. dvou duplicit." +
                                         Environment.NewLine +
-                                        "Pokud je předpokládané množství duplicit více, ošetřete vhodným výběrem klíčů.");
+                                        "Pokud je předpokládané množství duplicit více, ošetřete vhodným výběrem klíčů.",
+                                        "Nalezena duplicita",
+                                        MessageBoxButtons.OK,
+                                        MessageBoxIcon.Warning,
+                                        MessageBoxDefaultButton.Button1,
+                                        MessageBoxOptions.DefaultDesktopOnly);
                         duplicityFound = true;
                     }
                     else
