@@ -71,8 +71,8 @@ namespace SkompareWPF
 
             try
             {
-                OldFile.Workbook = XlApp.Workbooks.Open(OldFile.FilePath);
-                NewFile.Workbook = XlApp.Workbooks.Open(NewFile.FilePath);
+                //OldFile.Workbook = XlApp.Workbooks.Open(OldFile.FilePath);
+                //NewFile.Workbook = XlApp.Workbooks.Open(NewFile.FilePath);
 
                 CheckColumns();
 
@@ -128,6 +128,11 @@ namespace SkompareWPF
                 else
                     OldFile.Workbook.Close(SaveChanges: false);
 
+                Marshal.ReleaseComObject(OldFile.Workbook);
+                Marshal.ReleaseComObject(NewFile.Workbook);
+                OldFile.Workbook = null;
+                NewFile.Workbook = null;
+
                 XlApp.Visible = true;
             }
             catch(Exception ex)
@@ -136,8 +141,11 @@ namespace SkompareWPF
                                 Environment.NewLine +
                                 ex.Message);
                 Trace.Flush();
-                ResultWorkbook.Close(SaveChanges: false);
-                Marshal.ReleaseComObject(ResultWorkbook);
+                if(ResultWorkbook != null)
+                {
+                    ResultWorkbook.Close(SaveChanges: false);
+                    Marshal.ReleaseComObject(ResultWorkbook);
+                }
             }
 
             Trace.Unindent();

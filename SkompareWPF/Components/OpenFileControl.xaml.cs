@@ -75,7 +75,7 @@ namespace SkompareWPF.Components
             set
             {
                 xlFileName = value;
-                FileTextBox.Text = value;                
+                FileTextBox.Text = xlFileName;                
                 InvokeChange(XlFileName);
                 XlFile.Worksheets.CollectionChanged += Worksheets_CollectionChanged;
             }
@@ -90,7 +90,17 @@ namespace SkompareWPF.Components
 
         private void Worksheets_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            SheetComboBox.SelectedIndex = 0;
+            if(XlFile.SelectedSheet == null)
+            {
+                SheetComboBox.SelectedIndex = 0;
+                return;
+            }
+
+            //if (SheetComboBox.FindName(XlFile.SelectedSheet.Name) != null)
+            //        SheetComboBox.SelectedItem = SheetComboBox.FindName(XlFile.SelectedSheet.Name) as Workbook;
+            //else
+            //    SheetComboBox.SelectedIndex = 0;
+                
         }
 
         private void FileOpenerButton_Click(object sender, RoutedEventArgs e)
@@ -127,7 +137,8 @@ namespace SkompareWPF.Components
 
         private void SheetComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            XlFile.SelectedSheet = SheetComboBox.SelectedItem as Worksheet;
+            if(SheetComboBox.SelectedItem != null)
+                XlFile.SelectedSheet = SheetComboBox.SelectedItem as Worksheet;
         }
     }
 }

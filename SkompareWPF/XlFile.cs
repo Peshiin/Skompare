@@ -29,10 +29,25 @@ namespace SkompareWPF
             }
             set
             {
+                if (value == null)
+                {
+                    workbook = null;
+                    SelectedSheet = null;
+                    Worksheets.Clear();
+                }
+
+                if (workbook != null)
+                {
+                    workbook.Close();
+                    Marshal.ReleaseComObject(workbook);
+                    workbook = null;
+                }
+
                 workbook = value;
                 Worksheets.Clear();
-                foreach (Excel.Worksheet sheet in Workbook.Worksheets)
-                    Worksheets.Add(sheet);
+                if(workbook != null)
+                    foreach (Excel.Worksheet sheet in Workbook.Worksheets)
+                        Worksheets.Add(sheet);
                 InvokeChange(nameof(Worksheets));
             }
         }
@@ -47,6 +62,12 @@ namespace SkompareWPF
             set
             {
                 selectedSheet = value;
+
+                if (selectedSheet != null)
+                    Trace.WriteLine("Selected sheet: " + selectedSheet.Name);
+                else
+                    Trace.WriteLine("Selected sheet: null");
+
                 try
                 {
                     RowsCount = GetLast(SelectedSheet, XlSearchOrder.xlByColumns);
@@ -98,8 +119,12 @@ namespace SkompareWPF
                     GC.Collect();
                     GC.WaitForPendingFinalizers();
                     Workbook.Close(SaveChanges: false);
+                    SelectedSheet = null;
+                    Worksheets.Clear();
                     Marshal.ReleaseComObject(Workbook);
                     Marshal.ReleaseComObject(workbook);
+                    Workbook = null;
+
                 }
                 catch(Exception ex)
                 {

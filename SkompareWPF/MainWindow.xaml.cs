@@ -213,7 +213,14 @@ namespace SkompareWPF
 
         private void StartCompareButton_Click(object sender, RoutedEventArgs e)
         {
-            MainHandler.CompareInit();
+            try
+            {
+                MainHandler.CompareInit();
+            }
+            catch(Exception ex)
+            {
+                Trace.WriteLine(ex.ToString());               
+            }
         }
     }
 }
