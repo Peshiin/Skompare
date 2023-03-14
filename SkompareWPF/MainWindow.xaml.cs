@@ -20,6 +20,7 @@ using System.Windows.Shapes;
 using WinForms = System.Windows.Forms;
 using Excel = Microsoft.Office.Interop.Excel;
 using System.Text.RegularExpressions;
+using SkompareWPF.Components;
 
 namespace SkompareWPF
 {
@@ -31,6 +32,7 @@ namespace SkompareWPF
         private MainHandler MainHandler;
         private SolidColorBrush HighlightBrush = new SolidColorBrush();
         private string selectedRadioButton = string.Empty;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -46,6 +48,11 @@ namespace SkompareWPF
             MainHandler.StartString = StartStringTextBox.Text;
             MainHandler.EndString = EndStringTextBox.Text;
             MainHandler.SearchColumns[0] = SearchColumnATextBox.Text;
+            MainHandler.PropertyChanged += MainHandler_PropertyChanged;
+        }
+
+        private void MainHandler_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
         }
 
         private void LanguageSwitcherButton_Click(object sender, RoutedEventArgs e)
@@ -57,8 +64,14 @@ namespace SkompareWPF
         {
             try
             {
-                MainHandler.OldFile.Workbook.Close(SaveChanges: false);
-                MainHandler.NewFile.Workbook.Close(SaveChanges: false);
+                if(MainHandler.OldFile != null)
+                {
+                    MainHandler.OldFile.Workbook.Close(SaveChanges: false);
+                }
+                if(MainHandler.NewFile != null)
+                {
+                    MainHandler.NewFile.Workbook.Close(SaveChanges: false);
+                }
             }
             catch(Exception ex)
             {
@@ -129,7 +142,10 @@ namespace SkompareWPF
                     HighlightBrush.Color = MainHandler.HighlightColor;
                     SelectColorTextBox.Background = HighlightBrush;
                 }
-                catch (Exception ex) { }
+                catch (Exception ex)
+                {
+                    Trace.WriteLine(ex.ToString());
+                }
             }
         }
 
@@ -215,11 +231,15 @@ namespace SkompareWPF
         {
             try
             {
+                if (MainHandler.NewFile.Workbook == null || MainHandler.OldFile.Workbook == null)
+                    throw new Exception("Nebyl správně vybrán porovnávaný sešit");
+
                 MainHandler.CompareInit();
             }
             catch(Exception ex)
             {
-                Trace.WriteLine(ex.ToString());               
+                Trace.WriteLine(ex.ToString());     
+                MessageBox.Show(ex.ToString());
             }
         }
     }

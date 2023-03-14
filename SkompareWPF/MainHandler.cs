@@ -21,7 +21,7 @@ using System.Text.RegularExpressions;
 
 namespace SkompareWPF
 {
-    internal class MainHandler
+    internal class MainHandler: INotifyPropertyChanged
     {
         public Excel.Application XlApp{ get; private set; } = new Excel.Application();
         public XlFile OldFile { get; private set; }
@@ -38,7 +38,42 @@ namespace SkompareWPF
         private int CompareRowsCount { get; set; }
         public int StartRow { get; set; }
         public string StartString { get; set; }
-        public string EndString { get; set; } 
+        public string EndString { get; set; }
+        private int progressNum;
+        public int ProgressNum
+        {
+            get
+            { 
+                return progressNum;
+            }
+            set
+            {
+                progressNum = value;
+                Trace.WriteLine(progressNum.ToString());
+                InvokeChange(nameof(ProgressNum));
+            }
+        }
+        private string progressState;
+        public string ProgressState
+        {
+            get 
+            {
+                return progressState;
+            }
+            set
+            {
+                progressState = value;
+                Trace.WriteLine(progressState);
+                InvokeChange(nameof(ProgressState));
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void InvokeChange(string property)
+        {
+            if (PropertyChanged != null)
+                PropertyChanged(this, new PropertyChangedEventArgs(property));
+        }
 
         public MainHandler(OpenFileControl oldControl, OpenFileControl newControl)
         {
@@ -51,6 +86,8 @@ namespace SkompareWPF
 
         public void CompareInit()
         {
+            ProgressState = "Compare intializing";
+
             string debugFilePath = AppDomain.CurrentDomain.BaseDirectory + "\\Debug.log";
             if(System.IO.File.Exists(debugFilePath))
             {
@@ -66,7 +103,8 @@ namespace SkompareWPF
 
             TextWriterTraceListener debug = new TextWriterTraceListener(debugFilePath, "myListener");
             Trace.Listeners.Add(debug);
-            Trace.WriteLine("Starting comparing @ " + DateTime.Now.ToString());
+            ProgressState = "Starting @ " + DateTime.Now.ToString();
+            Trace.WriteLine("Starting @ " + DateTime.Now.ToString());
             Trace.Indent();
 
             try
@@ -77,6 +115,7 @@ namespace SkompareWPF
                 CheckColumns();
 
                 //Assigns sheets arrays
+                ProgressState = "Loading data";
                 NewList = GetSheet2DList(NewFile.SelectedSheet, NewFile.RowsCount, NewFile.ColumnsCount);
                 OldList = GetSheet2DList(OldFile.SelectedSheet, OldFile.RowsCount, OldFile.ColumnsCount);
 
@@ -88,6 +127,7 @@ namespace SkompareWPF
                 //autoUpdate(False);
 
                 //Creates "result" workbook to where the actual comparing will be done
+                ProgressState = "Creating \"result\" worksheet";
                 CreateResult();
                 // Removes absolute file reference from header
                 if(StartRow > 1)
@@ -102,7 +142,7 @@ namespace SkompareWPF
                         fileReference = "[" + NewFile.Workbook.Name + "]"; //NewFile.Workbook.Path + "\\
                         if (headerValue == null)
                             continue;
-                        Trace.WriteLine(fileReference + " " + headerValue);
+                        //Trace.WriteLine(fileReference + " " + headerValue);
                         while(headerValue.Contains(fileReference))
                         {
                             headerValue = headerValue.Replace(fileReference, "");
@@ -114,12 +154,14 @@ namespace SkompareWPF
                 CompareRowsCount = Math.Max(OldFile.RowsCount, NewFile.RowsCount);
 
                 //Comparison itself
+                ProgressState = "Comparing started";
                 Compare();
 
                 //Allows auto updating
                 //autoUpdate(True);
 
                 //Closes the originals and shows the result
+                ProgressState = "Closing workbooks";
                 if (OldFile.Workbook != NewFile.Workbook)
                 {
                     OldFile.Workbook.Close(SaveChanges: false);
@@ -134,6 +176,7 @@ namespace SkompareWPF
                 NewFile.Workbook = null;
 
                 XlApp.Visible = true;
+                ProgressState = "Finished";
             }
             catch(Exception ex)
             {
@@ -229,62 +272,74 @@ namespace SkompareWPF
         /// </summary>
         private void Compare()
         {
-            bool duplicityFound = false;
-            string searchString;
-            int oldRowIndex;
-
-            List<bool> duplicity = new List<bool>();
-            for (int i = 0; i < CompareRowsCount; i++)
-                duplicity.Add(false);
-
-            Trace.WriteLine("Starting looping");
-            for(int newRowIndex = StartRow - 1; newRowIndex < NewFile.RowsCount; newRowIndex++)
+            try
             {
-                Trace.WriteLine("Row index: " + newRowIndex);
+                ProgressState = "Comparing started";
+                ProgressNum = 0;
 
-                searchString = NewSearchList[newRowIndex];
-                Trace.WriteLine("Searching for: " + searchString);
+                bool duplicityFound = false;
+                string searchString;
+                int oldRowIndex;
 
-                oldRowIndex = OldSearchList.IndexOf(searchString);
-                Trace.WriteLine("Found at row " + oldRowIndex + " of old sheet");
+                List<bool> duplicity = new List<bool>();
+                for (int i = 0; i < CompareRowsCount; i++)
+                    duplicity.Add(false);
 
-                if (oldRowIndex < 0)
+                Trace.WriteLine("Starting looping");
+                for (int newRowIndex = StartRow - 1; newRowIndex < NewFile.RowsCount; newRowIndex++)
                 {
-                    ResultWorksheet.Rows[newRowIndex + 1].EntireRow.Interior.Color =
-                        System.Drawing.Color.FromArgb(HighlightColor.R, HighlightColor.G, HighlightColor.B);
-                    continue;
-                }
+                    ProgressNum = (int)((double)newRowIndex / NewFile.RowsCount * 100);
 
-                if (duplicity[oldRowIndex])
-                {
-                    if (!duplicityFound)
+                    Trace.WriteLine("Row index: " + newRowIndex);
+
+                    searchString = NewSearchList[newRowIndex];
+                    Trace.WriteLine("Searching for: " + searchString);
+
+                    oldRowIndex = OldSearchList.IndexOf(searchString);
+                    Trace.WriteLine("Found at row " + oldRowIndex + " of old sheet");
+
+                    if (oldRowIndex < 0)
                     {
-                        MessageBox.Show("Nalezena duplicita zadaných vyhledávacích klíčů" +
-                                        Environment.NewLine +
-                                        "Skript proběhne s předpokladem max. dvou duplicit." +
-                                        Environment.NewLine +
-                                        "Pokud je předpokládané množství duplicit více, ošetřete vhodným výběrem klíčů.",
-                                        "Nalezena duplicita",
-                                        MessageBoxButtons.OK,
-                                        MessageBoxIcon.Warning,
-                                        MessageBoxDefaultButton.Button1,
-                                        MessageBoxOptions.DefaultDesktopOnly);
-                        duplicityFound = true;
+                        ResultWorksheet.Rows[newRowIndex + 1].EntireRow.Interior.Color =
+                            System.Drawing.Color.FromArgb(HighlightColor.R, HighlightColor.G, HighlightColor.B);
+                        continue;
                     }
-                    else
-                        oldRowIndex = OldSearchList.IndexOf(searchString, oldRowIndex + 1);
+
+                    if (duplicity[oldRowIndex])
+                    {
+                        if (!duplicityFound)
+                        {
+                            MessageBox.Show("Nalezena duplicita zadaných vyhledávacích klíčů" +
+                                            Environment.NewLine +
+                                            "Skript proběhne s předpokladem max. dvou duplicit." +
+                                            Environment.NewLine +
+                                            "Pokud je předpokládané množství duplicit více, ošetřete vhodným výběrem klíčů.",
+                                            "Nalezena duplicita",
+                                            MessageBoxButtons.OK,
+                                            MessageBoxIcon.Warning,
+                                            MessageBoxDefaultButton.Button1,
+                                            MessageBoxOptions.DefaultDesktopOnly);
+                            duplicityFound = true;
+                        }
+                        else
+                            oldRowIndex = OldSearchList.IndexOf(searchString, oldRowIndex + 1);
+                    }
+
+                    if (oldRowIndex >= 0)
+                    {
+                        duplicity[oldRowIndex] = true;
+
+                        CompareRow(newRowIndex, oldRowIndex);
+                    }
                 }
 
-                if(oldRowIndex >= 0)
-                {
-                    duplicity[oldRowIndex] = true;
-
-                    CompareRow(newRowIndex, oldRowIndex);
-                }
+                Trace.WriteLine("Deleting rows from \"Cancelled\"");
+                DeleteRows(ResultWorkbook.Worksheets["Cancelled"], duplicity);
             }
-
-            Trace.WriteLine("Deleting rows from \"Cancelled\"");
-            DeleteRows(ResultWorkbook.Worksheets["Cancelled"], duplicity);
+            catch(Exception ex)
+            {
+                Trace.WriteLine(ex.ToString());
+            }
         }
 
         
@@ -295,6 +350,7 @@ namespace SkompareWPF
         /// <param name="indexArray"></param>
         private void DeleteRows(Worksheet sheet, List<bool> indexArray)
         {
+            ProgressState = "Deleting rows from \"Cancelled\" sheet";
             for(int i = indexArray.Count - 1; i >= StartRow - 1; i--)
             {
                 if (indexArray[i])
@@ -389,7 +445,7 @@ namespace SkompareWPF
             }
             catch(Exception ex)
             {
-                Trace.WriteLine(ex.StackTrace);
+                Trace.WriteLine(ex.ToString());
             }
         }
 

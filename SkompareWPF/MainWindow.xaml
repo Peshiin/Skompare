@@ -285,13 +285,32 @@
             </Grid>
         </StackPanel>
 
+        <StackPanel Grid.Row="3" Grid.Column="0"
+                    Orientation="Vertical"
+                    Margin="10">
+            <StackPanel x:Name="ProgressBarStackPanel"
+                    HorizontalAlignment="Stretch" VerticalAlignment="Center">
+                <ProgressBar x:Name="ThisProgressBar"
+                         Width="{Binding ActualWidth, ElementName=ProgressBarStackPanel}"
+                         Height="20"
+                         Minimum="0" Maximum="100"
+                         Value="{Binding ProgressNum}"/>
+            </StackPanel>
+            <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Center"
+                        Orientation="Horizontal">
+                <TextBlock Text="Progress: " />
+                <TextBlock Text="{Binding ProgressState}" />
+            </StackPanel>
+        </StackPanel>
+
         <StackPanel Grid.Row="3" Grid.Column="2"
                     Margin="10"
-                    HorizontalAlignment="Right">
+                    HorizontalAlignment="Right" VerticalAlignment="Center">
             <Button x:Name="StartCompareButton"
                     Width="100" Height="40" Click="StartCompareButton_Click">
                 <TextBlock Text="Start"/>
             </Button>
         </StackPanel>
+
     </Grid>
 </Window>
