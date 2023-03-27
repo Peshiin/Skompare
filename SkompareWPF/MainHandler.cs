@@ -18,6 +18,7 @@ using System.Runtime.InteropServices;
 using System.Collections;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using static System.Net.WebRequestMethods;
 
 namespace SkompareWPF
 {
@@ -49,7 +50,7 @@ namespace SkompareWPF
             set
             {
                 progressNum = value;
-                Trace.WriteLine(progressNum.ToString());
+                Trace.WriteLine(progressNum + " %");
                 InvokeChange(nameof(ProgressNum));
             }
         }
@@ -545,6 +546,28 @@ namespace SkompareWPF
             }
 
             return columnName;
+        }
+
+        /// <summary>
+        /// Allow/disable auto updates of Excel App
+        /// </summary>
+        /// <param name="auto"></param>
+        private void AutoUpdate(bool auto)
+        {
+            if (auto) // Allow auto updates
+            {                
+                XlApp.Calculation = Excel.XlCalculation.xlCalculationAutomatic;
+                XlApp.ScreenUpdating = true;
+                XlApp.DisplayStatusBar = true;
+                XlApp.EnableEvents = true;
+            }
+            else if(!auto) // Disable auto updates
+            {
+                XlApp.Calculation = Excel.XlCalculation.xlCalculationManual;
+                XlApp.ScreenUpdating = false;
+                XlApp.DisplayStatusBar = false;
+                XlApp.EnableEvents = false;
+            }
         }
     }
 }

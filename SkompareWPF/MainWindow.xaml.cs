@@ -53,6 +53,10 @@ namespace SkompareWPF
 
         private void MainHandler_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
+            if (e.PropertyName == nameof(MainHandler.ProgressNum))
+                ThisProgressBar.Value = MainHandler.ProgressNum;
+            if (e.PropertyName == nameof(MainHandler.ProgressState))
+                ProgressStateTextBlock.Text = MainHandler.ProgressState;
         }
 
         private void LanguageSwitcherButton_Click(object sender, RoutedEventArgs e)
