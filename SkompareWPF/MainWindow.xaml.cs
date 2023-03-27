@@ -21,6 +21,8 @@ using WinForms = System.Windows.Forms;
 using Excel = Microsoft.Office.Interop.Excel;
 using System.Text.RegularExpressions;
 using SkompareWPF.Components;
+using System.Threading;
+using System.Windows.Threading;
 
 namespace SkompareWPF
 {
@@ -54,13 +56,17 @@ namespace SkompareWPF
         private void MainHandler_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == nameof(MainHandler.ProgressNum))
-                ThisProgressBar.Value = MainHandler.ProgressNum;
+                ThisProgressBar.Dispatcher.Invoke(() => ThisProgressBar.Value = MainHandler.ProgressNum, DispatcherPriority.Background);
             if (e.PropertyName == nameof(MainHandler.ProgressState))
-                ProgressStateTextBlock.Text = MainHandler.ProgressState;
+                ProgressStateTextBlock.Dispatcher.Invoke(() => ProgressStateTextBlock.Text = MainHandler.ProgressState, DispatcherPriority.Background);
         }
 
         private void LanguageSwitcherButton_Click(object sender, RoutedEventArgs e)
         {
+            for (int i = 0; i < 100; i++)
+            {
+                Thread.Sleep(100);
+            }
             MessageBox.Show(OldFileControl.XlFileName + " " + NewFileControl.XlFileName);
         }
 
@@ -233,6 +239,7 @@ namespace SkompareWPF
 
         private void StartCompareButton_Click(object sender, RoutedEventArgs e)
         {
+            ProgressStateTextBlock.Dispatcher.Invoke(() => ProgressStateTextBlock.Text = "Initializing", DispatcherPriority.Background);
             try
             {
                 if (MainHandler.NewFile.Workbook == null || MainHandler.OldFile.Workbook == null)
@@ -246,6 +253,7 @@ namespace SkompareWPF
             }
             catch(Exception ex)
             {
+                ProgressStateTextBlock.Dispatcher.Invoke(() => ProgressStateTextBlock.Text = "", DispatcherPriority.Background);
                 Trace.WriteLine(ex.ToString());     
                 MessageBox.Show(ex.ToString());
             }

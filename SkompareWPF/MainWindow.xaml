@@ -294,13 +294,11 @@
                          Width="{Binding ActualWidth, ElementName=ProgressBarStackPanel}"
                          Height="20"
                          Minimum="0" Maximum="100"/>
-                <!--Value="{Binding ProgressNum}"-->
             </StackPanel>
             <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Center"
                         Orientation="Horizontal">
                 <TextBlock Text="Progress: " />
                 <TextBlock x:Name="ProgressStateTextBlock" />
-                <!--Text="{Binding ProgressState}"-->
             </StackPanel>
         </StackPanel>
 
