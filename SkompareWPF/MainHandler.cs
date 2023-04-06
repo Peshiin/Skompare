@@ -19,6 +19,8 @@ using System.Collections;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using static System.Net.WebRequestMethods;
+using System.Security.Cryptography;
+using System.Linq.Expressions;
 
 namespace SkompareWPF
 {
@@ -110,9 +112,6 @@ namespace SkompareWPF
 
             try
             {
-                //OldFile.Workbook = XlApp.Workbooks.Open(OldFile.FilePath);
-                //NewFile.Workbook = XlApp.Workbooks.Open(NewFile.FilePath);
-
                 CheckColumns();
 
                 //Assigns sheets arrays
@@ -125,31 +124,26 @@ namespace SkompareWPF
                 OldSearchList = GetSearchList(OldList);
 
                 //Sets auto updating of the XlApp to false
-                //autoUpdate(False);
+                AutoUpdate(false);
 
                 //Creates "result" workbook to where the actual comparing will be done
                 ProgressState = "Creating \"result\" worksheet";
                 CreateResult();
+
                 // Removes absolute file reference from header
                 if(StartRow > 1)
                 {
-                    Range header = ResultWorksheet.Range["A1:" + GetExcelColumnName(NewFile.ColumnsCount) + (StartRow - 1).ToString()];
-                    string headerValue;
-                    string fileReference;
-                    foreach (Range cell in header)
-                    {
-                        //C:\Users\pechm\Desktop\skompare test\[newTest.xlsx]
-                        headerValue = Convert.ToString(cell.Formula);
-                        fileReference = "[" + NewFile.Workbook.Name + "]"; //NewFile.Workbook.Path + "\\
-                        if (headerValue == null)
-                            continue;
-                        //Trace.WriteLine(fileReference + " " + headerValue);
-                        while(headerValue.Contains(fileReference))
-                        {
-                            headerValue = headerValue.Replace(fileReference, "");
-                            cell.Formula = headerValue;
-                        }
-                    }
+                    Range header = ResultWorksheet.Range["A1:" + GetExcelColumnName(NewFile.ColumnsCount) + (StartRow - 1)];
+                    FormulaReplace(header, "[" + NewFile.Workbook.Name + "]", string.Empty);
+                }
+
+                // Due to renaming old sheet to "Cancelled" formulas need to be corrected
+                foreach(Worksheet sheet in ResultWorkbook.Worksheets)
+                {
+                    if (sheet == null || sheet == ResultWorksheet || sheet.Name == "Cancelled")
+                        continue;
+                    Trace.WriteLine(sheet.Name + " " + DateTime.Now.ToString());
+                    FormulaReplace(sheet.UsedRange, "Cancelled", ResultWorksheet.Name);
                 }
 
                 CompareRowsCount = Math.Max(OldFile.RowsCount, NewFile.RowsCount);
@@ -159,7 +153,7 @@ namespace SkompareWPF
                 Compare();
 
                 //Allows auto updating
-                //autoUpdate(True);
+                AutoUpdate(true);
 
                 //Closes the originals and shows the result
                 ProgressState = "Closing workbooks";
@@ -400,12 +394,13 @@ namespace SkompareWPF
             List<List<string>> returnList = new List<List<string>>();
             List<string> rowList;
 
-            for(int row = 1; row <= rows; row++)
+            object[,] val = sheet.UsedRange.Formula;
+            for (int row = 1; row <= rows; row++)
             {
                 rowList = new List<string>();
                 for (int col = 1; col <= columns; col++)
-                    if(sheet.Cells[row, col].Value != null)
-                        rowList.Add(sheet.Cells[row, col].Value.ToString());
+                    if (val[row, col] != null)
+                        rowList.Add(val[row, col].ToString());
                     else
                         rowList.Add(null);
                 returnList.Add(rowList);
@@ -567,6 +562,49 @@ namespace SkompareWPF
                 XlApp.ScreenUpdating = false;
                 XlApp.DisplayStatusBar = false;
                 XlApp.EnableEvents = false;
+            }
+        }
+
+        /// <summary>
+        /// Changes parts of excel formula
+        /// </summary>
+        /// <param name="rng"></param>
+        /// <param name="oldRef"></param>
+        /// <param name="newRef"></param>
+        private void FormulaReplace(Range rng, string oldRef, string newRef)
+        {
+            bool isProteceted = rng.Worksheet.ProtectContents;
+            if (isProteceted)
+            {
+                // Try to unprotect w/o password
+                try
+                {
+                    rng.Worksheet.Unprotect();
+                }
+                catch(Exception ex)
+                {
+                    Trace.WriteLine(ex.ToString());
+                    return;
+                }
+            }
+
+            foreach (Range cell in rng)
+            {
+                if (!cell.HasFormula)
+                    continue;
+
+                string formula = Convert.ToString(cell.Formula);
+
+                while (formula.Contains(oldRef))
+                {
+                    formula = formula.Replace(oldRef, newRef);
+                    cell.Formula = formula;
+                }
+            }
+
+            if (isProteceted)
+            {
+                rng.Worksheet.Protect();
             }
         }
     }
