@@ -394,7 +394,7 @@ namespace SkompareWPF
             List<List<string>> returnList = new List<List<string>>();
             List<string> rowList;
 
-            object[,] val = sheet.UsedRange.Formula;
+            object[,] val = sheet.UsedRange.Value;
             for (int row = 1; row <= rows; row++)
             {
                 rowList = new List<string>();
