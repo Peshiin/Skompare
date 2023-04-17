@@ -107,11 +107,5 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Skompare\Skompare.vbproj">
-      <Project>{b19854a3-0016-4954-8926-bada4b7b7f0d}</Project>
-      <Name>Skompare</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
