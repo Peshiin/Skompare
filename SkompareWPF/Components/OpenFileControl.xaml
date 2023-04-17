@@ -1,0 +1,86 @@
+﻿<UserControl x:Class="SkompareWPF.Components.OpenFileControl"
+             x:Name="thisControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:SkompareWPF.Components"
+             mc:Ignorable="d" 
+             d:DesignHeight="100" d:DesignWidth="400">
+
+    <Grid>
+        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+        
+        <StackPanel Grid.Row="0"
+                    VerticalAlignment="Center" HorizontalAlignment="Stretch">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="4*" />
+                    <ColumnDefinition Width="30" />
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="0"
+                            VerticalAlignment="Center" HorizontalAlignment="Left"
+                            Margin="5">
+                    <Label Content="{Binding Label, ElementName=thisControl}"
+                           FontSize="12"
+                           HorizontalContentAlignment="Left"/>
+                </StackPanel>
+
+                <StackPanel Grid.Column="1"
+                            VerticalAlignment="Center"
+                            Margin="5">
+                    <TextBox x:Name="FileTextBox"
+                             VerticalContentAlignment="Center"
+                             IsReadOnly="True"
+                             Background="LightGray"
+                             AllowDrop="True"
+                             PreviewDragOver="FileTextBox_PreviewDragOver"
+                             DragDrop.PreviewDrop="FileTextBox_PreviewDrop"
+                             Padding="4">
+                    </TextBox>
+                </StackPanel>
+
+                <StackPanel Grid.Column="2" x:Name="test"
+                            Margin="0 5 5 5"
+                            VerticalAlignment="Center">
+                    <Button x:Name="FileOpenerButton"
+                            HorizontalAlignment="Left" VerticalAlignment="Stretch"
+                            Click="FileOpenerButton_Click">
+                        <Image Source="Icons/OpenFolderIcon.png"
+                               Stretch="Fill"
+                               Margin="2"/>
+                    </Button>
+                </StackPanel>
+            </Grid>
+        </StackPanel>
+
+        <StackPanel Grid.Row="1"
+                    VerticalAlignment="Center" HorizontalAlignment="Stretch">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="4*" />
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0"
+                            HorizontalAlignment="Left">
+                    <Label Content="Select sheet: " />
+                </StackPanel>
+                <StackPanel Grid.Column="1">
+                    <ComboBox x:Name="SheetComboBox"
+                              Padding="4"
+                              ItemsSource="{Binding XlFile.Worksheets}"
+                              DisplayMemberPath="Name"
+                              SelectionChanged="SheetComboBox_SelectionChanged"/>
+                </StackPanel>
+            </Grid>
+        </StackPanel>
+
+    </Grid>
+
+</UserControl>

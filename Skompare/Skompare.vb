@@ -950,12 +950,16 @@ Public Class SkompareMain
 
     'Copies named ranges from one workbook to another
     Sub CopyNamedRanges(source As Excel.Workbook, dest As Excel.Workbook)
+        Try
+            For Each namedRange In source.Names
 
-        For Each namedRange In source.Names
+                dest.Names.Add(namedRange.NameLocal, namedRange.RefersToLocal)
+                Debug.Print(namedRange.NameLocal & " " & namedRange.RefersToLocal)
 
-            dest.Names.Add(namedRange.Name, namedRange.RefersTo)
-
-        Next namedRange
+            Next namedRange
+        Catch ex As Exception
+            Debug.Print(ex.StackTrace)
+        End Try
 
     End Sub
 
@@ -973,64 +977,72 @@ Public Class SkompareMain
 
         Next
 
-        CopyNamedRanges(res, old)
-        CopyMacros(res, old)
+        Try
+            'CopyNamedRanges(res, old)
+            CopyMacros(res, old)
+        Catch ex As Exception
+            Debug.Print(ex.StackTrace)
+        End Try
 
     End Sub
 
     'Creates "result" workbook
     Sub CreateResult()
+        Try
 
-        Dim path As String = NewWb.Path
-        Dim formulaText As String
+            Dim path As String = NewWb.Path
+            Dim formulaText As String
 
-        'Vytvoří výstupní soubor   
-        ResultWb = XlApp.Workbooks.Add
-        XlApp.ActiveSheet.Name = "NewWbSheet"
-        CopyOld(ResultWb, OldWb)
+            'Vytvoří výstupní soubor   
+            ResultWb = XlApp.Workbooks.Add
+            XlApp.ActiveSheet.Name = "NewWbSheet"
+            CopyOld(ResultWb, OldWb)
 
-        'Assigns OldResSheet
-        OldResSheet = ResultWb.Worksheets(OldSheet.Name)
-        OldResSheet.Name = "Cancelled"
+            'Assigns OldResSheet
+            OldResSheet = ResultWb.Worksheets(OldSheet.Name)
+            OldResSheet.Name = "Cancelled"
 
-        'Vymazání listu, který se tvoří automaticky s novým sešitem
-        XlApp.DisplayAlerts = False
-        ResultWb.Sheets("NewWbSheet").Delete
-        XlApp.DisplayAlerts = True
+            'Vymazání listu, který se tvoří automaticky s novým sešitem
+            XlApp.DisplayAlerts = False
+            ResultWb.Sheets("NewWbSheet").Delete
+            XlApp.DisplayAlerts = True
 
-        'Zkopírování listů a přiřazení do proměnných
-        NewSheet.Copy(Before:=OldResSheet)
-        NewResSheet = XlApp.ActiveSheet
-        NewResSheet.Name = OldSheet.Name
+            'Zkopírování listů a přiřazení do proměnných
+            NewSheet.Copy(Before:=OldResSheet)
+            NewResSheet = XlApp.ActiveSheet
+            NewResSheet.Name = OldSheet.Name
 
-        'Loops through created workbook to remove references to old workbook and sheet
-        For Each sheet As Excel.Worksheet In ResultWb.Sheets
+            'Loops through created workbook to remove references to old workbook and sheet
+            For Each sheet As Excel.Worksheet In ResultWb.Sheets
 
-            For Each cell As Excel.Range In sheet.UsedRange.Cells
+                For Each cell As Excel.Range In sheet.UsedRange.Cells
 
-                If cell.HasFormula Then
+                    If cell.HasFormula Then
 
-                    'Removes absolute file path to old workbook
-                    cell.Formula = RemoveAbsoluteReference(cell)
-                    formulaText = cell.Formula.ToString
+                        'Removes absolute file path to old workbook
+                        cell.Formula = RemoveAbsoluteReference(cell)
+                        formulaText = cell.Formula.ToString
 
-                    'Changes the formula not to refer to old ws now named "Cancelled" but to the new sheet
-                    If InStr(1, formulaText, "Cancelled", CompareMethod.Text) <> 0 Then
+                        'Changes the formula not to refer to old ws now named "Cancelled" but to the new sheet
+                        If InStr(1, formulaText, "Cancelled", CompareMethod.Text) <> 0 Then
 
-                        cell.Formula = formulaText.Replace("Cancelled", NewSheet.Name)
+                            cell.Formula = formulaText.Replace("Cancelled", NewSheet.Name)
+
+                        End If
 
                     End If
 
-                End If
+                Next
 
             Next
 
-        Next
+            ResultWb.Unprotect()
+            NewResSheet.Unprotect()
+            OldResSheet.Unprotect()
 
-        ResultWb.Unprotect()
-        NewResSheet.Unprotect()
-        OldResSheet.Unprotect()
-
+        Catch ex As Exception
+            Debug.Print(ex.StackTrace)
+        End Try
     End Sub
 
     'Deletes "found" rows from "Cancelled" sheet in "result" workbook
