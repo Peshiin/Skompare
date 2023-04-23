@@ -54,6 +54,8 @@ namespace SkompareWPF
             MainHandler.PropertyChanged += MainHandler_PropertyChanged;
 
             BackgroundWorker = new BackgroundWorker();
+            BackgroundWorker.WorkerReportsProgress = true;
+            BackgroundWorker.WorkerSupportsCancellation = true;
             BackgroundWorker.DoWork += new DoWorkEventHandler(BW_DoWork);
             BackgroundWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(BW_RunWorkerCompleted);
         }
@@ -67,6 +69,7 @@ namespace SkompareWPF
 
         private void BW_DoWork(object sender, DoWorkEventArgs e)
         {
+            e.Result = "Unexpected exception occured during comparing";
             try
             {
                 MainHandler.CompareInit(BackgroundWorker);
@@ -75,7 +78,6 @@ namespace SkompareWPF
             catch(Exception ex)
             {
                 Trace.WriteLine(ex.ToString());
-                e.Result = "Unexpected exception occured during comparing";
             }
         }
 
@@ -85,6 +87,9 @@ namespace SkompareWPF
                 ThisProgressBar.Dispatcher.Invoke(() => ThisProgressBar.Value = MainHandler.ProgressNum, DispatcherPriority.Background);
             if (e.PropertyName == nameof(MainHandler.ProgressState))
                 ProgressStateTextBlock.Dispatcher.Invoke(() => ProgressStateTextBlock.Text = MainHandler.ProgressState, DispatcherPriority.Background);
+            if (e.PropertyName == nameof(MainHandler.IsLoading))
+                if (!MainHandler.IsLoading)
+                    ThisProgressBar.Dispatcher.Invoke(() => ThisProgressBar.IsIndeterminate = false, DispatcherPriority.Background);
         }
 
         private void LanguageSwitcherButton_Click(object sender, RoutedEventArgs e)
@@ -96,19 +101,25 @@ namespace SkompareWPF
         {
             try
             {
+                BackgroundWorker.CancelAsync();
+
                 if(MainHandler.OldFile != null)
                 {
                     MainHandler.OldFile.Workbook.Close(SaveChanges: false);
+                    Marshal.ReleaseComObject(MainHandler.OldFile.Workbook);
                 }
                 if(MainHandler.NewFile != null)
                 {
                     MainHandler.NewFile.Workbook.Close(SaveChanges: false);
+                    Marshal.ReleaseComObject(MainHandler.NewFile.Workbook);
                 }
             }
             catch(Exception ex)
             {
                 Trace.WriteLine(ex.Message);
             }
+
+            MainHandler.XlApp.Visible = true;
             MainHandler.XlApp.Quit();
             Marshal.ReleaseComObject(MainHandler.XlApp);
         }
@@ -275,6 +286,7 @@ namespace SkompareWPF
                 {
                     BackgroundWorker.RunWorkerAsync();
                     StartCompareButton.IsEnabled = false;
+                    ThisProgressBar.IsIndeterminate = true;
                 }
             }
             catch(Exception ex)

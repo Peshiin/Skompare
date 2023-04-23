@@ -21,6 +21,7 @@ using System.Text.RegularExpressions;
 using static System.Net.WebRequestMethods;
 using System.Security.Cryptography;
 using System.Linq.Expressions;
+using System.Threading;
 
 namespace SkompareWPF
 {
@@ -70,7 +71,21 @@ namespace SkompareWPF
                 InvokeChange(nameof(ProgressState));
             }
         }
+        private bool isLoading = true;
+        public bool IsLoading
+        {
+            get
+            {
+                return isLoading;
+            }
+            set
+            {
+                isLoading = value;
+                InvokeChange(nameof(IsLoading));
+            }
+        }
         private BackgroundWorker BackgroundWorker { get; set; }
+
 
         public event PropertyChangedEventHandler PropertyChanged;
         protected void InvokeChange(string property)
@@ -153,6 +168,7 @@ namespace SkompareWPF
 
                 //Comparison itself
                 ProgressState = "Comparing started";
+                IsLoading = false;
                 Compare();
 
                 //Allows auto updating
@@ -270,6 +286,9 @@ namespace SkompareWPF
         /// </summary>
         private void Compare()
         {
+            if (BackgroundWorker.CancellationPending)
+                return;
+
             try
             {
                 ProgressState = "Comparing started";

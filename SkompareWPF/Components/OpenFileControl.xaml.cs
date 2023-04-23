@@ -94,13 +94,7 @@ namespace SkompareWPF.Components
             {
                 SheetComboBox.SelectedIndex = 0;
                 return;
-            }
-
-            //if (SheetComboBox.FindName(XlFile.SelectedSheet.Name) != null)
-            //        SheetComboBox.SelectedItem = SheetComboBox.FindName(XlFile.SelectedSheet.Name) as Workbook;
-            //else
-            //    SheetComboBox.SelectedIndex = 0;
-                
+            }                
         }
 
         private void FileOpenerButton_Click(object sender, RoutedEventArgs e)
