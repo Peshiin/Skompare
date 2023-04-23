@@ -33,6 +33,7 @@ namespace SkompareWPF
     {
         private MainHandler MainHandler;
         private SolidColorBrush HighlightBrush = new SolidColorBrush();
+        private BackgroundWorker BackgroundWorker;
         private string selectedRadioButton = string.Empty;
 
         public MainWindow()
@@ -51,6 +52,31 @@ namespace SkompareWPF
             MainHandler.EndString = EndStringTextBox.Text;
             MainHandler.SearchColumns[0] = SearchColumnATextBox.Text;
             MainHandler.PropertyChanged += MainHandler_PropertyChanged;
+
+            BackgroundWorker = new BackgroundWorker();
+            BackgroundWorker.DoWork += new DoWorkEventHandler(BW_DoWork);
+            BackgroundWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(BW_RunWorkerCompleted);
+        }
+
+        private void BW_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            ProgressStateTextBlock.Text = e.Result.ToString();
+            StartCompareButton.IsEnabled = true;
+            ThisProgressBar.Value = 0;
+        }
+
+        private void BW_DoWork(object sender, DoWorkEventArgs e)
+        {
+            try
+            {
+                MainHandler.CompareInit(BackgroundWorker);
+                e.Result = "Comparing ended successfully";
+            }
+            catch(Exception ex)
+            {
+                Trace.WriteLine(ex.ToString());
+                e.Result = "Unexpected exception occured during comparing";
+            }
         }
 
         private void MainHandler_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -63,10 +89,6 @@ namespace SkompareWPF
 
         private void LanguageSwitcherButton_Click(object sender, RoutedEventArgs e)
         {
-            for (int i = 0; i < 100; i++)
-            {
-                Thread.Sleep(100);
-            }
             MessageBox.Show(OldFileControl.XlFileName + " " + NewFileControl.XlFileName);
         }
 
@@ -249,7 +271,11 @@ namespace SkompareWPF
                     Path.GetExtension(MainHandler.NewFile.FilePath))
                     throw new Exception("Formáty souborů se neshodují. Porovnávejte soubory se stejným formátem");
 
-                MainHandler.CompareInit();
+                if (!BackgroundWorker.IsBusy)
+                {
+                    BackgroundWorker.RunWorkerAsync();
+                    StartCompareButton.IsEnabled = false;
+                }
             }
             catch(Exception ex)
             {

@@ -70,6 +70,7 @@ namespace SkompareWPF
                 InvokeChange(nameof(ProgressState));
             }
         }
+        private BackgroundWorker BackgroundWorker { get; set; }
 
         public event PropertyChangedEventHandler PropertyChanged;
         protected void InvokeChange(string property)
@@ -87,8 +88,10 @@ namespace SkompareWPF
                 SearchColumns.Add(string.Empty);
         }
 
-        public void CompareInit()
+        public void CompareInit(BackgroundWorker backgroundWorker)
         {
+            BackgroundWorker = backgroundWorker;
+            BackgroundWorker.ReportProgress(1);
             ProgressState = "Compare intializing";
 
             string debugFilePath = AppDomain.CurrentDomain.BaseDirectory + "\\Debug.log";
