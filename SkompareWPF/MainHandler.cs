@@ -71,7 +71,7 @@ namespace SkompareWPF
                 InvokeChange(nameof(ProgressState));
             }
         }
-        private bool isLoading = true;
+        private bool isLoading;
         public bool IsLoading
         {
             get
@@ -105,6 +105,7 @@ namespace SkompareWPF
 
         public void CompareInit(BackgroundWorker backgroundWorker)
         {
+            IsLoading = true;
             BackgroundWorker = backgroundWorker;
             BackgroundWorker.ReportProgress(1);
             ProgressState = "Compare intializing";

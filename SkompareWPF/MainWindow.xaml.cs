@@ -51,7 +51,6 @@ namespace SkompareWPF
             MainHandler.StartString = StartStringTextBox.Text;
             MainHandler.EndString = EndStringTextBox.Text;
             MainHandler.SearchColumns[0] = SearchColumnATextBox.Text;
-            MainHandler.PropertyChanged += MainHandler_PropertyChanged;
 
             BackgroundWorker = new BackgroundWorker();
             BackgroundWorker.WorkerReportsProgress = true;
@@ -79,17 +78,6 @@ namespace SkompareWPF
             {
                 Trace.WriteLine(ex.ToString());
             }
-        }
-
-        private void MainHandler_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName == nameof(MainHandler.ProgressNum))
-                ThisProgressBar.Dispatcher.Invoke(() => ThisProgressBar.Value = MainHandler.ProgressNum, DispatcherPriority.Background);
-            if (e.PropertyName == nameof(MainHandler.ProgressState))
-                ProgressStateTextBlock.Dispatcher.Invoke(() => ProgressStateTextBlock.Text = MainHandler.ProgressState, DispatcherPriority.Background);
-            if (e.PropertyName == nameof(MainHandler.IsLoading))
-                if (!MainHandler.IsLoading)
-                    ThisProgressBar.Dispatcher.Invoke(() => ThisProgressBar.IsIndeterminate = false, DispatcherPriority.Background);
         }
 
         private void LanguageSwitcherButton_Click(object sender, RoutedEventArgs e)
@@ -272,7 +260,7 @@ namespace SkompareWPF
 
         private void StartCompareButton_Click(object sender, RoutedEventArgs e)
         {
-            ProgressStateTextBlock.Dispatcher.Invoke(() => ProgressStateTextBlock.Text = "Initializing", DispatcherPriority.Background);
+            MainHandler.ProgressState = "Initializing";
             try
             {
                 if (MainHandler.NewFile.Workbook == null || MainHandler.OldFile.Workbook == null)
@@ -286,12 +274,11 @@ namespace SkompareWPF
                 {
                     BackgroundWorker.RunWorkerAsync();
                     StartCompareButton.IsEnabled = false;
-                    ThisProgressBar.IsIndeterminate = true;
                 }
             }
             catch(Exception ex)
             {
-                ProgressStateTextBlock.Dispatcher.Invoke(() => ProgressStateTextBlock.Text = "", DispatcherPriority.Background);
+                MainHandler.ProgressState = "";
                 Trace.WriteLine(ex.ToString());     
                 MessageBox.Show(ex.ToString());
             }
