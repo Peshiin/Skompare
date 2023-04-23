@@ -7,11 +7,11 @@ using System.Windows;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("SkompareWPF")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("Skompare")]
+[assembly: AssemblyDescription("Excel-file comparing app")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("SkompareWPF")]
+[assembly: AssemblyProduct("Skompare")]
 [assembly: AssemblyCopyright("Copyright ©  2023")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
