@@ -610,17 +610,16 @@ namespace SkompareWPF
                 }
             }
 
-            foreach (Range cell in rng)
+            object[,] formulas = rng.Formula;
+            string formula;
+
+            for(int i = 1; i < formulas.GetLength(0) + 1; i++)
             {
-                if (!cell.HasFormula)
-                    continue;
-
-                string formula = Convert.ToString(cell.Formula);
-
-                while (formula.Contains(oldRef))
+                for(int j = 1; j < formulas.GetLength(1) + 1; j++)
                 {
-                    formula = formula.Replace(oldRef, newRef);
-                    cell.Formula = formula;
+                    formula = formulas.GetValue(i, j).ToString();
+                    if(formula.StartsWith("="))
+                        rng.Cells[i, j].Formula = formula.Replace(oldRef, newRef);
                 }
             }
 
