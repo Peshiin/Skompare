@@ -185,10 +185,9 @@ namespace SkompareWPF
                 else
                     OldFile.Workbook.Close(SaveChanges: false);
 
+
                 Marshal.ReleaseComObject(OldFile.Workbook);
                 Marshal.ReleaseComObject(NewFile.Workbook);
-                OldFile.Workbook = null;
-                NewFile.Workbook = null;
 
                 XlApp.Visible = true;
                 ProgressState = "Finished";
