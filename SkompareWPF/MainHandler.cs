@@ -474,8 +474,8 @@ namespace SkompareWPF
         /// <param name="OldR"></param>
         private void CompareRow(int newR, int oldR)
         {
-            string newVal = null;
-            string oldVal = null;
+            string newVal;
+            string oldVal;
             Range row = ResultWorksheet.Rows[newR + 1];
 
             try
@@ -484,11 +484,17 @@ namespace SkompareWPF
                 {
                     if (NewList[newR][column] != null)
                         newVal = NewList[newR][column].ToString();
+                    else
+                        newVal = null;
 
                     if (OldList[oldR][column] != null)
                         oldVal = OldList[oldR][column].ToString();
+                    else
+                        oldVal = null;
 
-                    if (newVal == null && oldVal == null)
+
+                    if ((newVal == null && oldVal == null) ||
+                        (newVal == "" && oldVal == null))
                         continue;
                     else if(newVal == null && oldVal != null)
                         CompareStyle(row.Cells[column + 1], newVal, oldVal);
