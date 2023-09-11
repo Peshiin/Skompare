@@ -22,6 +22,7 @@ using static System.Net.WebRequestMethods;
 using System.Security.Cryptography;
 using System.Linq.Expressions;
 using System.Threading;
+using Microsoft.Vbe.Interop;
 
 namespace SkompareWPF
 {
@@ -651,18 +652,22 @@ namespace SkompareWPF
                 }
             }
 
-            object[,] formulas = rng.Formula;
-            string formula;
-
-            for(int i = 1; i < formulas.GetLength(0) + 1; i++)
+            try
             {
-                for(int j = 1; j < formulas.GetLength(1) + 1; j++)
+                object[,] formulas = rng.Formula;
+                string formula;
+
+                for (int i = 1; i < formulas.GetLength(0) + 1; i++)
                 {
-                    formula = formulas.GetValue(i, j).ToString();
-                    if(formula.StartsWith("="))
-                        rng.Cells[i, j].Formula = formula.Replace(oldRef, newRef);
+                    for (int j = 1; j < formulas.GetLength(1) + 1; j++)
+                    {
+                        formula = formulas.GetValue(i, j).ToString();
+                        if (formula.StartsWith("="))
+                            rng.Cells[i, j].Formula = formula.Replace(oldRef, newRef);
+                    }
                 }
             }
+            catch { }
 
             if (isProteceted)
             {
