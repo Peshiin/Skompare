@@ -461,6 +461,7 @@ namespace SkompareWPF
                         rowList.Add(val[row, col].ToString());
                     else
                         rowList.Add(null);
+
                 returnList.Add(rowList);
             }
 
@@ -538,7 +539,10 @@ namespace SkompareWPF
                 newRng.Interior.Color
                     = System.Drawing.Color.FromArgb(HighlightColor.R, HighlightColor.G, HighlightColor.B);
                 if(newStr != null)
-                    newRng.Value = newStr;
+                    if (double.TryParse(newStr, out double newVal))
+                        newRng.Value = newVal;
+                    else
+                        newRng.Value = newStr;
 
                 if (newRng.Comment != null)
                     newRng.Comment.Delete();
