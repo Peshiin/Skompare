@@ -22,6 +22,7 @@ using static System.Net.WebRequestMethods;
 using System.Security.Cryptography;
 using System.Linq.Expressions;
 using System.Threading;
+using Microsoft.Vbe.Interop;
 
 namespace SkompareWPF
 {
@@ -35,7 +36,7 @@ namespace SkompareWPF
         private List<List<string>> NewList { get; set; }
         private List<List<string>> OldList { get; set; }
         private List<string> NewSearchList { get; set; }
-        private List<string> OldSearchList { get; set; } 
+        private Hashtable  OldSearchHashtable { get; set; } //List<string>
         public Color HighlightColor { get; set; }
         public string ChangesHighlight { get; set; } = string.Empty;
         public List<string> SearchColumns { get; set; } = new List<string>(3);
@@ -140,7 +141,7 @@ namespace SkompareWPF
 
                 //Assigns search arrays
                 NewSearchList = GetSearchList(NewList);
-                OldSearchList = GetSearchList(OldList);
+                OldSearchHashtable = GetSearchHashtable(OldList);
 
                 //Sets auto updating of the XlApp to false
                 AutoUpdate(false);
@@ -269,7 +270,7 @@ namespace SkompareWPF
             {
                 ResultWorkbook.Worksheets["Cancelled"].Delete();
             }
-            catch(Exception ex)
+            catch(Exception)
             {
                 Trace.WriteLine("\"Cancelled\" sheet does not exist");
             }
@@ -294,7 +295,6 @@ namespace SkompareWPF
                 ProgressState = "Comparing started";
                 ProgressNum = 0;
 
-                bool duplicityFound = false;
                 string searchString;
                 int oldRowIndex;
 
@@ -312,7 +312,10 @@ namespace SkompareWPF
                     searchString = NewSearchList[newRowIndex];
                     Trace.WriteLine("Searching for: " + searchString);
 
-                    oldRowIndex = OldSearchList.IndexOf(searchString);
+                    if(OldSearchHashtable.ContainsKey(searchString))
+                        oldRowIndex = (int)OldSearchHashtable[searchString];
+                    else
+                        oldRowIndex = -1;
                     Trace.WriteLine("Found at row " + oldRowIndex + " of old sheet");
 
                     if (oldRowIndex < 0)
@@ -322,30 +325,26 @@ namespace SkompareWPF
                         continue;
                     }
 
-                    if (duplicity[oldRowIndex])
+                    int duplKey = 1;
+                    string originalSearch = searchString;
+                    while (duplicity[oldRowIndex])
                     {
-                        if (!duplicityFound)
+                        searchString = originalSearch + duplKey.ToString();
+                        if (OldSearchHashtable.ContainsKey(searchString))
                         {
-                            MessageBox.Show("Nalezena duplicita zadaných vyhledávacích klíčů" +
-                                            Environment.NewLine +
-                                            "Skript proběhne s předpokladem max. dvou duplicit." +
-                                            Environment.NewLine +
-                                            "Pokud je předpokládané množství duplicit více, ošetřete vhodným výběrem klíčů.",
-                                            "Nalezena duplicita",
-                                            MessageBoxButtons.OK,
-                                            MessageBoxIcon.Warning,
-                                            MessageBoxDefaultButton.Button1,
-                                            MessageBoxOptions.DefaultDesktopOnly);
-                            duplicityFound = true;
+                            oldRowIndex = (int)OldSearchHashtable[searchString];
+                            duplKey++;
                         }
                         else
-                            oldRowIndex = OldSearchList.IndexOf(searchString, oldRowIndex + 1);
+                        {
+                            oldRowIndex = -1;
+                            break;
+                        }
                     }
 
                     if (oldRowIndex >= 0)
                     {
                         duplicity[oldRowIndex] = true;
-
                         CompareRow(newRowIndex, oldRowIndex);
                     }
                 }
@@ -405,6 +404,43 @@ namespace SkompareWPF
         }
 
         /// <summary>
+        /// Returns hastable with concatenated string from SearchColumns as key and row No. as value
+        /// </summary>
+        /// <param name="inputArray"></param>
+        /// <returns></returns>
+        private Hashtable GetSearchHashtable(List<List<string>> inputArray)
+        {
+            int inputLength = inputArray.Count();
+            Hashtable returnHT = new Hashtable();
+            string fullKey;
+            int duplicity = 1;
+            string duplKey;
+
+            for (int row = StartRow - 1; row < inputLength; row++)
+            {
+                fullKey = string.Empty;
+                foreach (string key in SearchColumns)
+                {
+                    if (key != string.Empty && key != "")
+                    {
+                        fullKey += inputArray[row][GetExcelColumnNumber(key) - 1];
+                    }
+                }
+
+                duplKey = fullKey;
+                while (returnHT.ContainsKey(duplKey))
+                {
+                    duplKey = fullKey + duplicity.ToString();
+                    duplicity++;
+                }
+
+                returnHT.Add(duplKey, row);
+            }
+
+            return returnHT;
+        }
+
+        /// <summary>
         /// Returns range of Excel worksheet as List of Lists<string>
         /// </summary>
         /// <param name="sheet"></param>
@@ -439,8 +475,8 @@ namespace SkompareWPF
         /// <param name="OldR"></param>
         private void CompareRow(int newR, int oldR)
         {
-            string newVal = null;
-            string oldVal = null;
+            string newVal;
+            string oldVal;
             Range row = ResultWorksheet.Rows[newR + 1];
 
             try
@@ -449,11 +485,17 @@ namespace SkompareWPF
                 {
                     if (NewList[newR][column] != null)
                         newVal = NewList[newR][column].ToString();
+                    else
+                        newVal = null;
 
                     if (OldList[oldR][column] != null)
                         oldVal = OldList[oldR][column].ToString();
+                    else
+                        oldVal = null;
 
-                    if (newVal == null && oldVal == null)
+
+                    if ((newVal == null && oldVal == null) ||
+                        (newVal == "" && oldVal == null))
                         continue;
                     else if(newVal == null && oldVal != null)
                         CompareStyle(row.Cells[column + 1], newVal, oldVal);
@@ -610,18 +652,22 @@ namespace SkompareWPF
                 }
             }
 
-            object[,] formulas = rng.Formula;
-            string formula;
-
-            for(int i = 1; i < formulas.GetLength(0) + 1; i++)
+            try
             {
-                for(int j = 1; j < formulas.GetLength(1) + 1; j++)
+                object[,] formulas = rng.Formula;
+                string formula;
+
+                for (int i = 1; i < formulas.GetLength(0) + 1; i++)
                 {
-                    formula = formulas.GetValue(i, j).ToString();
-                    if(formula.StartsWith("="))
-                        rng.Cells[i, j].Formula = formula.Replace(oldRef, newRef);
+                    for (int j = 1; j < formulas.GetLength(1) + 1; j++)
+                    {
+                        formula = formulas.GetValue(i, j).ToString();
+                        if (formula.StartsWith("="))
+                            rng.Cells[i, j].Formula = formula.Replace(oldRef, newRef);
+                    }
                 }
             }
+            catch { }
 
             if (isProteceted)
             {
